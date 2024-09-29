@@ -4,8 +4,6 @@ import '../controllers/password_manager_controller.dart';
 class PasswordManagerBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<PasswordManagerController>(
-      () => PasswordManagerController(),
-    );
+    Get.lazyPut<PasswordManagerController>(() => PasswordManagerController());
   }
 }

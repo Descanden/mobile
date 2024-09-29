@@ -3,7 +3,10 @@ import 'package:get/get.dart';
 import '../controllers/password_manager_controller.dart';
 
 class PasswordManagerView extends StatelessWidget {
-  const PasswordManagerView({Key? key}) : super(key: key);
+  // Use Get.find() to retrieve the existing controller
+  final PasswordManagerController controller = Get.find<PasswordManagerController>();
+
+  PasswordManagerView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,8 @@ class PasswordManagerView extends StatelessWidget {
             'Password Manager',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
             ),
           ),
         ),
@@ -33,16 +37,7 @@ class PasswordManagerView extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            const Text(
-              'Manage Your Passwords',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Divider(color: Colors.grey, thickness: 1), // Divider for separation
+            const Divider(color: Colors.grey, thickness: 1),
             const SizedBox(height: 20),
             Expanded(
               child: Container(
@@ -55,31 +50,43 @@ class PasswordManagerView extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.2),
                       spreadRadius: 5,
                       blurRadius: 10,
-                      offset: const Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
-                    _buildPasswordField('Enter old password'),
+                    _buildPasswordField(controller.oldPassword, 'Enter old password'),
                     const SizedBox(height: 20),
-                    _buildPasswordField('Enter new password'),
+                    _buildPasswordField(controller.newPassword, 'Enter new password'),
+                    const SizedBox(height: 20),
+                    _buildPasswordField(controller.confirmPassword, 'Confirm new password'),
                     const SizedBox(height: 40),
                     ElevatedButton(
                       onPressed: () {
-                        // TODO: Implement update password logic
+                        try {
+                          controller.updatePassword();
+                        } on PasswordMismatchException catch (e) {
+                          Get.snackbar('Error', e.message,
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF704F38), // Update button color
+                        backgroundColor: const Color(0xFF704F38),
                         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                       ),
-                      child: const Text('Update Password'),
+                      child: const Text(
+                        'Update Password',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     const SizedBox(height: 40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Icon(Icons.lock, color: Colors.black), // Change lock icon color to black
+                        Icon(Icons.lock, color: Colors.black),
                         SizedBox(width: 8),
                         Text(
                           'Secure Your Data',
@@ -108,23 +115,46 @@ class PasswordManagerView extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
         ],
         onTap: (index) {
-          // Handle bottom navigation bar tap, navigate accordingly.
-          // You can implement navigation here if needed
+          switch (index) {
+            case 0:
+              Get.toNamed('/home');
+              break;
+            case 1:
+              Get.toNamed('/kategori');
+              break;
+            case 2:
+              Get.toNamed('/riwayat');
+              break;
+            case 3:
+              Get.toNamed('/penjualan');
+              break;
+            case 4:
+              Get.to(PasswordManagerView());
+              break;
+          }
         },
       ),
     );
   }
 
-  Widget _buildPasswordField(String hintText) {
-    return TextField(
-      obscureText: true,
-      decoration: InputDecoration(
-        hintText: hintText,
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+  Widget _buildPasswordField(RxString passwordController, String hintText) {
+    return Obx(() {
+      Color borderColor = passwordController.value.isEmpty ? Colors.red : Colors.grey;
+
+      return TextField(
+        onChanged: (value) {
+          passwordController.value = value;
+        },
+        obscureText: true,
+        decoration: InputDecoration(
+          hintText: hintText,
+          contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide(color: borderColor),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

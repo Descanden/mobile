@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/account_controller.dart';
+import 'profile_view.dart'; // Import ProfileMenu di sini
 
 class AccountView extends StatelessWidget {
   AccountView({Key? key}) : super(key: key);
@@ -60,15 +61,15 @@ class AccountView extends StatelessWidget {
             );
           }),
           const SizedBox(height: 30),
-          _buildMenuItem(title: 'Your Profile', onTap: () {}),
-          _buildMenuItem(
+          ProfileMenu(title: 'Your Profile', onTap: () {}), // Menggunakan ProfileMenu
+          ProfileMenu(
             title: 'Password Manager',
             onTap: () {
-              Get.toNamed('/password-manager'); // Navigasi ke halaman Password Manager
+              Get.toNamed('password-manager'); // Pastikan ini sesuai dengan definisi di app_routes.dart
             },
           ),
-          _buildMenuItem(title: 'Settings', onTap: () {}),
-          _buildMenuItem(title: 'Log out', onTap: () {}),
+          ProfileMenu(title: 'Settings', onTap: () {}),
+          ProfileMenu(title: 'Log out', onTap: () {}),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -82,21 +83,25 @@ class AccountView extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
         ],
         onTap: (index) {
-          // Handle bottom navigation bar tap, navigate accordingly.
+          switch (index) {
+            case 0:
+              Get.toNamed('/home');
+              break;
+            case 1:
+              Get.toNamed('/kategori');
+              break;
+            case 2:
+              Get.toNamed('/riwayat');
+              break;
+            case 3:
+              Get.toNamed('/penjualan');
+              break;
+            case 4:
+              Get.toNamed('/account');
+              break;
+          }
         },
       ),
-    );
-  }
-
-  Widget _buildMenuItem({required String title, required VoidCallback onTap}) {
-    return Column(
-      children: [
-        ListTile(
-          title: Text(title, style: const TextStyle(fontSize: 18)),
-          onTap: onTap,
-        ),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-      ],
     );
   }
 

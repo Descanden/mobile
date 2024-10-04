@@ -5,10 +5,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:permission_handler/permission_handler.dart';
-import '../models/akun_model.dart';
 
-class AccountController extends GetxController {
-  var account = Account().obs;
+class YourProfileController extends GetxController {
+  var profileImagePath = ''.obs;
+  var name = 'Your Name'.obs; // Replace with the actual user's name if available
   final ImagePicker _picker = ImagePicker();
 
   // Meminta izin untuk akses kamera dan penyimpanan
@@ -26,7 +26,6 @@ class AccountController extends GetxController {
 
   // Memilih gambar dari galeri atau kamera
   void pickImage(String source) async {
-    // Meminta izin sebelum mengakses kamera atau penyimpanan
     await requestPermissions();
 
     if (source == 'gallery') {
@@ -36,19 +35,15 @@ class AccountController extends GetxController {
 
       if (result != null) {
         if (kIsWeb) {
-          Uint8List? bytes = result.files.single.bytes; // Gunakan bytes di web
+          Uint8List? bytes = result.files.single.bytes; 
           if (bytes != null) {
             String base64Image = base64Encode(bytes);
             String imageData = 'data:image/png;base64,$base64Image';
-            account.update((acc) {
-              acc?.profileImagePath = imageData; // Update dengan data gambar base64
-            });
+            profileImagePath.value = imageData; 
           }
         } else {
           String filePath = result.files.single.path!;
-          account.update((acc) {
-            acc?.profileImagePath = filePath; // Update dengan file path
-          });
+          profileImagePath.value = filePath; 
         }
       }
     } else if (source == 'camera') {
@@ -58,18 +53,12 @@ class AccountController extends GetxController {
           Uint8List bytes = await photo.readAsBytes();
           String base64Image = base64Encode(bytes);
           String imageData = 'data:image/png;base64,$base64Image';
-          account.update((acc) {
-            acc?.profileImagePath = imageData; // Update dengan data gambar base64
-          });
+          profileImagePath.value = imageData; 
         } else {
           String filePath = photo.path;
-          account.update((acc) {
-            acc?.profileImagePath = filePath; // Update dengan file path
-          });
+          profileImagePath.value = filePath; 
         }
       }
     }
   }
-
-  void updateName(String text) {}
 }

@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pemrograman_mobile/app/modules/home/account/views/profile_view.dart';
 import '../controllers/account_controller.dart';
-import 'profile_view.dart';
 
 class AccountView extends StatelessWidget {
   AccountView({super.key});
@@ -61,7 +61,12 @@ class AccountView extends StatelessWidget {
             );
           }),
           const SizedBox(height: 30),
-          ProfileMenu(title: 'Your Profile', onTap: () {}),
+          ProfileMenu(
+            title: 'Your Profile',
+            onTap: () {
+              Get.toNamed('your-profile');
+            },
+          ),
           ProfileMenu(
             title: 'Password Manager',
             onTap: () {

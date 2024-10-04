@@ -83,9 +83,9 @@ class PasswordManagerView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(Icons.lock, color: Colors.black),
                         SizedBox(width: 8),
                         Text(

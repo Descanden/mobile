@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/account_controller.dart';
-import 'profile_view.dart'; // Import ProfileMenu di sini
+import 'profile_view.dart';
 
 class AccountView extends StatelessWidget {
-  AccountView({Key? key}) : super(key: key);
+  AccountView({super.key});
   final AccountController controller = Get.put(AccountController());
 
   @override
@@ -61,11 +61,11 @@ class AccountView extends StatelessWidget {
             );
           }),
           const SizedBox(height: 30),
-          ProfileMenu(title: 'Your Profile', onTap: () {}), // Menggunakan ProfileMenu
+          ProfileMenu(title: 'Your Profile', onTap: () {}),
           ProfileMenu(
             title: 'Password Manager',
             onTap: () {
-              Get.toNamed('password-manager'); // Pastikan ini sesuai dengan definisi di app_routes.dart
+              Get.toNamed('password-manager');
             },
           ),
           ProfileMenu(title: 'Settings', onTap: () {}),

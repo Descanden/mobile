@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+
 import '../modules/home/account/bindings/account_binding.dart';
 import '../modules/home/account/views/account_view.dart';
 import '../modules/home/password_manager/bindings/password_manager_binding.dart';

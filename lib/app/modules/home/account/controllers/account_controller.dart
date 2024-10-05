@@ -24,9 +24,9 @@ class AccountController extends GetxController {
     }
   }
 
-  // Memilih gambar dari galeri atau kamera
+
   void pickImage(String source) async {
-    // Meminta izin sebelum mengakses kamera atau penyimpanan
+
     await requestPermissions();
 
     if (source == 'gallery') {
@@ -36,18 +36,18 @@ class AccountController extends GetxController {
 
       if (result != null) {
         if (kIsWeb) {
-          Uint8List? bytes = result.files.single.bytes; // Gunakan bytes di web
+          Uint8List? bytes = result.files.single.bytes;
           if (bytes != null) {
             String base64Image = base64Encode(bytes);
             String imageData = 'data:image/png;base64,$base64Image';
             account.update((acc) {
-              acc?.profileImagePath = imageData; // Update dengan data gambar base64
+              acc?.profileImagePath = imageData; 
             });
           }
         } else {
           String filePath = result.files.single.path!;
           account.update((acc) {
-            acc?.profileImagePath = filePath; // Update dengan file path
+            acc?.profileImagePath = filePath;
           });
         }
       }
@@ -59,12 +59,12 @@ class AccountController extends GetxController {
           String base64Image = base64Encode(bytes);
           String imageData = 'data:image/png;base64,$base64Image';
           account.update((acc) {
-            acc?.profileImagePath = imageData; // Update dengan data gambar base64
+            acc?.profileImagePath = imageData;
           });
         } else {
           String filePath = photo.path;
           account.update((acc) {
-            acc?.profileImagePath = filePath; // Update dengan file path
+            acc?.profileImagePath = filePath;
           });
         }
       }

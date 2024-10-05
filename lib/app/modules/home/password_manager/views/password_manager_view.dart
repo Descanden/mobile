@@ -106,7 +106,7 @@ class PasswordManagerView extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: 4,
+        currentIndex: 4, // Ubah ini sesuai posisi saat ini
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Kategori'),
@@ -129,8 +129,8 @@ class PasswordManagerView extends StatelessWidget {
               Get.toNamed('/penjualan');
               break;
             case 4:
-              Get.to(PasswordManagerView());
-              break;
+              Get.toNamed('/account'); // Navigasi ke halaman akun
+              break; // Mengarahkan kembali ke halaman akun
           }
         },
       ),

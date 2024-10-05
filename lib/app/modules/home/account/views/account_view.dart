@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pemrograman_mobile/app/modules/home/account/views/profile_view.dart';
 import '../controllers/account_controller.dart';
+import '../../your_profile/controllers/your_profile_controller.dart';
 
 class AccountView extends StatelessWidget {
   AccountView({super.key});
-  final AccountController controller = Get.put(AccountController());
+  final AccountController accountController = Get.put(AccountController());
+  final YourProfileController yourProfileController = Get.put(YourProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +39,10 @@ class AccountView extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: controller.account.value.profileImagePath.isNotEmpty
+                    backgroundImage: yourProfileController.profileImagePath.isNotEmpty
                         ? (kIsWeb
-                            ? NetworkImage(controller.account.value.profileImagePath) as ImageProvider
-                            : FileImage(File(controller.account.value.profileImagePath)))
+                            ? NetworkImage(yourProfileController.profileImagePath as String) as ImageProvider
+                            : FileImage(File(yourProfileController.profileImagePath as String)))
                         : const AssetImage('lib/assets/Formal_Rofiq.jpg'),
                   ),
                   Container(
@@ -56,7 +58,7 @@ class AccountView extends StatelessWidget {
           const SizedBox(height: 10),
           Obx(() {
             return Text(
-              controller.account.value.name,
+              yourProfileController.name.value, // Gunakan name dari YourProfileController
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             );
           }),
@@ -118,14 +120,14 @@ class AccountView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              controller.pickImage('camera');
+              yourProfileController.pickImage('camera'); // Gunakan yourProfileController
               Navigator.of(context).pop();
             },
             child: const Text('Camera'),
           ),
           TextButton(
             onPressed: () {
-              controller.pickImage('gallery');
+              yourProfileController.pickImage('gallery'); // Gunakan yourProfileController
               Navigator.of(context).pop();
             },
             child: const Text('Gallery'),

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../account/controllers/account_controller.dart';
+import '../controllers/your_profile_controller.dart'; // Import YourProfileController
 
 class YourProfileView extends StatelessWidget {
-  YourProfileView({Key? key}) : super(key: key);
+  YourProfileView({super.key});
 
-  final AccountController controller = Get.find<AccountController>();
+  final AccountController accountController = Get.find<AccountController>();
+  final YourProfileController yourProfileController = Get.find<YourProfileController>();
   final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    nameController.text = controller.account.value.name;
+    // Set initial text for nameController
+    nameController.text = ''; // Kosongkan nama di awal
 
     return Scaffold(
       appBar: AppBar(
@@ -43,8 +46,8 @@ class YourProfileView extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: controller.account.value.profileImagePath.isNotEmpty
-                        ? NetworkImage(controller.account.value.profileImagePath) as ImageProvider
+                    backgroundImage: yourProfileController.profileImagePath.isNotEmpty
+                        ? NetworkImage(yourProfileController.profileImagePath as String) as ImageProvider
                         : const AssetImage('lib/assets/Formal_Rofiq.jpg'),
                   ),
                   Container(
@@ -57,10 +60,12 @@ class YourProfileView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              controller.account.value.name,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+            Obx(() {
+              return Text(
+                yourProfileController.name.value.isNotEmpty ? yourProfileController.name.value : 'Your Name', // Tampilkan nama setelah di save
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              );
+            }),
             const SizedBox(height: 30),
             const Align(
               alignment: Alignment.centerLeft,
@@ -70,29 +75,44 @@ class YourProfileView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                hintText: 'Enter your name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Colors.grey),
+            const Divider(), // Garis atas
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                // Oval sebagai background
+                Container(
+                  height: 60, // Tinggi oval
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30), // Membuat oval
+                    border: Border.all(color: Colors.grey, width: 1),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Colors.grey),
+                // TextField untuk ganti nama
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your name',
+                    border: InputBorder.none, // Menghilangkan border default
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  ),
+                  onChanged: (value) {
+                    // Update the name in the controller
+                    yourProfileController.name.value = value; // Update name pada controller
+                  },
                 ),
-              ),
+              ],
             ),
+            const Divider(), // Garis bawah
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // Update the name in the controller
-                controller.updateName(nameController.text);
+                accountController.updateName(yourProfileController.name.value);
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
+                backgroundColor: const Color(0xFF704F38),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -106,6 +126,36 @@ class YourProfileView extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 4, // Ubah ini sesuai posisi saat ini
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Kategori'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Penjualan'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Get.toNamed('/home');
+              break;
+            case 1:
+              Get.toNamed('/kategori');
+              break;
+            case 2:
+              Get.toNamed('/riwayat');
+              break;
+            case 3:
+              Get.toNamed('/penjualan');
+              break;
+            case 4:
+              Get.toNamed('/account'); // Navigasi ke halaman akun
+              break;
+          }
+        },
+      ),
     );
   }
 
@@ -117,14 +167,14 @@ class YourProfileView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              controller.pickImage('camera');
+              yourProfileController.pickImage('camera');
               Navigator.of(context).pop();
             },
             child: const Text('Camera'),
           ),
           TextButton(
             onPressed: () {
-              controller.pickImage('gallery');
+              yourProfileController.pickImage('gallery');
               Navigator.of(context).pop();
             },
             child: const Text('Gallery'),

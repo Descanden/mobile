@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
+import '../../../../routes/app_pages.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -76,21 +77,28 @@ class LoginView extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                controller.login(); // Login functionality
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF704F38), // Dark brown background
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-              ),
-              child: const Text(
-                'Login',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
+  onPressed: () {
+    // Attempt to log in
+    controller.login().then((success) {
+      if (success) {
+        // Navigate to Home page and remove Login page from stack
+        Get.offNamed(Routes.HOME_PAGE); // Update this to your actual home route
+      }
+    });
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFF704F38), // Dark brown background
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    ),
+    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+  ),
+  child: const Text(
+    'Login',
+    style: TextStyle(fontSize: 18, color: Colors.white),
+  ),
+),
+
             const SizedBox(height: 30),
             const Divider(
               color: Colors.grey,

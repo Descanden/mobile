@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pemrograman_mobile/app/modules/home/account/views/profile_view.dart';
 import '../controllers/account_controller.dart';
 import '../../your_profile/controllers/your_profile_controller.dart';
+import '../../../../routes/app_pages.dart';
 
 class AccountView extends StatelessWidget {
   AccountView({super.key});
@@ -22,7 +23,7 @@ class AccountView extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(); // You can remove this if you don't want any back action
           },
         ),
       ),
@@ -58,7 +59,7 @@ class AccountView extends StatelessWidget {
           const SizedBox(height: 10),
           Obx(() {
             return Text(
-              yourProfileController.name.value, // Gunakan name dari YourProfileController
+              yourProfileController.name.value, // Use name from YourProfileController
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             );
           }),
@@ -66,13 +67,13 @@ class AccountView extends StatelessWidget {
           ProfileMenu(
             title: 'Your Profile',
             onTap: () {
-              Get.toNamed('your-profile');
+              Get.toNamed(Routes.YOUR_PROFILE); // Navigate to Your Profile
             },
           ),
           ProfileMenu(
             title: 'Password Manager',
             onTap: () {
-              Get.toNamed('password-manager');
+              Get.toNamed(Routes.PASSWORD_MANAGER); // Navigate to Password Manager
             },
           ),
           ProfileMenu(title: 'Settings', onTap: () {}),
@@ -81,7 +82,7 @@ class AccountView extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: 4,
+        currentIndex: 4, // Set index for Account page
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Kategori'),
@@ -92,19 +93,19 @@ class AccountView extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              Get.toNamed('/home');
+              Get.offAllNamed(Routes.HOME_PAGE); // Navigate to Home without back button
               break;
             case 1:
-              Get.toNamed('/kategori');
+              Get.toNamed('/kategori'); // Navigate to Kategori
               break;
             case 2:
-              Get.toNamed('/riwayat');
+              Get.toNamed('/riwayat'); // Navigate to Riwayat
               break;
             case 3:
-              Get.toNamed('/penjualan');
+              Get.toNamed('/penjualan'); // Navigate to Penjualan
               break;
             case 4:
-              Get.toNamed('/account');
+              Get.offAllNamed(Routes.ACCOUNT); // Navigate to Account without back button
               break;
           }
         },
@@ -120,14 +121,14 @@ class AccountView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              yourProfileController.pickImage('camera'); // Gunakan yourProfileController
+              yourProfileController.pickImage('camera'); // Use yourProfileController
               Navigator.of(context).pop();
             },
             child: const Text('Camera'),
           ),
           TextButton(
             onPressed: () {
-              yourProfileController.pickImage('gallery'); // Gunakan yourProfileController
+              yourProfileController.pickImage('gallery'); // Use yourProfileController
               Navigator.of(context).pop();
             },
             child: const Text('Gallery'),

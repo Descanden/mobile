@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/password_manager_controller.dart';
+import '../../../../routes/app_pages.dart';
 
 class PasswordManagerView extends StatelessWidget {
-  // Use Get.find() to retrieve the existing controller
   final PasswordManagerController controller = Get.find<PasswordManagerController>();
 
   PasswordManagerView({super.key});
@@ -66,7 +66,14 @@ class PasswordManagerView extends StatelessWidget {
                       onPressed: () {
                         try {
                           controller.updatePassword();
+                          // After successful password update, navigate back to this page
+                          Get.offAll(() => PasswordManagerView());
                         } on PasswordMismatchException catch (e) {
+                          Get.snackbar('Error', e.message,
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white);
+                        } on PasswordIncorrectException catch (e) {
                           Get.snackbar('Error', e.message,
                               snackPosition: SnackPosition.BOTTOM,
                               backgroundColor: Colors.red,
@@ -106,7 +113,7 @@ class PasswordManagerView extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: 4, // Ubah ini sesuai posisi saat ini
+        currentIndex: 4, // Set current index to Akun
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Kategori'),
@@ -117,20 +124,20 @@ class PasswordManagerView extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              Get.toNamed('/home');
+              Get.offAllNamed(Routes.HOME_PAGE); // Navigate to Home without back button
               break;
             case 1:
-              Get.toNamed('/kategori');
+              Get.toNamed('/kategori'); // Navigate to Kategori
               break;
             case 2:
-              Get.toNamed('/riwayat');
+              Get.toNamed('/riwayat'); // Navigate to Riwayat
               break;
             case 3:
-              Get.toNamed('/penjualan');
+              Get.toNamed('/penjualan'); // Navigate to Penjualan
               break;
             case 4:
-              Get.toNamed('/account'); // Navigasi ke halaman akun
-              break; // Mengarahkan kembali ke halaman akun
+              Get.toNamed(Routes.ACCOUNT); // Navigate to Account
+              break;
           }
         },
       ),

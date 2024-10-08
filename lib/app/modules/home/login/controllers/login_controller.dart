@@ -7,7 +7,7 @@ class LoginController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   final box = GetStorage();
 
-  void login() {
+  Future<bool> login() async { // Change the return type to Future<bool>
     String username = usernameController.text.trim();
     String password = passwordController.text.trim();
     String storedPassword = box.read('password') ?? '';
@@ -20,6 +20,7 @@ class LoginController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      return false; // Return false if validation fails
     } else if (username == 'sasha' && password == storedPassword) {
       Get.snackbar(
         'Success',
@@ -28,8 +29,7 @@ class LoginController extends GetxController {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-
-      Get.toNamed('/account');
+      return true; // Return true on successful login
     } else {
       Get.snackbar(
         'Error',
@@ -38,6 +38,7 @@ class LoginController extends GetxController {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      return false; // Return false for invalid credentials
     }
   }
 

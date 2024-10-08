@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../account/controllers/account_controller.dart';
-import '../controllers/your_profile_controller.dart'; // Import YourProfileController
+import '../controllers/your_profile_controller.dart';
+import '../../../../routes/app_pages.dart';
 
 class YourProfileView extends StatelessWidget {
   YourProfileView({super.key});
@@ -12,8 +13,7 @@ class YourProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Set initial text for nameController
-    nameController.text = ''; // Kosongkan nama di awal
+    nameController.text = yourProfileController.name.value; // Set initial value from controller
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +38,6 @@ class YourProfileView extends StatelessWidget {
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () {
-                // Show dialog to select new profile image
                 _showImageSourceDialog(context);
               },
               child: Stack(
@@ -62,7 +61,7 @@ class YourProfileView extends StatelessWidget {
             const SizedBox(height: 10),
             Obx(() {
               return Text(
-                yourProfileController.name.value.isNotEmpty ? yourProfileController.name.value : 'Your Name', // Tampilkan nama setelah di save
+                yourProfileController.name.value.isNotEmpty ? yourProfileController.name.value : 'Your Name',
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               );
             }),
@@ -75,41 +74,46 @@ class YourProfileView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const Divider(), // Garis atas
+            const Divider(),
             Stack(
               alignment: Alignment.center,
               children: [
-                // Oval sebagai background
                 Container(
-                  height: 60, // Tinggi oval
+                  height: 60,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(30), // Membuat oval
+                    borderRadius: BorderRadius.circular(30),
                     border: Border.all(color: Colors.grey, width: 1),
                   ),
                 ),
-                // TextField untuk ganti nama
                 TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
                     hintText: 'Enter your name',
-                    border: InputBorder.none, // Menghilangkan border default
+                    border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   ),
                   onChanged: (value) {
-                    // Update the name in the controller
-                    yourProfileController.name.value = value; // Update name pada controller
+                    yourProfileController.name.value = value; // Update name in controller
                   },
                 ),
               ],
             ),
-            const Divider(), // Garis bawah
+            const Divider(),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Update the name in the controller
-                accountController.updateName(yourProfileController.name.value);
-                Navigator.of(context).pop();
+                // Save the name to GetStorage
+                yourProfileController.saveName(nameController.text);
+                // Show a Snackbar to confirm saving
+                Get.snackbar(
+                  'Success',
+                  'Your name has been saved!',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.green,
+                  colorText: Colors.white,
+                );
+                // Stay on the current page
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF704F38),
@@ -128,7 +132,7 @@ class YourProfileView extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: 4, // Ubah ini sesuai posisi saat ini
+        currentIndex: 4,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Kategori'),
@@ -139,7 +143,7 @@ class YourProfileView extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              Get.toNamed('/home');
+              Get.offAllNamed(Routes.HOME_PAGE);
               break;
             case 1:
               Get.toNamed('/kategori');
@@ -151,7 +155,7 @@ class YourProfileView extends StatelessWidget {
               Get.toNamed('/penjualan');
               break;
             case 4:
-              Get.toNamed('/account'); // Navigasi ke halaman akun
+              Get.toNamed(Routes.ACCOUNT);
               break;
           }
         },

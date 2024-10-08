@@ -4,12 +4,11 @@ import 'package:get_storage/get_storage.dart';
 import 'app/routes/app_pages.dart';
 
 void main() async {
-  await GetStorage.init();  // Initialize GetStorage
+  await GetStorage.init();
 
-  // Set initial password in GetStorage
   final box = GetStorage();
   if (box.read('password') == null) {
-    box.write('password', 'sasha'); // Store initial password
+    box.write('password', 'sasha');
   }
 
   runApp(GetMaterialApp(

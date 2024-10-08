@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/home/account/bindings/account_binding.dart';
 import '../modules/home/account/views/account_view.dart';
+import '../modules/home/home_page/bindings/home_page_binding.dart';
+import '../modules/home/home_page/views/home_page_view.dart';
 import '../modules/home/login/bindings/login_binding.dart';
 import '../modules/home/login/views/login_view.dart';
 import '../modules/home/password_manager/bindings/password_manager_binding.dart';
@@ -36,6 +38,11 @@ class AppPages {
       name: _Paths.YOUR_PROFILE,
       page: () => YourProfileView(),
       binding: YourProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.HOME_PAGE,
+      page: () => const HomePageView(),
+      binding: HomePageBinding(),
     ),
   ];
 }

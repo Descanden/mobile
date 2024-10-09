@@ -139,7 +139,7 @@ class PasswordManagerView extends StatelessWidget {
               Get.offAllNamed(Routes.HOME_PAGE); // Navigate to Home without back button
               break;
             case 1:
-              Get.toNamed('/kategori'); // Navigate to Kategori
+              Get.toNamed('/category'); // Navigate to Kategori
               break;
             case 2:
               Get.toNamed('/riwayat'); // Navigate to Riwayat

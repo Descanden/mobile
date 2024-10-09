@@ -146,7 +146,7 @@ class HomePageView extends GetView<HomePageController> {
               Get.toNamed('/home'); // Navigate to Home
               break;
             case 1:
-              Get.toNamed('/kategori'); // Navigate to Kategori
+              Get.toNamed('/category'); // Navigate to Kategori
               break;
             case 2:
               Get.toNamed('/riwayat'); // Navigate to Riwayat

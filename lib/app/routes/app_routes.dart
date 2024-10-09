@@ -8,6 +8,7 @@ abstract class Routes {
   static const PASSWORD_MANAGER = _Paths.PASSWORD_MANAGER;
   static const YOUR_PROFILE = _Paths.YOUR_PROFILE;
   static const SETTINGS = _Paths.SETTINGS;
+  static const CATEGORY = _Paths.CATEGORY;
 }
 
 abstract class _Paths {
@@ -18,4 +19,5 @@ abstract class _Paths {
   static const PASSWORD_MANAGER = '/password-manager';
   static const YOUR_PROFILE = '/your-profile';
   static const SETTINGS = '/settings';
+  static const CATEGORY = '/category';
 }

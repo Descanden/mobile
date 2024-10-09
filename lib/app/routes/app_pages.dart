@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/home/account/bindings/account_binding.dart';
 import '../modules/home/account/views/account_view.dart';
+import '../modules/home/category/bindings/category_binding.dart';
+import '../modules/home/category/views/category_view.dart';
 import '../modules/home/home_page/bindings/home_page_binding.dart';
 import '../modules/home/home_page/views/home_page_view.dart';
 import '../modules/home/login/bindings/login_binding.dart';
@@ -50,6 +52,11 @@ class AppPages {
       name: _Paths.SETTINGS,
       page: () => const SettingsView(),
       binding: SettingsBinding(),
+    ),
+    GetPage(
+      name: _Paths.CATEGORY,
+      page: () => const CategoryView(),
+      binding: CategoryBinding(),
     ),
   ];
 }

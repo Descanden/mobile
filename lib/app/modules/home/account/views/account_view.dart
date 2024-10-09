@@ -116,7 +116,7 @@ class AccountView extends StatelessWidget {
               Get.offAllNamed(Routes.HOME_PAGE);
               break;
             case 1:
-              Get.toNamed('/kategori');
+              Get.toNamed('/category');
               break;
             case 2:
               Get.toNamed('/riwayat');

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/password_manager_controller.dart';
 import '../../../../routes/app_pages.dart';
+import '../../settings/controllers/settings_controller.dart'; // Import SettingsController
 
 class PasswordManagerView extends StatelessWidget {
   final PasswordManagerController controller = Get.find<PasswordManagerController>();
+  final SettingsController settingsController = Get.find<SettingsController>(); // Initialize SettingsController
 
   PasswordManagerView({super.key});
 
@@ -16,24 +18,24 @@ class PasswordManagerView extends StatelessWidget {
           child: Text(
             'Password Manager',
             style: TextStyle(
-              color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: 24,
             ),
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: settingsController.isDarkMode.value ? Colors.black : Colors.white, // Dark mode background
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back),
+          color: settingsController.isDarkMode.value ? Colors.white : Colors.black, // Back button color
           onPressed: () {
-            // Navigasi kembali ke halaman akun
+            // Navigate back to the Account Page
             Get.offAllNamed(Routes.ACCOUNT);
           },
         ),
         elevation: 0,
       ),
       body: Container(
-        color: Colors.white,
+        color: settingsController.isDarkMode.value ? const Color(0xFF121212) : Colors.white, // Dark mode background
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           children: [
@@ -44,7 +46,7 @@ class PasswordManagerView extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: settingsController.isDarkMode.value ? const Color(0xFF1E1E1E) : Colors.white, // Dark mode container
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
@@ -67,7 +69,7 @@ class PasswordManagerView extends StatelessWidget {
                       onPressed: () {
                         try {
                           controller.updatePassword();
-                          // Setelah password diupdate, kembali ke PasswordManagerView yang sama
+                          // Navigate back to PasswordManagerView
                           Get.off(() => PasswordManagerView());
                           Get.snackbar(
                             'Success',
@@ -98,18 +100,20 @@ class PasswordManagerView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 40),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.lock, color: Colors.black),
-                        SizedBox(width: 8),
-                        Text(
-                          'Secure Your Data',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                          ),
-                        ),
+                        Icon(Icons.lock, color: settingsController.isDarkMode.value ? Colors.white : Colors.black), // Change icon color
+                        const SizedBox(width: 8),
+                        Obx(() {
+                          return Text(
+                            'Secure Your Data',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: settingsController.isDarkMode.value ? Colors.white : Colors.black, // Change text color
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ],
@@ -144,7 +148,7 @@ class PasswordManagerView extends StatelessWidget {
               Get.toNamed('/penjualan'); // Navigate to Penjualan
               break;
             case 4:
-              Get.toNamed(Routes.ACCOUNT); // Navigate to Account
+              Get.offAllNamed(Routes.ACCOUNT); // Navigate to Account
               break;
           }
         },
@@ -168,6 +172,8 @@ class PasswordManagerView extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide(color: borderColor),
           ),
+          filled: true,
+          fillColor: settingsController.isDarkMode.value ? Colors.grey[800] : Colors.white, // Fill color for password field
         ),
       );
     });

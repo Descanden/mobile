@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'app/routes/app_pages.dart';
+import 'app/modules/home/settings/controllers/settings_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,13 @@ void main() async {
     box.write('name', 'Guest');
   }
 
-  runApp(const MyApp());
+  // Initialize the SettingsController
+  final settingsController = Get.put(SettingsController());
+
+  // Set initial theme based on stored preference
+  settingsController.isDarkMode.value = box.read('darkMode') ?? false;
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,11 +37,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: "Your App Title",
-      initialRoute: Routes.LOGIN,
-      getPages: AppPages.routes,
-      debugShowCheckedModeBanner: false,
-    );
+    return Obx(() {
+      return GetMaterialApp(
+        title: "Your App Title",
+        initialRoute: Routes.LOGIN,
+        getPages: AppPages.routes,
+        debugShowCheckedModeBanner: false,
+        theme: Get.find<SettingsController>().isDarkMode.value
+            ? ThemeData.dark() // Dark mode theme
+            : ThemeData.light(), // Light mode theme
+      );
+    });
   }
 }

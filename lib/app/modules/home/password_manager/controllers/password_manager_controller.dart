@@ -19,10 +19,6 @@ class PasswordManagerController extends GetxController {
 
   final box = GetStorage();
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void updatePassword() {
     String storedPassword = box.read('password') ?? '';

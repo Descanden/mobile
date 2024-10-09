@@ -8,6 +8,8 @@ import '../modules/home/login/bindings/login_binding.dart';
 import '../modules/home/login/views/login_view.dart';
 import '../modules/home/password_manager/bindings/password_manager_binding.dart';
 import '../modules/home/password_manager/views/password_manager_view.dart';
+import '../modules/home/settings/bindings/settings_binding.dart';
+import '../modules/home/settings/views/settings_view.dart';
 import '../modules/home/your_profile/bindings/your_profile_binding.dart';
 import '../modules/home/your_profile/views/your_profile_view.dart';
 
@@ -43,6 +45,11 @@ class AppPages {
       name: _Paths.HOME_PAGE,
       page: () => const HomePageView(),
       binding: HomePageBinding(),
+    ),
+    GetPage(
+      name: _Paths.SETTINGS,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
     ),
   ];
 }

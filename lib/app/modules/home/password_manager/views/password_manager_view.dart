@@ -26,7 +26,8 @@ class PasswordManagerView extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop();
+            // Navigasi kembali ke halaman akun
+            Get.offAllNamed(Routes.ACCOUNT);
           },
         ),
         elevation: 0,
@@ -66,8 +67,15 @@ class PasswordManagerView extends StatelessWidget {
                       onPressed: () {
                         try {
                           controller.updatePassword();
-                          // After successful password update, navigate back to this page
-                          Get.offAll(() => PasswordManagerView());
+                          // Setelah password diupdate, kembali ke PasswordManagerView yang sama
+                          Get.off(() => PasswordManagerView());
+                          Get.snackbar(
+                            'Success',
+                            'Password updated successfully',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
                         } on PasswordMismatchException catch (e) {
                           Get.snackbar('Error', e.message,
                               snackPosition: SnackPosition.BOTTOM,

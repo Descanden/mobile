@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../account/controllers/account_controller.dart';
@@ -13,7 +15,8 @@ class YourProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    nameController.text = yourProfileController.name.value; // Set initial value from controller
+    // Set initial value from controller
+    nameController.text = yourProfileController.name.value;
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +49,9 @@ class YourProfileView extends StatelessWidget {
                   CircleAvatar(
                     radius: 50,
                     backgroundImage: yourProfileController.profileImagePath.isNotEmpty
-                        ? NetworkImage(yourProfileController.profileImagePath as String) as ImageProvider
+                        ? (kIsWeb
+                            ? NetworkImage(yourProfileController.profileImagePath as String) 
+                            : FileImage(File(yourProfileController.profileImagePath as String)))
                         : const AssetImage('lib/assets/Formal_Rofiq.jpg'),
                   ),
                   Container(
@@ -93,9 +98,6 @@ class YourProfileView extends StatelessWidget {
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   ),
-                  onChanged: (value) {
-                    yourProfileController.name.value = value; // Update name in controller
-                  },
                 ),
               ],
             ),

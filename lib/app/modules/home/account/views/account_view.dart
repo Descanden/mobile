@@ -23,7 +23,7 @@ class AccountView extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.of(context).pop(); // You can remove this if you don't want any back action
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -77,7 +77,12 @@ class AccountView extends StatelessWidget {
             },
           ),
           ProfileMenu(title: 'Settings', onTap: () {}),
-          ProfileMenu(title: 'Log out', onTap: () {}),
+          ProfileMenu(
+            title: 'Log out',
+            onTap: () {
+              _showLogoutConfirmation(context); // Show logout confirmation
+            },
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -135,6 +140,72 @@ class AccountView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLogoutConfirmation(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Teks LOGOUT dengan garis bawah
+              Column(
+                children: [
+                  const Text(
+                    'Log out',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    width: 60,
+                    height: 2,
+                    color: Colors.black, // Garis di bawah tulisan Log out
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Are you sure want to log out?',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300), // Menggunakan extra light
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the modal
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey, // Cancel button color
+                    ),
+                    child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      accountController.logout(); // Handle log out
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.brown, // Logout button color
+                    ),
+                    child: const Text('Log out', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

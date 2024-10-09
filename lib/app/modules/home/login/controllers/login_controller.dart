@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pemrograman_mobile/app/routes/app_pages.dart';
+import '../../account/controllers/account_controller.dart'; // Make sure to import the AccountController
 
 class LoginController extends GetxController {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final box = GetStorage();
+  final AccountController accountController = Get.put(AccountController()); // Create an instance of AccountController
 
   Future<bool> login() async { // Change the return type to Future<bool>
     String username = usernameController.text.trim();
@@ -29,6 +32,8 @@ class LoginController extends GetxController {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
+      accountController.loadAccountData(); // Load the account data after successful login
+      Get.offAllNamed(Routes.ACCOUNT); // Navigate to the account page
       return true; // Return true on successful login
     } else {
       Get.snackbar(

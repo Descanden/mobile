@@ -24,7 +24,7 @@ class YourProfileController extends GetxController {
     box.write('name', newName); // Save to GetStorage
   }
 
-  // Meminta izin untuk akses kamera dan penyimpanan
+  // Request permissions for camera and storage
   Future<void> requestPermissions() async {
     var statusCamera = await Permission.camera.status;
     if (!statusCamera.isGranted) {
@@ -37,7 +37,7 @@ class YourProfileController extends GetxController {
     }
   }
 
-  // Memilih gambar dari galeri atau kamera
+  // Pick image from gallery or camera
   void pickImage(String source) async {
     await requestPermissions();
 

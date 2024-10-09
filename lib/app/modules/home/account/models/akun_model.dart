@@ -1,7 +1,6 @@
 class Account {
-  String name;
-  String profileImagePath;
+  String? name;
+  String? profileImagePath;
 
-  Account({this.name = '', 
-  this.profileImagePath = ''});
+  Account({this.name, this.profileImagePath});
 }

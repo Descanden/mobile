@@ -84,12 +84,12 @@ class HomePageView extends GetView<HomePageController> {
                   crossAxisSpacing: 10,
                 ),
                 children: [
-                  _buildIconButton('Kategori', Icons.list, '/category'), // Icon updated
-                  _buildIconButton('Riwayat', Icons.access_time, '/history'), // Icon updated
-                  _buildIconButton('Tambah Barang', Icons.add_circle, '/add-item'), // Icon updated
-                  _buildIconButton('Daftar Member', Icons.group, '/members'), // Icon updated
-                  _buildIconButton('Input harga/promo', Icons.price_check, '/promo'), // Icon updated
-                  _buildIconButton('Jurnal', Icons.book, '/journal'), // Icon updated
+                  _buildIconButton('Kategori', Icons.list, '/category'),
+                  _buildIconButton('Riwayat', Icons.access_time, '/history'),
+                  _buildIconButton('Tambah Barang', Icons.add_circle, '/add-item'),
+                  _buildIconButton('Daftar Member', Icons.group, '/members'),
+                  _buildIconButton('Input harga/promo', Icons.price_check, '/promo'),
+                  _buildIconButton('Jurnal', Icons.book, '/journal'),
                 ],
               ),
             ),

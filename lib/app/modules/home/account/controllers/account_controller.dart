@@ -10,35 +10,35 @@ import '../models/akun_model.dart';
 import '../../../../routes/app_pages.dart';
 
 class AccountController extends GetxController {
-  var account = Account().obs;
+  var account = Account().obs; // Account model observable
   final ImagePicker _picker = ImagePicker();
   final box = GetStorage();
 
   @override
   void onInit() {
     super.onInit();
-    loadAccountData();
+    loadAccountData(); // Load account data on initialization
   }
 
   void loadAccountData() {
     account.update((val) {
-      val?.name = box.read('name') ?? 'Guest';
-      val?.profileImagePath = box.read('profileImagePath') ?? '';
+      val?.name = box.read('name') ?? 'Guest'; // Load name or set to 'Guest'
+      val?.profileImagePath = box.read('profileImagePath') ?? ''; // Load profile image path
     });
   }
 
   void updateName(String newName) {
     account.update((val) {
-      val?.name = newName;
+      val?.name = newName; // Update name in account
     });
-    box.write('name', newName);
+    box.write('name', newName); // Save new name to GetStorage
   }
 
   void updateProfileImage(String newImagePath) {
     account.update((val) {
-      val?.profileImagePath = newImagePath;
+      val?.profileImagePath = newImagePath; // Update profile image path in account
     });
-    box.write('profileImagePath', newImagePath);
+    box.write('profileImagePath', newImagePath); // Save new image path to GetStorage
   }
 
   void logout() {
@@ -49,17 +49,17 @@ class AccountController extends GetxController {
   Future<void> requestPermissions() async {
     var statusCamera = await Permission.camera.status;
     if (!statusCamera.isGranted) {
-      await Permission.camera.request();
+      await Permission.camera.request(); // Request camera permission
     }
 
     var statusStorage = await Permission.storage.status;
     if (!statusStorage.isGranted) {
-      await Permission.storage.request();
+      await Permission.storage.request(); // Request storage permission
     }
   }
 
   Future<void> pickImage(String source) async {
-    await requestPermissions();
+    await requestPermissions(); // Ensure permissions are granted
 
     if (source == 'gallery') {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -94,4 +94,8 @@ class AccountController extends GetxController {
       }
     }
   }
+
+  void pickImageFromGallery() {}
+
+  void pickImageFromCamera() {}
 }

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pemrograman_mobile/app/routes/app_pages.dart';
-import '../../account/controllers/account_controller.dart'; // Make sure to import the AccountController
+import '../../account/controllers/account_controller.dart';
 
 class LoginController extends GetxController {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final box = GetStorage();
-  final AccountController accountController = Get.put(AccountController()); // Create an instance of AccountController
+  final AccountController accountController = Get.put(AccountController()); 
 
-  Future<bool> login() async { // Change the return type to Future<bool>
+  Future<bool> login() async {
     String username = usernameController.text.trim();
     String password = passwordController.text.trim();
     String storedPassword = box.read('password') ?? '';

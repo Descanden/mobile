@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pemrograman_mobile/app/modules/home/account/views/profile_view.dart';
-import '../controllers/account_controller.dart';
-import '../../your_profile/controllers/your_profile_controller.dart';
+import 'package:pemrograman_mobile/app/modules/home/account/controllers/account_controller.dart';
+import 'package:pemrograman_mobile/app/modules/home/your_profile/controllers/your_profile_controller.dart';
 import '../../../../routes/app_pages.dart';
 
 class AccountView extends StatelessWidget {
-  AccountView({super.key});
+  AccountView({Key? key}) : super(key: key);
+
   final AccountController accountController = Get.put(AccountController());
   final YourProfileController yourProfileController = Get.put(YourProfileController());
 
@@ -22,28 +22,25 @@ class AccountView extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Get.back(),
         ),
       ),
       body: Column(
         children: [
           const SizedBox(height: 20),
           Obx(() {
+            String imagePath = yourProfileController.profileImagePath.value; // Accessing the value
             return GestureDetector(
-              onTap: () {
-                _showImageSourceDialog(context);
-              },
+              onTap: () => _showImageSourceDialog(context),
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: yourProfileController.profileImagePath.isNotEmpty
+                    backgroundImage: imagePath.isNotEmpty && File(imagePath).existsSync()
                         ? (kIsWeb
-                            ? NetworkImage(yourProfileController.profileImagePath as String) as ImageProvider
-                            : FileImage(File(yourProfileController.profileImagePath as String)))
+                            ? NetworkImage(imagePath)
+                            : FileImage(File(imagePath)))
                         : const AssetImage('lib/assets/Formal_Rofiq.jpg'),
                   ),
                   Container(
@@ -59,35 +56,29 @@ class AccountView extends StatelessWidget {
           const SizedBox(height: 10),
           Obx(() {
             return Text(
-              yourProfileController.name.value, // Use name from YourProfileController
+              yourProfileController.name.value, // Accessing the value
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             );
           }),
           const SizedBox(height: 30),
           ProfileMenu(
             title: 'Your Profile',
-            onTap: () {
-              Get.toNamed(Routes.YOUR_PROFILE); // Navigate to Your Profile
-            },
+            onTap: () => Get.toNamed(Routes.YOUR_PROFILE),
           ),
           ProfileMenu(
             title: 'Password Manager',
-            onTap: () {
-              Get.toNamed(Routes.PASSWORD_MANAGER); // Navigate to Password Manager
-            },
+            onTap: () => Get.toNamed(Routes.PASSWORD_MANAGER),
           ),
           ProfileMenu(title: 'Settings', onTap: () {}),
           ProfileMenu(
             title: 'Log out',
-            onTap: () {
-              _showLogoutConfirmation(context); // Show logout confirmation
-            },
+            onTap: () => _showLogoutConfirmation(context),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: 4, // Set index for Account page
+        currentIndex: 4,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Kategori'),
@@ -98,19 +89,19 @@ class AccountView extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              Get.offAllNamed(Routes.HOME_PAGE); // Navigate to Home without back button
+              Get.offAllNamed(Routes.HOME_PAGE);
               break;
             case 1:
-              Get.toNamed('/kategori'); // Navigate to Kategori
+              Get.toNamed('/kategori');
               break;
             case 2:
-              Get.toNamed('/riwayat'); // Navigate to Riwayat
+              Get.toNamed('/riwayat');
               break;
             case 3:
-              Get.toNamed('/penjualan'); // Navigate to Penjualan
+              Get.toNamed('/penjualan');
               break;
             case 4:
-              Get.offAllNamed(Routes.ACCOUNT); // Navigate to Account without back button
+              Get.offAllNamed(Routes.ACCOUNT);
               break;
           }
         },
@@ -126,14 +117,14 @@ class AccountView extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () {
-              yourProfileController.pickImage('camera'); // Use yourProfileController
+              yourProfileController.pickImage('camera');
               Navigator.of(context).pop();
             },
             child: const Text('Camera'),
           ),
           TextButton(
             onPressed: () {
-              yourProfileController.pickImage('gallery'); // Use yourProfileController
+              yourProfileController.pickImage('gallery');
               Navigator.of(context).pop();
             },
             child: const Text('Gallery'),
@@ -159,7 +150,6 @@ class AccountView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Teks LOGOUT dengan garis bawah
               Column(
                 children: [
                   const Text(
@@ -167,36 +157,30 @@ class AccountView extends StatelessWidget {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 5),
-                  Container(
-                    width: 60,
-                    height: 2,
-                    color: Colors.black, // Garis di bawah tulisan Log out
-                  ),
+                  Container(width: 60, height: 2, color: Colors.black),
                 ],
               ),
               const SizedBox(height: 20),
               const Text(
                 'Are you sure want to log out?',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300), // Menggunakan extra light
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context); // Close the modal
-                    },
+                    onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey, // Cancel button color
+                      backgroundColor: Colors.grey,
                     ),
                     child: const Text('Cancel', style: TextStyle(color: Colors.white)),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      accountController.logout(); // Handle log out
+                      accountController.logout();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.brown, // Logout button color
+                      backgroundColor: Colors.brown,
                     ),
                     child: const Text('Log out', style: TextStyle(color: Colors.white)),
                   ),
@@ -206,6 +190,21 @@ class AccountView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class ProfileMenu extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+
+  const ProfileMenu({Key? key, required this.title, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(title),
+      onTap: onTap,
     );
   }
 }

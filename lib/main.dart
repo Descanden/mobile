@@ -17,9 +17,24 @@ void main() async {
     box.write('password', 'sasha');
   }
 
-  runApp(GetMaterialApp(
-    debugShowCheckedModeBanner: false,
-    initialRoute: AppPages.INITIAL,
-    getPages: AppPages.routes, 
-  ));
+  // Initialize the default name if it doesn't exist
+  if (box.read('name') == null) {
+    box.write('name', 'Guest');
+  }
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: "Your App Title",
+      initialRoute: Routes.LOGIN,
+      getPages: AppPages.routes,
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }

@@ -16,7 +16,7 @@ class YourProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Set initial value from controller
-    nameController.text = yourProfileController.name.value;
+    nameController.text = yourProfileController.name.value; // Accessing RxString value
 
     return Scaffold(
       appBar: AppBar(
@@ -48,10 +48,10 @@ class YourProfileView extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: yourProfileController.profileImagePath.isNotEmpty
+                    backgroundImage: yourProfileController.profileImagePath.value.isNotEmpty
                         ? (kIsWeb
-                            ? NetworkImage(yourProfileController.profileImagePath as String) 
-                            : FileImage(File(yourProfileController.profileImagePath as String)))
+                            ? NetworkImage(yourProfileController.profileImagePath.value) // Accessing RxString value
+                            : FileImage(File(yourProfileController.profileImagePath.value)))
                         : const AssetImage('lib/assets/Formal_Rofiq.jpg'),
                   ),
                   Container(

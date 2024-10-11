@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 
+import '../modules/home/EditSupplier/bindings/edit_supplier_binding.dart';
+import '../modules/home/EditSupplier/views/edit_supplier_view.dart';
+import '../modules/home/TambahSupplier/bindings/tambah_supplier_binding.dart';
+import '../modules/home/TambahSupplier/views/tambah_supplier_view.dart';
 import '../modules/home/account/bindings/account_binding.dart';
 import '../modules/home/account/views/account_view.dart';
 import '../modules/home/category/bindings/category_binding.dart';
@@ -20,6 +24,8 @@ import '../modules/home/product3/bindings/product3_binding.dart';
 import '../modules/home/product3/views/product3_view.dart';
 import '../modules/home/settings/bindings/settings_binding.dart';
 import '../modules/home/settings/views/settings_view.dart';
+import '../modules/home/supplier/bindings/supplier_binding.dart';
+import '../modules/home/supplier/views/supplier_view.dart';
 import '../modules/home/your_profile/bindings/your_profile_binding.dart';
 import '../modules/home/your_profile/views/your_profile_view.dart';
 
@@ -85,6 +91,21 @@ class AppPages {
       name: _Paths.PRODUCT3,
       page: () => const Product3View(),
       binding: Product3Binding(),
+    ),
+    GetPage(
+      name: _Paths.SUPPLIER,
+      page: () => const SupplierView(),
+      binding: SupplierBinding(),
+    ),
+    GetPage(
+      name: _Paths.TAMBAH_SUPPLIER,
+      page: () => TambahSupplierView(),
+      binding: TambahSupplierBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_SUPPLIER,
+      page: () => EditSupplierView(),
+      binding: EditSupplierBinding(),
     ),
   ];
 }

@@ -13,6 +13,9 @@ abstract class Routes {
   static const DESCRIPTION = _Paths.DESCRIPTION;
   static const PRODUCT2 = _Paths.PRODUCT2;
   static const PRODUCT3 = _Paths.PRODUCT3;
+  static const SUPPLIER = _Paths.SUPPLIER;
+  static const TAMBAH_SUPPLIER = _Paths.TAMBAH_SUPPLIER;
+  static const EDIT_SUPPLIER = _Paths.EDIT_SUPPLIER;
 }
 
 abstract class _Paths {
@@ -28,4 +31,7 @@ abstract class _Paths {
   static const DESCRIPTION = '/description';
   static const PRODUCT2 = '/product2';
   static const PRODUCT3 = '/product3';
-}
+  static const SUPPLIER = '/supplier';
+  static const TAMBAH_SUPPLIER = '/tambah-supplier';
+  static const EDIT_SUPPLIER = '/edit-supplier';
+} 

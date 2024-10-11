@@ -84,6 +84,19 @@ class ProductView extends GetView<ProductController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 17),
+              // Menambahkan judul "Bomber Jacket"
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Bomber Jacket',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 17), // Jarak antara judul dan grid
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -215,7 +228,7 @@ class ProductView extends GetView<ProductController> {
                 Get.offNamed('/riwayat');
                 break;
               case 3:
-                Get.offNamed('/penjualan');
+                // Get.offNamed('/penjualan');
                 break;
               case 4:
                 Get.offNamed('/account');

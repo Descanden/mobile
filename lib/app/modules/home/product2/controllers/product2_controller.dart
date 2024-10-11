@@ -5,13 +5,13 @@ class Product2Controller extends GetxController {
   // List of products
   final productList = [
     Product(
-      image: 'lib/assets/Photo 2 Shopping List.jpg',
+      image: 'lib/assets/hw3.jpeg',
       title: 'Kaos Heavyweight Hitam',
       price: 142000,
       description: 'Kaos heavyweight ini terbuat dari 100% katun, memberikan kenyamanan maksimal. Cocok untuk tampilan kasual sehari-hari.',
     ),
     Product(
-      image: 'lib/assets/Frame home.jpg',
+      image: 'lib/assets/hw4.jpeg',
       title: 'Kaos Heavyweight Coklat',
       price: 150000,
       description: 'Kaos coklat ini memiliki desain klasik yang timeless, ideal untuk dipadukan dengan berbagai outfit.',
@@ -23,7 +23,7 @@ class Product2Controller extends GetxController {
       description: 'Kaos oversize ini memberikan gaya santai dan trendy, cocok untuk yang menyukai fashion yang lebih leluasa.',
     ),
     Product(
-      image: 'lib/assets/heavyweight.jpg',
+      image: 'lib/assets/hw2.jpeg',
       title: 'Kaos Heavyweight Boxy',
       price: 102000,
       description: 'Kaos boxy ini dirancang dengan potongan yang modern, memberikan tampilan stylish dan nyaman.',

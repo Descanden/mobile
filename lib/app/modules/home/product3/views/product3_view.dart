@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pemrograman_mobile/app/modules/home/settings/controllers/settings_controller.dart';
-import '../controllers/product2_controller.dart';
+import '../controllers/product3_controller.dart';
 
-class Product2View extends GetView<Product2Controller> {
-  const Product2View({super.key});
+class Product3View extends GetView<Product3Controller> {
+  const Product3View({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,6 @@ class Product2View extends GetView<Product2Controller> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 17),
-              // Menambahkan Padding untuk teks 'Bomber Jacket'
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
@@ -96,7 +95,6 @@ class Product2View extends GetView<Product2Controller> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10), // Menambahkan jarak di bawah judul
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -110,7 +108,97 @@ class Product2View extends GetView<Product2Controller> {
                 itemCount: controller.productList.length,
                 itemBuilder: (context, index) {
                   final product = controller.productList[index];
-                  return buildProductCard(product, isDarkMode);
+                  return Card(
+                    color: isDarkMode ? Colors.grey[850] : Colors.white,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset(
+                                    product.image,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.add, color: Colors.black),
+                                    onPressed: () {
+                                      // Navigasi ke halaman detail produk
+                                      Get.toNamed('/description', arguments: {
+                                        'title': product.title,
+                                        'image': product.image,
+                                        'price': product.price,
+                                        'description': product.description,
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.title,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'Rp ${product.price}',
+                                style: const TextStyle(color: Colors.brown, fontSize: 12),
+                              ),
+                              const SizedBox(height: 5),
+                              // Tampilkan deskripsi singkat
+                              Text(
+                                product.description.length > 30
+                                    ? product.description.substring(0, 30) + '...'
+                                    : product.description,
+                                style: TextStyle(
+                                  color: isDarkMode ? Colors.white54 : Colors.black54,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ],
@@ -148,99 +236,5 @@ class Product2View extends GetView<Product2Controller> {
         ),
       );
     });
-  }
-
-  Widget buildProductCard(Product product, bool isDarkMode) {
-    return Card(
-      color: isDarkMode ? Colors.grey[850] : Colors.white,
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                      product.image,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      icon: const Icon(Icons.add, color: Colors.black),
-                      onPressed: () {
-                        // Navigasi ke halaman detail produk
-                        Get.toNamed('/description', arguments: {
-                          'title': product.title,
-                          'image': product.image,
-                          'price': product.price,
-                          'description': product.description,
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  'Rp ${product.price}',
-                  style: const TextStyle(color: Colors.brown, fontSize: 12),
-                ),
-                const SizedBox(height: 5),
-                // Tampilkan deskripsi singkat
-                Text(
-                  product.description.length > 30
-                      ? product.description.substring(0, 30) + '...'
-                      : product.description,
-                  style: TextStyle(
-                    color: isDarkMode ? Colors.white54 : Colors.black54,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

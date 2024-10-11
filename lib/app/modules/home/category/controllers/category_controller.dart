@@ -7,16 +7,15 @@ class CategoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Add some example products to the list
     loadProducts();
   }
 
   void loadProducts() {
     products.value = [
       Product(
-        imagePath: 'lib/assets/Photo 1 Shopping List.jpg',
-        title: 'Denim Overall Shorts',
-        description: 'Denim Overall Shorts adalah celana pendek berbahan denim dengan tali bahu, memberikan gaya kasual dan santai.',
+        imagePath: 'lib/assets/bomber jacket.jpeg',
+        title: 'Bomber Jacket',
+        description: 'Bomber jacket adalah simbol dari kombinasi fungsionalitas dan gaya yang menembus batas waktu dan budaya.',
       ),
       Product(
         imagePath: 'lib/assets/Photo 2 Shopping List.jpg',

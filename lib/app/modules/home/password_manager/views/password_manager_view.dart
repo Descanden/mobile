@@ -145,7 +145,7 @@ class PasswordManagerView extends StatelessWidget {
               Get.toNamed('/riwayat'); // Navigate to Riwayat
               break;
             case 3:
-              Get.toNamed('/penjualan'); // Navigate to Penjualan
+              Get.toNamed('/product'); // Navigate to Penjualan
               break;
             case 4:
               Get.offAllNamed(Routes.ACCOUNT); // Navigate to Account

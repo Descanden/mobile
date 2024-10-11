@@ -164,7 +164,7 @@ class YourProfileView extends StatelessWidget {
               Get.toNamed('/riwayat');
               break;
             case 3:
-              Get.toNamed('/penjualan');
+              Get.toNamed('/product');
               break;
             case 4:
               Get.toNamed(Routes.ACCOUNT);

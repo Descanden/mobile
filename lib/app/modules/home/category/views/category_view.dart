@@ -64,14 +64,27 @@ class CategoryView extends GetView<CategoryController> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: controller.products.map((product) {
+            children: List.generate(controller.products.length, (index) {
+              final product = controller.products[index];
               return ProductCard(
                 imagePath: product.imagePath,
                 title: product.title,
                 description: product.description,
                 isDarkMode: isDarkMode,
+                onCheckPressed: () {
+                  // Navigate to the appropriate product page based on index
+                  if (index == 0) {
+                    Get.toNamed('/product'); // Navigate to the first product page
+                  } else if (index == 1) {
+                    Get.toNamed('/product2'); // Navigate to the second product page
+                  } else if (index == 2) {
+                    Get.toNamed('/product3'); // Navigate to the third product page
+                  } else {
+                    print('Check button pressed for product ${index + 1}');
+                  }
+                },
               );
-            }).toList(),
+            }),
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -96,7 +109,7 @@ class CategoryView extends GetView<CategoryController> {
                 Get.toNamed('/riwayat');
                 break;
               case 3:
-                Get.toNamed('/penjualan');
+                Get.toNamed('/product');
                 break;
               case 4:
                 Get.offAllNamed('/account');
@@ -115,14 +128,16 @@ class ProductCard extends StatelessWidget {
   final String title;
   final String description;
   final bool isDarkMode;
+  final VoidCallback onCheckPressed; // Callback for button press
 
   const ProductCard({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.title,
     required this.description,
     required this.isDarkMode,
-  }) : super(key: key);
+    required this.onCheckPressed, // Pass the callback function
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +153,6 @@ class ProductCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // The image remains on the left
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.asset(
@@ -180,13 +194,11 @@ class ProductCard extends StatelessWidget {
                           vertical: 12.0,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0), // More rectangular with slightly rounded corners
+                          borderRadius: BorderRadius.circular(10.0), // Slightly rounded corners
                           side: const BorderSide(color: Colors.black), // Adding a border
                         ),
                       ),
-                      onPressed: () {
-                        // Implement the "Check" button functionality here
-                      },
+                      onPressed: onCheckPressed, // Call the passed callback function
                       child: const Text('Check'),
                     ),
                   ),

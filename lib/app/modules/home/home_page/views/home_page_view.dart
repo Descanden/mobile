@@ -29,7 +29,7 @@ class HomePageView extends GetView<HomePageController> {
                   color: settingsController.isDarkMode.value
                       ? const Color(0xFF2A2A2A)
                       : Colors.white, // Ubah warna latar belakang
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(25),
                 ),
                 child: TextField(
                   decoration: InputDecoration(
@@ -73,7 +73,7 @@ class HomePageView extends GetView<HomePageController> {
                 borderRadius: BorderRadius.circular(12.0),
                 child: Image.asset(
                   'lib/assets/Frame home.jpg', // Image path
-                  height: 220, // Increased height slightly for a larger image
+                  height: 330, // Increased height slightly for a larger image
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
@@ -88,7 +88,7 @@ class HomePageView extends GetView<HomePageController> {
                 children: [
                   _buildCategoryButton('Supplier', '/supplier',
                       settingsController.isDarkMode.value),
-                  _buildCategoryButton('Biaya Operasional', '/operational',
+                  _buildCategoryButton('Operasional', '/operational',
                       settingsController.isDarkMode.value),
                   _buildCategoryButton('Pegawai', '/employee',
                       settingsController.isDarkMode.value),
@@ -96,6 +96,7 @@ class HomePageView extends GetView<HomePageController> {
               ),
             ),
             const SizedBox(height: 20),
+            const SizedBox(width: 25),
             // Icon Grid
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -152,7 +153,7 @@ class HomePageView extends GetView<HomePageController> {
               Get.toNamed('/riwayat'); // Navigate to Riwayat
               break;
             case 3:
-              Get.toNamed('/penjualan'); // Navigate to Penjualan
+              Get.toNamed('/product'); // Navigate to Penjualan
               break;
             case 4:
               Get.toNamed('/account'); // Navigate to Account

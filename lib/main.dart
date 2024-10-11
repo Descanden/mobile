@@ -29,7 +29,7 @@ void main() async {
   // Set initial theme based on stored preference
   settingsController.isDarkMode.value = box.read('darkMode') ?? false;
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

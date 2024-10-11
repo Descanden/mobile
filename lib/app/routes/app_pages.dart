@@ -4,12 +4,18 @@ import '../modules/home/account/bindings/account_binding.dart';
 import '../modules/home/account/views/account_view.dart';
 import '../modules/home/category/bindings/category_binding.dart';
 import '../modules/home/category/views/category_view.dart';
+import '../modules/home/description/bindings/description_binding.dart';
+import '../modules/home/description/views/description_view.dart';
 import '../modules/home/home_page/bindings/home_page_binding.dart';
 import '../modules/home/home_page/views/home_page_view.dart';
 import '../modules/home/login/bindings/login_binding.dart';
 import '../modules/home/login/views/login_view.dart';
 import '../modules/home/password_manager/bindings/password_manager_binding.dart';
 import '../modules/home/password_manager/views/password_manager_view.dart';
+import '../modules/home/product/bindings/product_binding.dart';
+import '../modules/home/product/views/product_view.dart';
+import '../modules/home/product2/bindings/product2_binding.dart';
+import '../modules/home/product2/views/product2_view.dart';
 import '../modules/home/settings/bindings/settings_binding.dart';
 import '../modules/home/settings/views/settings_view.dart';
 import '../modules/home/your_profile/bindings/your_profile_binding.dart';
@@ -57,6 +63,21 @@ class AppPages {
       name: _Paths.CATEGORY,
       page: () => const CategoryView(),
       binding: CategoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRODUCT,
+      page: () => const ProductView(),
+      binding: ProductBinding(),
+    ),
+    GetPage(
+      name: _Paths.DESCRIPTION,
+      page: () => const DescriptionView(),
+      binding: DescriptionBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRODUCT2,
+      page: () => const Product2View(),
+      binding: Product2Binding(),
     ),
   ];
 }

@@ -19,6 +19,11 @@ abstract class Routes {
   static const PEGAWAI = _Paths.PEGAWAI;
   static const TAMBAH_PEGAWAI = _Paths.TAMBAH_PEGAWAI;
   static const EDIT_PEGAWAI = _Paths.EDIT_PEGAWAI;
+  static const OPERASIONAL = _Paths.OPERASIONAL;
+  static const TAMBAH_OPERASIONAL = _Paths.TAMBAH_OPERASIONAL;
+  static const ADD_ITEM = _Paths.ADD_ITEM;
+  static const HISTORY = _Paths.HISTORY;
+  static const JOURNAL = _Paths.JOURNAL;
 }
 
 abstract class _Paths {
@@ -40,4 +45,9 @@ abstract class _Paths {
   static const PEGAWAI = '/pegawai';
   static const TAMBAH_PEGAWAI = '/tambah-pegawai';
   static const EDIT_PEGAWAI = '/edit-pegawai';
+  static const OPERASIONAL = '/operasional';
+  static const TAMBAH_OPERASIONAL = '/tambah-operasional';
+  static const ADD_ITEM = '/add-item';
+  static const HISTORY = '/history';
+  static const JOURNAL = '/journal';
 }

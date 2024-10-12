@@ -144,13 +144,13 @@ class HomePageView extends GetView<HomePageController> {
         onTap: (index) {
           switch (index) {
             case 0:
-              Get.toNamed('/home'); // Navigate to Home
+              Get.toNamed('/home-page'); // Navigate to Home
               break;
             case 1:
               Get.toNamed('/category'); // Navigate to Kategori
               break;
             case 2:
-              Get.toNamed('/riwayat'); // Navigate to Riwayat
+              Get.toNamed('/history'); // Navigate to Riwayat
               break;
             case 3:
               Get.toNamed('/penjualan'); // Navigate to Penjualan

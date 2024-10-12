@@ -32,53 +32,71 @@ class YourProfileController extends GetxController {
   }
 
   // Request permissions for camera and storage
-  Future<void> requestPermissions() async {
-    var statusCamera = await Permission.camera.status;
-    if (!statusCamera.isGranted) {
-      await Permission.camera.request(); // Request camera permission
+  Future<bool> requestPermissions() async {
+    // Request camera permission
+    var cameraStatus = await Permission.camera.request();
+    if (!cameraStatus.isGranted) {
+      Get.snackbar('Permission Denied', 'Camera access is needed to take a photo.');
+      return false; // Return false if camera permission is not granted
     }
 
-    var statusStorage = await Permission.storage.status;
-    if (!statusStorage.isGranted) {
-      await Permission.storage.request(); // Request storage permission
+    // Request storage permission
+    var storageStatus = await Permission.storage.request();
+    if (!storageStatus.isGranted) {
+      Get.snackbar('Permission Denied', 'Storage access is needed to save images.');
+      return false; // Return false if storage permission is not granted
     }
+
+    return true; // Both permissions are granted
   }
 
   // Pick image from gallery or camera
   Future<void> pickImage(String source) async {
-    await requestPermissions(); // Ensure permissions are granted
+    bool permissionsGranted = await requestPermissions(); // Ensure permissions are granted
+    if (!permissionsGranted) {
+      return; // Exit if permissions are not granted
+    }
 
-    if (source == 'gallery') {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-      );
+    try {
+      if (source == 'gallery') {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.image,
+        );
 
-      if (result != null) {
-        if (kIsWeb) {
-          Uint8List? bytes = result.files.single.bytes;
-          if (bytes != null) {
+        if (result != null && result.files.isNotEmpty) {
+          if (kIsWeb) {
+            Uint8List? bytes = result.files.single.bytes;
+            if (bytes != null) {
+              String base64Image = base64Encode(bytes);
+              String imageData = 'data:image/png;base64,$base64Image';
+              updateProfileImage(imageData); // Update profile image path
+            }
+          } else {
+            String filePath = result.files.single.path!;
+            updateProfileImage(filePath); // Update profile image path
+          }
+        } else {
+          Get.snackbar('No Image Selected', 'Please select an image from gallery.');
+        }
+      } else if (source == 'camera') {
+        final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+        if (photo != null) {
+          if (kIsWeb) {
+            Uint8List bytes = await photo.readAsBytes();
             String base64Image = base64Encode(bytes);
             String imageData = 'data:image/png;base64,$base64Image';
             updateProfileImage(imageData); // Update profile image path
+          } else {
+            String filePath = photo.path;
+            updateProfileImage(filePath); // Update profile image path
           }
         } else {
-          String filePath = result.files.single.path!;
-          updateProfileImage(filePath); // Update profile image path
+          Get.snackbar('No Image Taken', 'Please take a photo using the camera.');
         }
       }
-    } else if (source == 'camera') {
-      final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-      if (photo != null) {
-        if (kIsWeb) {
-          Uint8List bytes = await photo.readAsBytes();
-          String base64Image = base64Encode(bytes);
-          String imageData = 'data:image/png;base64,$base64Image';
-          updateProfileImage(imageData); // Update profile image path
-        } else {
-          String filePath = photo.path;
-          updateProfileImage(filePath); // Update profile image path
-        }
-      }
+    } catch (e) {
+      // Handle errors while picking image
+      Get.snackbar('Error', 'Failed to pick image: $e');
     }
   }
 

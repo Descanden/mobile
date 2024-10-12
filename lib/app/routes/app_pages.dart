@@ -1,9 +1,19 @@
 import 'package:get/get.dart';
 
+import '../modules/home/AddItem/bindings/add_item_binding.dart';
+import '../modules/home/AddItem/views/add_item_view.dart';
 import '../modules/home/EditPegawai/bindings/edit_pegawai_binding.dart';
 import '../modules/home/EditPegawai/views/edit_pegawai_view.dart';
 import '../modules/home/EditSupplier/bindings/edit_supplier_binding.dart';
 import '../modules/home/EditSupplier/views/edit_supplier_view.dart';
+import '../modules/home/History/bindings/history_binding.dart';
+import '../modules/home/History/views/history_view.dart';
+import '../modules/home/Journal/bindings/journal_binding.dart';
+import '../modules/home/Journal/views/journal_view.dart';
+import '../modules/home/Operasional/bindings/operasional_binding.dart';
+import '../modules/home/Operasional/views/operasional_view.dart';
+import '../modules/home/TambahOperasional/bindings/tambah_operasional_binding.dart';
+import '../modules/home/TambahOperasional/views/tambah_operasional_view.dart';
 import '../modules/home/TambahPegawai/bindings/tambah_pegawai_binding.dart';
 import '../modules/home/TambahPegawai/views/tambah_pegawai_view.dart';
 import '../modules/home/TambahSupplier/bindings/tambah_supplier_binding.dart';
@@ -127,6 +137,31 @@ class AppPages {
       name: _Paths.EDIT_PEGAWAI,
       page: () => EditPegawaiView(),
       binding: EditPegawaiBinding(),
+    ),
+    GetPage(
+      name: _Paths.OPERASIONAL,
+      page: () => OperasionalView(),
+      binding: OperasionalBinding(),
+    ),
+    GetPage(
+      name: _Paths.TAMBAH_OPERASIONAL,
+      page: () => TambahOperasionalView(),
+      binding: TambahOperasionalBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADD_ITEM,
+      page: () => const AddItemView(),
+      binding: AddItemBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY,
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.JOURNAL,
+      page: () => const JournalView(),
+      binding: JournalBinding(),
     ),
   ];
 }

@@ -74,80 +74,64 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                 ),
               ),
               const SizedBox(height: 10),
-              // Input field untuk alamat
-              TextField(
-                controller: controller.addressController,
-                decoration: InputDecoration(
-                  labelText: 'Alamat',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                ),
-              ),
-              const SizedBox(height: 10),
-              // Input field untuk deskripsi
-              TextField(
-                controller: controller.descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Deskripsi',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                ),
-              ),
-              const SizedBox(height: 10),
               // Dropdown role pegawai
               Obx(() => DropdownButtonFormField<String>(
-                value: controller.selectedPegawaiRole.value,
-                onChanged: (newValue) {
-                  controller.selectedPegawaiRole.value = newValue!;
-                },
-                items: <String>['Admin', 'Kasir', 'Karyawan', 'Gudang'].map((String role) {
-                  return DropdownMenuItem<String>(
-                    value: role,
-                    child: Text(role),
-                  );
-                }).toList(),
-                decoration: InputDecoration(
-                  labelText: 'Role Pegawai',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                ),
-              )),
+                    value: controller.selectedPegawaiRole.value,
+                    decoration: InputDecoration(
+                      labelText: 'Role Pegawai',
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                    ),
+                    items: ['Admin', 'Staff', 'Manager']
+                        .map((role) => DropdownMenuItem<String>(
+                              value: role,
+                              child: Text(role),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.selectedPegawaiRole.value = value;
+                      }
+                    },
+                  )),
               const SizedBox(height: 10),
               // Dropdown status pegawai
               Obx(() => DropdownButtonFormField<String>(
-                value: controller.selectedStatus.value,
-                onChanged: (newValue) {
-                  controller.selectedStatus.value = newValue!;
-                },
-                items: <String>['Active', 'Inactive'].map((String status) {
-                  return DropdownMenuItem<String>(
-                    value: status,
-                    child: Text(status),
-                  );
-                }).toList(),
-                decoration: InputDecoration(
-                  labelText: 'Status Pegawai',
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                ),
-              )),
+                    value: controller.selectedStatus.value,
+                    decoration: InputDecoration(
+                      labelText: 'Status Pegawai',
+                      border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                    ),
+                    items: ['Active', 'Inactive']
+                        .map((status) => DropdownMenuItem<String>(
+                              value: status,
+                              child: Text(status),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        controller.selectedStatus.value = value;
+                      }
+                    },
+                  )),
               const SizedBox(height: 20),
-              // Tombol simpan pegawai
-              Center(
+              // Tombol untuk menambahkan pegawai
+              Center( // Menambahkan Center untuk memposisikan tombol di tengah
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown, // Mengubah latar belakang tombol
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Menambahkan padding
+                  ),
                   onPressed: () {
-                    // Aksi untuk menambah pegawai
                     controller.addPegawai(pegawaiController);
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.brown,
-                    foregroundColor: Colors.white,
+                  child: const Text(
+                    'Tambah Pegawai',
+                    style: TextStyle(color: Colors.white), // Mengubah warna teks menjadi putih
                   ),
-                  child: const Text('Simpan'),
                 ),
               ),
             ],

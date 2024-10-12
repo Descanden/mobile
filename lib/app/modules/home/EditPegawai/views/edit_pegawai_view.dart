@@ -6,7 +6,7 @@ import '../controllers/edit_pegawai_controller.dart';
 class EditPegawaiView extends StatelessWidget {
   final EditPegawaiController editController = Get.put(EditPegawaiController());
   final PegawaiController pegawaiController = Get.find<PegawaiController>();
-  final RxBool _obscurePassword = true.obs; // Menyimpan status password
+  final RxBool _obscurePassword = true.obs;
 
   EditPegawaiView({super.key});
 
@@ -29,18 +29,15 @@ class EditPegawaiView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Edit Pegawai', textAlign: TextAlign.left),
         centerTitle: false,
-        backgroundColor: Colors.transparent, // Mengatur warna latar belakang menjadi transparan
-        elevation: 0, // Menghilangkan bayangan di bawah AppBar
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bagian ini dihapus untuk menghilangkan garis di bawah header
-            // const Divider(thickness: 2.0, color: Colors.grey),
-
-            // Username Input Field
+            // Kolom Username
             TextField(
               controller: TextEditingController(text: editController.username.value),
               onChanged: (value) => editController.username.value = value,
@@ -56,7 +53,7 @@ class EditPegawaiView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Password Input Field
+            // Kolom Password
             Obx(() => TextField(
               controller: TextEditingController(text: editController.password.value),
               onChanged: (value) => editController.password.value = value,
@@ -74,14 +71,14 @@ class EditPegawaiView extends StatelessWidget {
                     _obscurePassword.value ? Icons.visibility : Icons.visibility_off,
                   ),
                   onPressed: () {
-                    _obscurePassword.value = !_obscurePassword.value; // Toggle visibility
+                    _obscurePassword.value = !_obscurePassword.value;
                   },
                 ),
               ),
             )),
             const SizedBox(height: 10),
 
-            // Nama Pegawai Input Field
+            // Kolom Nama Pegawai
             TextField(
               controller: TextEditingController(text: editController.namaPegawai.value),
               onChanged: (value) => editController.namaPegawai.value = value,
@@ -97,7 +94,7 @@ class EditPegawaiView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Nomor Telepon Input Field
+            // Kolom Nomor Telepon
             TextField(
               controller: TextEditingController(text: editController.nomorTelepon.value),
               onChanged: (value) => editController.nomorTelepon.value = value,
@@ -113,7 +110,7 @@ class EditPegawaiView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Role Input Field
+            // Kolom Role
             TextField(
               controller: TextEditingController(text: editController.role.value),
               onChanged: (value) => editController.role.value = value,
@@ -129,7 +126,7 @@ class EditPegawaiView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Status Input Field
+            // Kolom Status
             TextField(
               controller: TextEditingController(text: editController.status.value),
               onChanged: (value) => editController.status.value = value,
@@ -152,25 +149,17 @@ class EditPegawaiView extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () {
-                    // Tambahkan fungsi konfirmasi hapus jika diperlukan
+                    editController.showDeleteConfirmation(pegawai);
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    editController.updatePegawai(
-                      editController.username.value,
-                      editController.password.value,
-                      editController.namaPegawai.value,
-                      editController.nomorTelepon.value,
-                      editController.role.value,
-                      editController.status.value,
-                    );
-                    Get.back(); // Kembali setelah menyimpan
-                  },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.brown,
+                    foregroundColor: Colors.white, backgroundColor: Colors.brown, // Warna teks tombol
                   ),
-                  child: const Text('Simpan', style: TextStyle(color: Colors.white)),
+                  onPressed: () {
+                    editController.updatePegawai(pegawai);
+                  },
+                  child: const Text('Simpan'),
                 ),
               ],
             ),

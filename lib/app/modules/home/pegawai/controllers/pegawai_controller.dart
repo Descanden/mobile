@@ -7,8 +7,6 @@ class Pegawai {
   String password;
   String name;
   String phone;
-  String address;
-  String description;
   String role;
   String status;
 
@@ -17,8 +15,6 @@ class Pegawai {
     required this.password,
     required this.name,
     required this.phone,
-    required this.address,
-    required this.description,
     required this.role,
     required this.status,
   });
@@ -30,8 +26,6 @@ class Pegawai {
       'password': password,
       'name': name,
       'phone': phone,
-      'address': address,
-      'description': description,
       'role': role,
       'status': status,
     };
@@ -44,10 +38,8 @@ class Pegawai {
       password: json['password'],
       name: json['name'],
       phone: json['phone'],
-      address: json['address'],
-      description: json['description'],
       role: json['role'],
-      status: json['status'], // Parsing status dari JSON
+      status: json['status'],
     );
   }
 }
@@ -67,14 +59,13 @@ class PegawaiController extends GetxController {
   }
 
   // Method to add a new Pegawai
-  void addPegawai(String username, String password, String name, String phone, String address, String description, String role, String status) {
+  void addPegawai(String username, String password, String name, String phone,
+      String role, String status) {
     final newPegawai = Pegawai(
       username: username,
       password: password,
       name: name,
       phone: phone,
-      address: address,
-      description: description,
       role: role,
       status: status,
     );
@@ -86,7 +77,8 @@ class PegawaiController extends GetxController {
   // Method to save pegawai to GetStorage
   void savePegawai() {
     final box = GetStorage();
-    box.write('pegawai', pegawaiList.map((pegawai) => pegawai.toJson()).toList());
+    box.write(
+        'pegawai', pegawaiList.map((pegawai) => pegawai.toJson()).toList());
   }
 
   // Method to load pegawai from GetStorage
@@ -94,8 +86,10 @@ class PegawaiController extends GetxController {
     final box = GetStorage();
     var pegawaiFromStorage = box.read<List<dynamic>>('pegawai');
     if (pegawaiFromStorage != null) {
-      pegawaiList.assignAll(
-          pegawaiFromStorage.map((pegawai) => Pegawai.fromJson(Map<String, dynamic>.from(pegawai))).toList());
+      pegawaiList.assignAll(pegawaiFromStorage
+          .map(
+              (pegawai) => Pegawai.fromJson(Map<String, dynamic>.from(pegawai)))
+          .toList());
     }
   }
 
@@ -105,16 +99,16 @@ class PegawaiController extends GetxController {
       filteredPegawai.value = pegawaiList;
     } else {
       filteredPegawai.value = pegawaiList
-          .where((pegawai) => pegawai.name.toLowerCase().contains(query.toLowerCase()))
+          .where((pegawai) =>
+              pegawai.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
   }
 
   // Method to filter pegawai based on status
   void filterPegawaiByStatus(String status) {
-    filteredPegawai.value = pegawaiList
-        .where((pegawai) => pegawai.status == status)
-        .toList();
+    filteredPegawai.value =
+        pegawaiList.where((pegawai) => pegawai.status == status).toList();
   }
 
   // Method to delete a pegawai
@@ -124,11 +118,20 @@ class PegawaiController extends GetxController {
   }
 
   // Method to update a pegawai
-  void updatePegawai(Pegawai pegawai) {
-    int index = pegawaiList.indexOf(pegawai);
+  void updatePegawai(String username, String password, String name,
+      String phone, String role, String status) {
+    int index =
+        pegawaiList.indexWhere((pegawai) => pegawai.username == username);
     if (index != -1) {
-      pegawaiList[index] = pegawai; // Update pegawai details
-      savePegawai(); // Save updated list
+      pegawaiList[index] = Pegawai(
+        username: username,
+        password: password,
+        name: name,
+        phone: phone,
+        role: role,
+        status: status,
+      );
+      savePegawai(); // Save updated list to storage
     }
   }
 
@@ -141,8 +144,6 @@ class PegawaiController extends GetxController {
         password: pegawai.password,
         name: pegawai.name,
         phone: pegawai.phone,
-        address: pegawai.address,
-        description: pegawai.description,
         role: pegawai.role,
         status: newStatus,
       );

@@ -88,9 +88,9 @@ class HomePageView extends GetView<HomePageController> {
                 children: [
                   _buildCategoryButton('Supplier', '/supplier',
                       settingsController.isDarkMode.value),
-                  _buildCategoryButton('Operasional', '/operational',
+                  _buildCategoryButton('Operasional', '/operasional',
                       settingsController.isDarkMode.value),
-                  _buildCategoryButton('Pegawai', '/employee',
+                  _buildCategoryButton('Pegawai', '/pegawai',
                       settingsController.isDarkMode.value),
                 ],
               ),

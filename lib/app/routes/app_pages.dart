@@ -1,7 +1,11 @@
 import 'package:get/get.dart';
 
+import '../modules/home/EditPegawai/bindings/edit_pegawai_binding.dart';
+import '../modules/home/EditPegawai/views/edit_pegawai_view.dart';
 import '../modules/home/EditSupplier/bindings/edit_supplier_binding.dart';
 import '../modules/home/EditSupplier/views/edit_supplier_view.dart';
+import '../modules/home/TambahPegawai/bindings/tambah_pegawai_binding.dart';
+import '../modules/home/TambahPegawai/views/tambah_pegawai_view.dart';
 import '../modules/home/TambahSupplier/bindings/tambah_supplier_binding.dart';
 import '../modules/home/TambahSupplier/views/tambah_supplier_view.dart';
 import '../modules/home/account/bindings/account_binding.dart';
@@ -16,6 +20,8 @@ import '../modules/home/login/bindings/login_binding.dart';
 import '../modules/home/login/views/login_view.dart';
 import '../modules/home/password_manager/bindings/password_manager_binding.dart';
 import '../modules/home/password_manager/views/password_manager_view.dart';
+import '../modules/home/pegawai/bindings/pegawai_binding.dart';
+import '../modules/home/pegawai/views/pegawai_view.dart';
 import '../modules/home/product/bindings/product_binding.dart';
 import '../modules/home/product/views/product_view.dart';
 import '../modules/home/product2/bindings/product2_binding.dart';
@@ -106,6 +112,21 @@ class AppPages {
       name: _Paths.EDIT_SUPPLIER,
       page: () => EditSupplierView(),
       binding: EditSupplierBinding(),
+    ),
+    GetPage(
+      name: _Paths.PEGAWAI,
+      page: () => const PegawaiView(),
+      binding: PegawaiBinding(),
+    ),
+    GetPage(
+      name: _Paths.TAMBAH_PEGAWAI,
+      page: () => const TambahPegawaiView(),
+      binding: TambahPegawaiBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PEGAWAI,
+      page: () => EditPegawaiView(),
+      binding: EditPegawaiBinding(),
     ),
   ];
 }

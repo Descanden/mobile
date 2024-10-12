@@ -16,6 +16,9 @@ abstract class Routes {
   static const SUPPLIER = _Paths.SUPPLIER;
   static const TAMBAH_SUPPLIER = _Paths.TAMBAH_SUPPLIER;
   static const EDIT_SUPPLIER = _Paths.EDIT_SUPPLIER;
+  static const PEGAWAI = _Paths.PEGAWAI;
+  static const TAMBAH_PEGAWAI = _Paths.TAMBAH_PEGAWAI;
+  static const EDIT_PEGAWAI = _Paths.EDIT_PEGAWAI;
 }
 
 abstract class _Paths {
@@ -34,4 +37,7 @@ abstract class _Paths {
   static const SUPPLIER = '/supplier';
   static const TAMBAH_SUPPLIER = '/tambah-supplier';
   static const EDIT_SUPPLIER = '/edit-supplier';
-} 
+  static const PEGAWAI = '/pegawai';
+  static const TAMBAH_PEGAWAI = '/tambah-pegawai';
+  static const EDIT_PEGAWAI = '/edit-pegawai';
+}

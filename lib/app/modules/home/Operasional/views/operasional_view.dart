@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../controllers/operasional_controller.dart';
 
 class OperasionalView extends GetView<OperasionalController> {
-  const OperasionalView({Key? key}) : super(key: key);
+  const OperasionalView({super.key});
 
   @override
   Widget build(BuildContext context) {

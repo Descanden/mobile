@@ -4,7 +4,7 @@ import '../../supplier/controllers/supplier_controller.dart';
 import '../controllers/edit_supplier_controller.dart';
 
 class EditSupplierView extends GetView<EditSupplierController> {
-  EditSupplierView({super.key});
+  const EditSupplierView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +39,9 @@ class EditSupplierView extends GetView<EditSupplierController> {
                 labelText: 'Nama Supplier',
                 filled: true,
                 fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                border: const OutlineInputBorder(),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown, width: 2.0),
                 ),
               ),
             ),
@@ -55,9 +55,9 @@ class EditSupplierView extends GetView<EditSupplierController> {
                 labelText: 'No. Telepon',
                 filled: true,
                 fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                border: const OutlineInputBorder(),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown, width: 2.0),
                 ),
               ),
             ),
@@ -71,9 +71,9 @@ class EditSupplierView extends GetView<EditSupplierController> {
                 labelText: 'Alamat',
                 filled: true,
                 fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                border: const OutlineInputBorder(),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown, width: 2.0),
                 ),
               ),
             ),
@@ -88,9 +88,9 @@ class EditSupplierView extends GetView<EditSupplierController> {
                 labelText: 'Deskripsi',
                 filled: true,
                 fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.brown, width: 2.0),
+                border: const OutlineInputBorder(),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.brown, width: 2.0),
                 ),
               ),
             ),

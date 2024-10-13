@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.architexture_pattern"
+    namespace = "com.example.architexture_pattern" // Specify the namespace
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -41,4 +41,11 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// Optional: Add the following permissions to your AndroidManifest.xml
+android {
+    // Other configurations...
+
+    // If you need to add permissions, this should go into AndroidManifest.xml directly
 }

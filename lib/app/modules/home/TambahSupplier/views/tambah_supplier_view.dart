@@ -30,7 +30,7 @@ class TambahSupplierView extends GetView<TambahSupplierController> {
                 controller: controller.namaController,
                 decoration: InputDecoration(
                   labelText: 'Nama Supplier',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),
@@ -40,7 +40,7 @@ class TambahSupplierView extends GetView<TambahSupplierController> {
                 controller: controller.nomorController,
                 decoration: InputDecoration(
                   labelText: 'No. Telepon',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),
@@ -50,7 +50,7 @@ class TambahSupplierView extends GetView<TambahSupplierController> {
                 controller: controller.alamatController,
                 decoration: InputDecoration(
                   labelText: 'Alamat',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),
@@ -61,7 +61,7 @@ class TambahSupplierView extends GetView<TambahSupplierController> {
                 maxLines: 5,
                 decoration: InputDecoration(
                   labelText: 'Deskripsi',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),

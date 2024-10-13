@@ -97,7 +97,7 @@ class _DescriptionViewState extends State<DescriptionView> {
                   ),
                   TextButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       'Size Chart',
                       style: TextStyle(color: Colors.grey),
                     ),

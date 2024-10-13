@@ -24,6 +24,7 @@ abstract class Routes {
   static const ADD_ITEM = _Paths.ADD_ITEM;
   static const HISTORY = _Paths.HISTORY;
   static const JOURNAL = _Paths.JOURNAL;
+  static const MAP = _Paths.MAP;
 }
 
 abstract class _Paths {
@@ -50,4 +51,5 @@ abstract class _Paths {
   static const ADD_ITEM = '/add-item';
   static const HISTORY = '/history';
   static const JOURNAL = '/journal';
+  static const MAP = '/map';
 }

@@ -27,12 +27,12 @@ class HistoryView extends GetView<HistoryController> {
               child: TextField(
                 onChanged: (value) => controller.updateSearch(value),
                 style: const TextStyle(color: Colors.black), // Teks hitam agar terbaca
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey), // Ikon pencarian abu-abu
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: Colors.grey), // Ikon pencarian abu-abu
                   hintText: 'Cari riwayat',
-                  hintStyle: const TextStyle(color: Colors.grey), // Hint teks abu-abu
+                  hintStyle: TextStyle(color: Colors.grey), // Hint teks abu-abu
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                  contentPadding: EdgeInsets.symmetric(vertical: 15),
                 ),
               ),
             ),

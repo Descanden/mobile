@@ -1,0 +1,45 @@
+{
+    "locations": [
+      {
+        "id": 1,
+        "name": "Taman Nasional Gunung Leuser",
+        "latitude": 3.2608,
+        "longitude": 97.6060,
+        "address": "Jalan Nasional, Kec. Bahorok, Kab. Langkat, Sumatera Utara, Indonesia",
+        "type": "National Park"
+      },
+      {
+        "id": 2,
+        "name": "Candi Borobudur",
+        "latitude": -7.6079,
+        "longitude": 110.2022,
+        "address": "Jalan Badrawati, Borobudur, Magelang, Jawa Tengah, Indonesia",
+        "type": "Historical Site"
+      },
+      {
+        "id": 3,
+        "name": "Pantai Kuta",
+        "latitude": -8.7500,
+        "longitude": 115.1625,
+        "address": "Kuta, Badung, Bali, Indonesia",
+        "type": "Beach"
+      },
+      {
+        "id": 4,
+        "name": "Danau Toba",
+        "latitude": 2.2302,
+        "longitude": 98.8004,
+        "address": "Parapat, Simalungun, Sumatera Utara, Indonesia",
+        "type": "Lake"
+      },
+      {
+        "id": 5,
+        "name": "Gunung Bromo",
+        "latitude": -7.9420,
+        "longitude": 112.9536,
+        "address": "Sukapura, Probolinggo, Jawa Timur, Indonesia",
+        "type": "Mountain"
+      }
+    ]
+  }
+  

@@ -34,7 +34,7 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                 controller: controller.usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),
@@ -45,7 +45,7 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                 controller: controller.passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),
@@ -57,7 +57,7 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                 controller: controller.namaController,
                 decoration: InputDecoration(
                   labelText: 'Nama Pegawai',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),
@@ -68,7 +68,7 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                 controller: controller.nomorController,
                 decoration: InputDecoration(
                   labelText: 'Nomor Telepon',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                 ),
@@ -79,7 +79,7 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                     value: controller.selectedPegawaiRole.value,
                     decoration: InputDecoration(
                       labelText: 'Role Pegawai',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       filled: true,
                       fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                     ),
@@ -101,7 +101,7 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                     value: controller.selectedStatus.value,
                     decoration: InputDecoration(
                       labelText: 'Status Pegawai',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       filled: true,
                       fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
                     ),

@@ -188,7 +188,7 @@ class ProductView extends GetView<ProductController> {
                               // Tampilkan deskripsi singkat
                               Text(
                                 product.description.length > 30
-                                    ? product.description.substring(0, 30) + '...'
+                                    ? '${product.description.substring(0, 30)}...'
                                     : product.description,
                                 style: TextStyle(
                                   color: isDarkMode ? Colors.white54 : Colors.black54,

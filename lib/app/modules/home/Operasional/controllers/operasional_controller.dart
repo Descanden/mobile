@@ -27,8 +27,8 @@ class OperasionalController extends GetxController {
   List<Map<String, dynamic>> getSortedExpenses(DateTime start, DateTime end) {
     return expenses.where((expense) {
       final expenseDate = DateTime.parse(expense['date']);
-      return expenseDate.isAfter(start.subtract(Duration(days: 1))) &&
-             expenseDate.isBefore(end.add(Duration(days: 1)));
+      return expenseDate.isAfter(start.subtract(const Duration(days: 1))) &&
+             expenseDate.isBefore(end.add(const Duration(days: 1)));
     }).toList();
   }
 }

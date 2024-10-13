@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+
+import 'app/modules/components/map/views/map_view.dart';
 import 'app/routes/app_pages.dart';
 import 'app/modules/home/settings/controllers/settings_controller.dart';
 
@@ -40,8 +42,16 @@ class MyApp extends StatelessWidget {
     return Obx(() {
       return GetMaterialApp(
         title: "Your App Title",
-        initialRoute: Routes.LOGIN,
-        getPages: AppPages.routes,
+        initialRoute: Routes.LOGIN, // Sesuaikan jika ingin mengarah ke GeoapifyView
+        getPages: [
+          ...AppPages.routes,
+          // Tambahkan route untuk MapView
+          GetPage(
+            name: '/map', 
+            page: () => MapView(), 
+            binding: MapBinding(), // Bind controller ke MapView
+          ),
+        ],
         debugShowCheckedModeBanner: false,
         theme: Get.find<SettingsController>().isDarkMode.value
             ? ThemeData.dark() // Dark mode theme
@@ -49,4 +59,6 @@ class MyApp extends StatelessWidget {
       );
     });
   }
+  
+  MapBinding() {}
 }

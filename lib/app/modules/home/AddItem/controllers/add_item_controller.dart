@@ -63,8 +63,4 @@ class AddItemController extends GetxController {
     // Tambahkan logika untuk menyimpan data ke server atau database jika perlu
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

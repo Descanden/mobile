@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import '../../../components/map/views/map_view.dart';
+import '../../../components/webview_page.dart';
 import '../controllers/home_page_controller.dart';
 import '../../settings/controllers/settings_controller.dart';
+
 
 class HomePageView extends GetView<HomePageController> {
   const HomePageView({super.key});
@@ -14,11 +18,11 @@ class HomePageView extends GetView<HomePageController> {
     return Scaffold(
       backgroundColor: settingsController.isDarkMode.value
           ? const Color(0xFF121212)
-          : Colors.white, // Warna latar belakang
+          : Colors.white, // Background color
       appBar: AppBar(
         backgroundColor: settingsController.isDarkMode.value
             ? Colors.black
-            : const Color(0xFFAC9365), // Ubah warna AppBar
+            : const Color(0xFFAC9365), // Change AppBar color
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,7 +32,7 @@ class HomePageView extends GetView<HomePageController> {
                 decoration: BoxDecoration(
                   color: settingsController.isDarkMode.value
                       ? const Color(0xFF2A2A2A)
-                      : Colors.white, // Ubah warna latar belakang
+                      : Colors.white, // Change background color
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: TextField(
@@ -36,12 +40,12 @@ class HomePageView extends GetView<HomePageController> {
                     prefixIcon: Icon(Icons.search,
                         color: settingsController.isDarkMode.value
                             ? Colors.white54
-                            : Colors.black54), // Ubah warna ikon
+                            : Colors.black54), // Change icon color
                     hintText: 'Cari produk',
                     hintStyle: TextStyle(
                         color: settingsController.isDarkMode.value
                             ? Colors.white54
-                            : Colors.black54), // Ubah warna teks hint
+                            : Colors.black54), // Change hint text color
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 20),
@@ -53,11 +57,20 @@ class HomePageView extends GetView<HomePageController> {
               icon: Icon(Icons.shopping_bag_outlined,
                   color: settingsController.isDarkMode.value
                       ? Colors.white
-                      : Colors.black), // Ubah warna ikon
+                      : Colors.black), // Change shopping bag icon color
               onPressed: () {
                 // Action for shopping bag icon
               },
             ),
+            // Add Instagram icon button here
+            IconButton(
+  icon: FaIcon(FontAwesomeIcons.instagram,
+      color: settingsController.isDarkMode.value ? Colors.white : Colors.black),
+  onPressed: () {
+    Get.to(() => WebViewPage()); // Correctly navigate to WebViewPage
+  },
+),
+
           ],
         ),
       ),
@@ -69,13 +82,19 @@ class HomePageView extends GetView<HomePageController> {
             Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: 16.0, vertical: 10.0), // Added vertical padding
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: Image.asset(
-                  'lib/assets/Frame home.jpg', // Image path
-                  height: 330, // Increased height slightly for a larger image
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              child: GestureDetector(
+                onTap: () {
+                  // Navigate to MapView page
+                  Get.to(() => MapView()); // Replace WebViewPage with MapView
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: Image.asset(
+                    'lib/assets/Frame home.jpg', // Image path
+                    height: 330, // Increased height slightly for a larger image
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -173,17 +192,14 @@ class HomePageView extends GetView<HomePageController> {
           height: 40,
           margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
-            color:
-                isDarkMode ? const Color(0xFF483028) : const Color(0xFF483028),
+            color: isDarkMode ? const Color(0xFF483028) : const Color(0xFF483028),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
             child: Text(
               text,
               style: TextStyle(
-                  color: isDarkMode
-                      ? Colors.white
-                      : Colors.white), // Ubah warna teks
+                  color: isDarkMode ? Colors.white : Colors.white), // Change text color
             ),
           ),
         ),
@@ -201,16 +217,13 @@ class HomePageView extends GetView<HomePageController> {
         children: [
           Icon(icon,
               size: 50,
-              color:
-                  isDarkMode ? Colors.white : Colors.black), // Ubah warna ikon
+              color: isDarkMode ? Colors.white : Colors.black), // Change icon color
           const SizedBox(height: 5),
           Text(
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: isDarkMode
-                    ? Colors.white
-                    : Colors.black), // Ubah warna teks
+                color: isDarkMode ? Colors.white : Colors.black), // Change text color
           ),
         ],
       ),

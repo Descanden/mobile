@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/tambah_operasional_controller.dart';
 
 class TambahOperasionalView extends GetView<TambahOperasionalController> {
-  const TambahOperasionalView({Key? key}) : super(key: key);
+  const TambahOperasionalView({super.key});
 
   @override
   Widget build(BuildContext context) {

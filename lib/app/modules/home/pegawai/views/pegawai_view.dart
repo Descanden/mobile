@@ -12,9 +12,9 @@ class PegawaiView extends GetView<PegawaiController> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
                 'Pegawai',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -85,7 +85,7 @@ class PegawaiView extends GetView<PegawaiController> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.brown),
+                          icon: const FaIcon(FontAwesomeIcons.whatsapp, color: Colors.brown),
                           onPressed: () {
                             // Handle WhatsApp action
                           },

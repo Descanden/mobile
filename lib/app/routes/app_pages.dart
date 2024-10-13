@@ -1,5 +1,9 @@
+import 'dart:collection';
+
 import 'package:get/get.dart';
 
+import '../modules/components/map/bindings/map_binding.dart';
+import '../modules/components/map/views/map_view.dart';
 import '../modules/home/AddItem/bindings/add_item_binding.dart';
 import '../modules/home/AddItem/views/add_item_view.dart';
 import '../modules/home/EditPegawai/bindings/edit_pegawai_binding.dart';
@@ -44,6 +48,8 @@ import '../modules/home/supplier/bindings/supplier_binding.dart';
 import '../modules/home/supplier/views/supplier_view.dart';
 import '../modules/home/your_profile/bindings/your_profile_binding.dart';
 import '../modules/home/your_profile/views/your_profile_view.dart';
+
+//import '../modules/components/geoapify/views/geoapify_view.dart';
 
 part 'app_routes.dart';
 
@@ -140,12 +146,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.OPERASIONAL,
-      page: () => OperasionalView(),
+      page: () => const OperasionalView(),
       binding: OperasionalBinding(),
     ),
     GetPage(
       name: _Paths.TAMBAH_OPERASIONAL,
-      page: () => TambahOperasionalView(),
+      page: () => const TambahOperasionalView(),
       binding: TambahOperasionalBinding(),
     ),
     GetPage(
@@ -162,6 +168,16 @@ class AppPages {
       name: _Paths.JOURNAL,
       page: () => const JournalView(),
       binding: JournalBinding(),
+    ),
+    // GetPage(
+    //   name: _Paths.GEOAPIFY,
+    //   page: () => const GeoapifyView(),
+    //   binding: GeoapifyBinding(),
+    // ),
+    GetPage(
+      name: _Paths.MAP,
+      page: () => MapView(),
+      binding: MapBinding(),
     ),
   ];
 }

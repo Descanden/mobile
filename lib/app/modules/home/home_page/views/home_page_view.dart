@@ -134,7 +134,7 @@ class HomePageView extends GetView<HomePageController> {
                   _buildIconButton('Riwayat', Icons.access_time, '/history',
                       settingsController.isDarkMode.value),
                   _buildIconButton('Tambah Barang', Icons.add_circle,
-                      '/add-item', settingsController.isDarkMode.value),
+                      '/item', settingsController.isDarkMode.value),
                   _buildIconButton('Daftar Member', Icons.group, '/members',
                       settingsController.isDarkMode.value),
                   _buildIconButton('Input harga/promo', Icons.price_check,

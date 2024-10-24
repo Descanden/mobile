@@ -1,7 +1,10 @@
+import 'dart:io'; // Import to use File
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pemrograman_mobile/app/modules/components/product.dart'; // This is the ComponentProduct
 import 'package:pemrograman_mobile/app/modules/home/settings/controllers/settings_controller.dart';
-import '../controllers/product2_controller.dart';
+import '../../product/controllers/product_controller.dart' as HomeProduct; // Using a prefix here
+import '../controllers/product2_controller.dart'; // Ensure this uses the correct Product
 
 class Product2View extends GetView<Product2Controller> {
   const Product2View({super.key});
@@ -9,6 +12,8 @@ class Product2View extends GetView<Product2Controller> {
   @override
   Widget build(BuildContext context) {
     final SettingsController settingsController = Get.find<SettingsController>();
+    final Map<String, dynamic>? arguments = Get.arguments as Map<String, dynamic>?; 
+    final String category = arguments?['category'] ?? 'Unknown Category';
 
     return Obx(() {
       bool isDarkMode = settingsController.isDarkMode.value;
@@ -36,7 +41,7 @@ class Product2View extends GetView<Product2Controller> {
               color: isDarkMode ? Colors.white : Colors.black,
             ),
             onPressed: () {
-              Get.back(); // Kembali ke halaman sebelumnya
+              Get.back();
             },
           ),
           title: Row(
@@ -73,7 +78,7 @@ class Product2View extends GetView<Product2Controller> {
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
                 onPressed: () {
-                  // Implement cart functionality here
+                  // Implement your cart functionality here
                 },
               ),
             ],
@@ -84,11 +89,10 @@ class Product2View extends GetView<Product2Controller> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 17),
-              // Menambahkan Padding untuk teks 'Bomber Jacket'
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Bomber Jacket',
+                  category,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
@@ -96,7 +100,7 @@ class Product2View extends GetView<Product2Controller> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10), // Menambahkan jarak di bawah judul
+              const SizedBox(height: 10),
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -109,8 +113,9 @@ class Product2View extends GetView<Product2Controller> {
                 ),
                 itemCount: controller.productList.length,
                 itemBuilder: (context, index) {
-                  final product = controller.productList[index];
-                  return buildProductCard(product, isDarkMode);
+                  final product = controller.productList[index]; // Get Product directly
+                  final componentProduct = convertToComponentProduct(product); // Convert to ComponentProduct
+                  return buildProductCard(componentProduct, isDarkMode);
                 },
               ),
             ],
@@ -150,7 +155,17 @@ class Product2View extends GetView<Product2Controller> {
     });
   }
 
-  Widget buildProductCard(Product product, bool isDarkMode) {
+  // Conversion method
+  ComponentProduct convertToComponentProduct(Product product) {
+    return ComponentProduct(
+      title: product.title,
+      image: product.image,
+      description: product.description,
+      price: product.price.toDouble(), // Assuming price is an int in Product
+    );
+  }
+
+  Widget buildProductCard(ComponentProduct product, bool isDarkMode) {
     return Card(
       color: isDarkMode ? Colors.grey[850] : Colors.white,
       elevation: 3,
@@ -177,12 +192,19 @@ class Product2View extends GetView<Product2Controller> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: Image.asset(
-                      product.image,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
+                    child: product.image.startsWith('/data/') // Check if the image is from a file path
+                        ? Image.file(
+                            File(product.image),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          )
+                        : Image.asset(
+                            product.image, // For asset images
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
                   ),
                 ),
                 Positioned(
@@ -193,7 +215,6 @@ class Product2View extends GetView<Product2Controller> {
                     child: IconButton(
                       icon: const Icon(Icons.add, color: Colors.black),
                       onPressed: () {
-                        // Navigasi ke halaman detail produk
                         Get.toNamed('/description', arguments: {
                           'title': product.title,
                           'image': product.image,
@@ -226,7 +247,6 @@ class Product2View extends GetView<Product2Controller> {
                   style: const TextStyle(color: Colors.brown, fontSize: 12),
                 ),
                 const SizedBox(height: 5),
-                // Tampilkan deskripsi singkat
                 Text(
                   product.description.length > 30
                       ? '${product.description.substring(0, 30)}...'

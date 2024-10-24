@@ -28,6 +28,8 @@ import '../modules/home/description/bindings/description_binding.dart';
 import '../modules/home/description/views/description_view.dart';
 import '../modules/home/home_page/bindings/home_page_binding.dart';
 import '../modules/home/home_page/views/home_page_view.dart';
+import '../modules/home/item/bindings/item_binding.dart';
+import '../modules/home/item/views/item_view.dart';
 import '../modules/home/login/bindings/login_binding.dart';
 import '../modules/home/login/views/login_view.dart';
 import '../modules/home/password_manager/bindings/password_manager_binding.dart';
@@ -183,6 +185,11 @@ class AppPages {
       name: _Paths.REGISTER,
       page: () => const RegisterView(),
       binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: _Paths.ITEM,
+      page: () => const ItemView(),
+      binding: ItemBinding(),
     ),
   ];
 }

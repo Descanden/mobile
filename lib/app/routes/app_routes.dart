@@ -26,6 +26,7 @@ abstract class Routes {
   static const JOURNAL = _Paths.JOURNAL;
   static const MAP = _Paths.MAP;
   static const REGISTER = _Paths.REGISTER;
+  static const ITEM = _Paths.ITEM;
 }
 
 abstract class _Paths {
@@ -54,4 +55,5 @@ abstract class _Paths {
   static const JOURNAL = '/journal';
   static const MAP = '/map';
   static const REGISTER = '/register';
+  static const ITEM = '/item';
 }

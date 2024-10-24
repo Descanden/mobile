@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/product_controller.dart';
 import '../../settings/controllers/settings_controller.dart';
+import 'dart:io'; // Import File untuk memproses gambar
 
 class ProductView extends GetView<ProductController> {
   const ProductView({super.key});
@@ -136,12 +137,17 @@ class ProductView extends GetView<ProductController> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset(
-                                    product.image,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                  ),
+                                  child: product.image.isNotEmpty
+                                      ? Image.file(
+                                          File(product.image), // Gunakan File untuk gambar
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        )
+                                      : Container(
+                                          color: Colors.grey[300], // Placeholder jika gambar tidak ada
+                                          child: const Icon(Icons.image, color: Colors.grey),
+                                        ),
                                 ),
                               ),
                               Positioned(

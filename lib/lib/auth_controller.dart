@@ -22,6 +22,10 @@ class AuthController extends GetxController {
         password: password,
       );
       print("User logged in: ${userCredential.user?.email}");
+      
+      // Simpan email ke GetStorage
+      _box.write('email', email);
+
       Get.offAllNamed(Routes.HOME_PAGE); // Arahkan ke home setelah login berhasil
     } catch (e) {
       Get.snackbar("Error", e.toString());
@@ -36,6 +40,10 @@ class AuthController extends GetxController {
         password: password,
       );
       print("User registered: ${userCredential.user?.email}");
+
+      // Simpan email ke GetStorage
+      _box.write('email', email);
+
       Get.offAllNamed(Routes.LOGIN); // Arahkan ke home setelah register berhasil
     } catch (e) {
       Get.snackbar("Error", e.toString());
@@ -51,5 +59,10 @@ class AuthController extends GetxController {
   // Fungsi untuk cek login
   bool isLoggedIn() {
     return _auth.currentUser != null;
+  }
+
+  // Fungsi untuk mendapatkan email yang disimpan
+  String? getStoredEmail() {
+    return _box.read('email');
   }
 }

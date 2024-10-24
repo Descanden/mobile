@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:io';
 
 class DescriptionView extends StatefulWidget {
   const DescriptionView({super.key});
@@ -50,11 +51,17 @@ class _DescriptionViewState extends State<DescriptionView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Image.asset(
-                  productData['image'] ?? 'assets/image_not_found.png',
-                  height: 300,
-                  fit: BoxFit.cover,
-                ),
+                child: productData['image'] != null && File(productData['image']).existsSync()
+                    ? Image.file(
+                        File(productData['image']),
+                        height: 300,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        'assets/image_not_found.png',
+                        height: 300,
+                        fit: BoxFit.cover,
+                      ),
               ),
               const SizedBox(height: 20),
               Row(

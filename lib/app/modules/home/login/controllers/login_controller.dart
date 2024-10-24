@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pemrograman_mobile/app/routes/app_pages.dart';
+import '../../../components/user_preferences_servies.dart';
 import '../../account/controllers/account_controller.dart';
+
 
 class LoginController extends GetxController {
   final TextEditingController usernameController = TextEditingController();
@@ -11,6 +13,7 @@ class LoginController extends GetxController {
   final box = GetStorage();
   final AccountController accountController = Get.put(AccountController());
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserPreferencesService _userPreferencesService = UserPreferencesService(); // Initialize the service
 
   var isPasswordVisible = false.obs; // Menggunakan RxBool untuk reaktifitas
 
@@ -74,6 +77,9 @@ class LoginController extends GetxController {
       if (userCredential.user != null) {
         User? user = userCredential.user; 
         print('User ID: ${user?.uid}');
+
+        // Save email to SharedPreferences
+        await _userPreferencesService.saveEmail(email);
         
         Get.snackbar(
           'Success',
@@ -82,7 +88,7 @@ class LoginController extends GetxController {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        
+
         accountController.loadAccountData(); 
         Get.offAllNamed(Routes.ACCOUNT); 
         return true;
@@ -111,6 +117,7 @@ class LoginController extends GetxController {
   // Logout method
   Future<void> logout() async {
     await _auth.signOut();
+    await _userPreferencesService.removeEmail(); // Remove email from SharedPreferences
     Get.snackbar(
       'Success',
       'Logged out successfully',
@@ -119,6 +126,20 @@ class LoginController extends GetxController {
       colorText: Colors.white,
     );
     Get.offAllNamed(Routes.LOGIN);
+  }
+
+  // Load email during startup
+  Future<void> loadEmail() async {
+    String? email = await _userPreferencesService.getEmail();
+    if (email != null) {
+      usernameController.text = email; // Pre-fill the username/email field
+    }
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadEmail(); // Load email when the controller is initialized
   }
 
   @override
@@ -133,4 +154,3 @@ class LoginController extends GetxController {
     isPasswordVisible.value = !isPasswordVisible.value;
   }
 }
-

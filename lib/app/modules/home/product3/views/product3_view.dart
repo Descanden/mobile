@@ -1,3 +1,4 @@
+import 'dart:io'; // Import to handle File
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pemrograman_mobile/app/modules/home/settings/controllers/settings_controller.dart';
@@ -134,8 +135,8 @@ class Product3View extends GetView<Product3Controller> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: Image.asset(
-                                    product.image,
+                                  child: Image.file(
+                                    File(product.image), // Use Image.file for images stored in device storage
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                     height: double.infinity,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 import '../../product/controllers/product_controller.dart' as HomeProduct; // Alias for home product controller
 import '../../product2/controllers/product2_controller.dart' as Product2; // Alias for product2 controller
+import '../../product3/controllers/product3_controller.dart' as Product3; // Alias for product3 controller
 
 class ItemController extends GetxController {
   var categories = <String>[].obs; // Observable list of categories
@@ -55,7 +56,7 @@ class ItemController extends GetxController {
     }
 
     // Create a new product for the selected category
-    Product2.Product product2Product = Product2.Product(
+    var newProduct = Product3.Product(
       image: image?.path ?? '', // Image path (ensure you save the image correctly)
       title: nameController.text,
       price: int.tryParse(priceController.text) ?? 0, // Parse price to int
@@ -77,17 +78,31 @@ class ItemController extends GetxController {
     } else if (selectedCategory.value == 'Product2') {
       // Add product to Product2Controller
       final product2Controller = Get.find<Product2.Product2Controller>(); // Use the alias
-      product2Controller.addProduct(product2Product); // Use the Product2 product directly
-      
+      product2Controller.addProduct(newProduct as Product2.Product); // Use the Product2 product directly
+
       // Save the product to Firestore
       await _firestore.collection('products2').add({
-        'image': product2Product.image,
-        'title': product2Product.title,
-        'price': product2Product.price,
-        'description': product2Product.description,
+        'image': newProduct.image,
+        'title': newProduct.title,
+        'price': newProduct.price,
+        'description': newProduct.description,
       });
-      
+
       Get.snackbar("Success", "Product added to Product2 successfully!");
+    } else if (selectedCategory.value == 'Product3') {
+      // Add product to Product3Controller
+      final product3Controller = Get.find<Product3.Product3Controller>(); // Use the alias
+      product3Controller.productList.add(newProduct); // Add new product to Product3
+  
+      // Save the product to Firestore (if needed for Product3)
+      await _firestore.collection('products3').add({
+        'image': newProduct.image,
+        'title': newProduct.title,
+        'price': newProduct.price,
+        'description': newProduct.description,
+      });
+
+      Get.snackbar("Success", "Product added to Product3 successfully!");
     } else {
       Get.snackbar("Error", "Invalid category selected");
       return;

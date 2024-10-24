@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
 import 'app/modules/components/user_preferences_servies.dart';
 import 'app/modules/home/item/controllers/item_controller.dart';
 import 'app/modules/home/product/controllers/product_controller.dart';
 import 'app/modules/home/product2/controllers/product2_controller.dart';
+import 'app/modules/home/product3/controllers/product3_controller.dart'; // Import Product3Controller
 import 'app/routes/app_pages.dart';
 import 'app/modules/home/settings/controllers/settings_controller.dart';
 
@@ -34,7 +34,10 @@ void main() async {
   Get.put(ProductController());
 
   // Initialize Product2Controller
-  Get.put(Product2Controller()); // Add this line
+  Get.put(Product2Controller()); 
+
+  // Initialize Product3Controller
+  Get.put(Product3Controller());
 
   // Load user email from SharedPreferences
   final userPreferencesService = UserPreferencesService();

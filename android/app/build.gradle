@@ -1,12 +1,35 @@
+buildscript {
+    repositories {
+        // Pastikan sudah menyertakan Google Maven repository
+        google() // Google's Maven repository
+        mavenCentral() // Repositori tambahan jika diperlukan
+    }
+    dependencies {
+        // Tambahkan dependensi untuk Google Services plugin
+        classpath 'com.google.gms:google-services:4.3.15' // Google Services plugin
+    }
+}
+
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services' // Google Services plugin
+    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+allprojects {
+    repositories {
+        // Pastikan Google Maven repository ada di sini
+        google() // Google's Maven repository
+        mavenCentral() // Repositori tambahan
+    }
+}
+
 android {
-    namespace = "com.example.architexture_pattern" // Specify the namespace
+    namespace = "com.example.architexture_pattern"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,11 +43,10 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.architexture_pattern"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // Application ID unik
+        applicationId = "com.example.sasha"
+        // Konfigurasi versi SDK
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -32,8 +54,6 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
         }
     }
@@ -43,9 +63,7 @@ flutter {
     source = "../.."
 }
 
-// Optional: Add the following permissions to your AndroidManifest.xml
-android {
-    // Other configurations...
-
-    // If you need to add permissions, this should go into AndroidManifest.xml directly
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'com.google.firebase:firebase-analytics'
 }

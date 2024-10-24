@@ -43,7 +43,7 @@ class LoginView extends StatelessWidget {
               controller: controller.usernameController,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.person, color: Colors.grey),
-                hintText: 'Username',
+                hintText: 'Username / Email',
                 contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -54,55 +54,64 @@ class LoginView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: controller.passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.lock, color: Colors.grey),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.visibility),
-                  onPressed: () {
-                    // Add functionality to show/hide password if needed
-                  },
-                ),
-                hintText: 'Password',
-                contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                border: OutlineInputBorder(
+            Obx(() => TextField(
+                  controller: controller.passwordController,
+                  obscureText: !controller.isPasswordVisible.value, // Mengontrol visibilitas password
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                    suffixIcon: IconButton(
+                      icon: controller.isPasswordVisible.value
+                          ? const Icon(Icons.visibility_off)
+                          : const Icon(Icons.visibility),
+                      onPressed: () {
+                        controller.togglePasswordVisibility(); // Toggle visibilitas
+                      },
+                    ),
+                    hintText: 'Password',
+                    contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                )),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () async {
+                bool success = await controller.login();
+                if (success) {
+                  Get.offNamed(Routes.HOME_PAGE); // Navigate to home page
+                } else {
+                  Get.snackbar('Login Failed', 'Invalid credentials or network error',
+                      backgroundColor: Colors.red, colorText: Colors.white);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF704F38), // Dark brown background
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
                 ),
-                filled: true,
-                fillColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+              ),
+              child: const Text(
+                'Login',
+                style: TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
-  onPressed: () {
-    // Attempt to log in
-    controller.login().then((success) {
-      if (success) {
-        // Navigate to Home page and remove Login page from stack
-        Get.offNamed(Routes.HOME_PAGE); // Update this to your actual home route
-      }
-    });
-  },
-  style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF704F38), // Dark brown background
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30),
-    ),
-    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 40),
-  ),
-  child: const Text(
-    'Login',
-    style: TextStyle(fontSize: 18, color: Colors.white),
-  ),
-),
-
-            const SizedBox(height: 30),
-            const Divider(
-              color: Colors.grey,
-              thickness: 1,
+            TextButton(
+              onPressed: () {
+                Get.toNamed(Routes.REGISTER); // Navigate to Register Page
+              },
+              child: const Text(
+                'Don\'t have an account? Register here',
+                style: TextStyle(
+                  color: Color(0xFF704F38), // Dark brown text
+                  fontSize: 16,
+                ),
+              ),
             ),
           ],
         ),

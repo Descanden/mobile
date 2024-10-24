@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "155276331185",
+    "project_id": "shasha-shop",
+    "storage_bucket": "shasha-shop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155276331185:android:693ca34274c312fc4ffa90",
+        "android_client_info": {
+          "package_name": "com.example.sasha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuJ5eZYx9brCwm3hjWW5zyjGWrYR1i6DQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155276331185:android:113173ee58998b274ffa90",
+        "android_client_info": {
+          "package_name": "com.sasha"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuJ5eZYx9brCwm3hjWW5zyjGWrYR1i6DQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:get/get.dart';
 
 import '../modules/components/map/bindings/map_binding.dart';
@@ -42,6 +40,8 @@ import '../modules/home/product2/bindings/product2_binding.dart';
 import '../modules/home/product2/views/product2_view.dart';
 import '../modules/home/product3/bindings/product3_binding.dart';
 import '../modules/home/product3/views/product3_view.dart';
+import '../modules/home/register/bindings/register_binding.dart';
+import '../modules/home/register/views/register_view.dart';
 import '../modules/home/settings/bindings/settings_binding.dart';
 import '../modules/home/settings/views/settings_view.dart';
 import '../modules/home/supplier/bindings/supplier_binding.dart';
@@ -178,6 +178,11 @@ class AppPages {
       name: _Paths.MAP,
       page: () => MapView(),
       binding: MapBinding(),
+    ),
+    GetPage(
+      name: _Paths.REGISTER,
+      page: () => const RegisterView(),
+      binding: RegisterBinding(),
     ),
   ];
 }

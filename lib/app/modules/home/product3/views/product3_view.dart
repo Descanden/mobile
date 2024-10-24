@@ -1,7 +1,7 @@
-import 'dart:io'; // Import to handle File
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pemrograman_mobile/app/modules/home/settings/controllers/settings_controller.dart';
+import 'dart:io'; // Import untuk File
 import '../controllers/product3_controller.dart';
 
 class Product3View extends GetView<Product3Controller> {
@@ -136,7 +136,7 @@ class Product3View extends GetView<Product3Controller> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
                                   child: Image.file(
-                                    File(product.image), // Use Image.file for images stored in device storage
+                                    File(product.image), // Menampilkan gambar dari path file
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                     height: double.infinity,
@@ -202,7 +202,7 @@ class Product3View extends GetView<Product3Controller> {
                   );
                 },
               ),
-            ],
+            ],  
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(

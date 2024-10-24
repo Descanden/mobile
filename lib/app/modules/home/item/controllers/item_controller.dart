@@ -55,12 +55,15 @@ class ItemController extends GetxController {
       return;
     }
 
+    // Debug print to check selected category
+    print("Selected category: ${selectedCategory.value}");
+
     // Create a new product for the selected category
     var newProduct = Product3.Product(
-      image: image?.path ?? '', // Image path (ensure you save the image correctly)
+      image: image?.path ?? '', // Image path
       title: nameController.text,
       price: int.tryParse(priceController.text) ?? 0, // Parse price to int
-      description: "Description for ${nameController.text}", // A default description; you can change this
+      description: "Description for ${nameController.text}", // A default description
     );
 
     // Determine which product controller to use based on selected category
@@ -79,7 +82,7 @@ class ItemController extends GetxController {
       // Add product to Product2Controller
       final product2Controller = Get.find<Product2.Product2Controller>(); // Use the alias
       product2Controller.addProduct(newProduct as Product2.Product); // Use the Product2 product directly
-
+      
       // Save the product to Firestore
       await _firestore.collection('products2').add({
         'image': newProduct.image,
@@ -87,13 +90,13 @@ class ItemController extends GetxController {
         'price': newProduct.price,
         'description': newProduct.description,
       });
-
+      
       Get.snackbar("Success", "Product added to Product2 successfully!");
     } else if (selectedCategory.value == 'Product3') {
       // Add product to Product3Controller
       final product3Controller = Get.find<Product3.Product3Controller>(); // Use the alias
       product3Controller.productList.add(newProduct); // Add new product to Product3
-  
+
       // Save the product to Firestore (if needed for Product3)
       await _firestore.collection('products3').add({
         'image': newProduct.image,
@@ -117,3 +120,4 @@ class ItemController extends GetxController {
     update(); // Update the UI
   }
 }
+      

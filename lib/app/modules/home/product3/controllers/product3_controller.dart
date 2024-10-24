@@ -1,12 +1,9 @@
 import 'package:get/get.dart';
 
 class Product3Controller extends GetxController {
-  var productList = <Product>[].obs; // Observable list of products
+  final productList = <Product>[].obs;
 
-  // Function to add a new product to the productList
-  void addProduct(Product product) {
-    productList.add(product);
-  }
+  var isLoading = false.obs;
 }
 
 class Product {
@@ -22,3 +19,4 @@ class Product {
     required this.description,
   });
 }
+  

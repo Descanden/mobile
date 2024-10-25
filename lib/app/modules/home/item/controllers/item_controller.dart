@@ -13,7 +13,7 @@ class ItemController extends GetxController {
   var selectedCategory = ''.obs; // Selected category
   final nameController = TextEditingController(); // Controller for product name
   final priceController = TextEditingController(); // Controller for price
-  final sizeController = TextEditingController(); // Controller for size
+  final descriptionController = TextEditingController(); // Controller for description
   XFile? image; // For holding the selected image
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Firestore instance
@@ -43,7 +43,6 @@ class ItemController extends GetxController {
         update(); // Notify the UI to update when an image is picked
       }
     } catch (e) {
-      // Handle errors if needed
       print("Error picking image: $e");
     }
   }
@@ -51,13 +50,10 @@ class ItemController extends GetxController {
   // Function to upload image to Firebase Storage and get the download URL
   Future<String?> uploadImageToFirebaseStorage(XFile imageFile) async {
     try {
-      // Create a unique file path in Firebase Storage
       String fileName = 'products/${DateTime.now().millisecondsSinceEpoch}_${imageFile.name}';
       Reference ref = _firebaseStorage.ref().child(fileName);
       UploadTask uploadTask = ref.putFile(File(imageFile.path));
       TaskSnapshot taskSnapshot = await uploadTask;
-
-      // Get the image URL
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
@@ -68,51 +64,44 @@ class ItemController extends GetxController {
 
   // Function to save the item
   Future<void> saveItem() async {
-    // Check that required fields are filled
     if (nameController.text.isEmpty ||
         priceController.text.isEmpty ||
+        descriptionController.text.isEmpty ||
         selectedCategory.value.isEmpty) {
       Get.snackbar("Error", "Please fill all fields");
       return;
     }
 
-    // Debug print to check selected category
     print("Selected category: ${selectedCategory.value}");
 
-    // Check if an image is selected
     String? imageUrl;
     if (image != null) {
-      // Upload the image to Firebase Storage and get the URL
       imageUrl = await uploadImageToFirebaseStorage(image!);
       if (imageUrl == null) {
         Get.snackbar("Error", "Failed to upload image");
         return;
       }
     } else {
-      imageUrl = ''; // Empty string if no image is selected
+      imageUrl = '';
     }
 
-    // Create a new product for the selected category
     var newProduct = Product3.Product(
-      image: imageUrl, // Use uploaded image URL
+      image: imageUrl,
       title: nameController.text,
-      price: int.tryParse(priceController.text) ?? 0, // Parse price to int
-      description: "Description for ${nameController.text}", // A default description
+      price: int.tryParse(priceController.text) ?? 0,
+      description: descriptionController.text, // Use descriptionController text
     );
 
-    // Determine which product controller to use based on selected category
     if (selectedCategory.value == 'Product1') {
-      // Add product to ProductController
       final productController = Get.find<HomeProduct.ProductController>(); // Use the alias
       var homeProduct = HomeProduct.Product(
         image: imageUrl,
         title: nameController.text,
         price: int.tryParse(priceController.text) ?? 0,
-        description: "Description for ${nameController.text}",
+        description: descriptionController.text, // Use descriptionController text
       );
       productController.productList.add(homeProduct);
 
-      // Save product data to Firestore
       await _firestore.collection('products1').add({
         'image': imageUrl,
         'title': homeProduct.title,
@@ -122,17 +111,15 @@ class ItemController extends GetxController {
 
       Get.snackbar("Success", "Product added to Product1 successfully!");
     } else if (selectedCategory.value == 'Product2') {
-      // Add product to Product2Controller
       final product2Controller = Get.find<Product2.Product2Controller>(); // Use the alias
       var newProduct2 = Product2.Product(
         image: imageUrl,
         title: nameController.text,
         price: int.tryParse(priceController.text) ?? 0,
-        description: "Description for ${nameController.text}",
+        description: descriptionController.text, // Use descriptionController text
       );
       product2Controller.addProduct(newProduct2);
 
-      // Save the product to Firestore
       await _firestore.collection('products2').add({
         'image': newProduct2.image,
         'title': newProduct2.title,
@@ -142,11 +129,9 @@ class ItemController extends GetxController {
 
       Get.snackbar("Success", "Product added to Product2 successfully!");
     } else if (selectedCategory.value == 'Product3') {
-      // Add product to Product3Controller
       final product3Controller = Get.find<Product3.Product3Controller>(); // Use the alias
       product3Controller.productList.add(newProduct);
 
-      // Save the product to Firestore
       await _firestore.collection('products3').add({
         'image': newProduct.image,
         'title': newProduct.title,
@@ -160,10 +145,9 @@ class ItemController extends GetxController {
       return;
     }
 
-    // Clear fields
     nameController.clear();
     priceController.clear();
-    sizeController.clear();
+    descriptionController.clear(); // Clear the description field
     image = null; // Clear the image
     selectedCategory.value = ''; // Reset selected category
     update(); // Update the UI

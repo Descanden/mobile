@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/item_controller.dart';
 
-
 class ItemView extends GetView<ItemController> {
   const ItemView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( 
+      appBar: AppBar(
         title: const Text('Tambah Barang'),
         centerTitle: true,
       ),
@@ -69,10 +68,10 @@ class ItemView extends GetView<ItemController> {
                 ),
                 const SizedBox(height: 16),
 
-                // Input size produk
+                // Input deskripsi produk
                 TextField(
-                  controller: controller.sizeController,
-                  decoration: const InputDecoration(labelText: 'Size'),
+                  controller: controller.descriptionController, // Use descriptionController
+                  decoration: const InputDecoration(labelText: 'Deskripsi'), // Change label to 'Deskripsi'
                 ),
                 const SizedBox(height: 16),
 

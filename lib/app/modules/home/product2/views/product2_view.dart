@@ -1,10 +1,8 @@
-import 'dart:io'; // Import to use File
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pemrograman_mobile/app/modules/components/product.dart'; // This is the ComponentProduct
-import 'package:pemrograman_mobile/app/modules/home/settings/controllers/settings_controller.dart';
-import '../../product/controllers/product_controller.dart' as HomeProduct; // Using a prefix here
-import '../controllers/product2_controller.dart'; // Ensure this uses the correct Product
+import '../controllers/product2_controller.dart';
+import '../../settings/controllers/settings_controller.dart';
+import 'dart:io'; // Import File untuk memproses gambar
 
 class Product2View extends GetView<Product2Controller> {
   const Product2View({super.key});
@@ -12,8 +10,6 @@ class Product2View extends GetView<Product2Controller> {
   @override
   Widget build(BuildContext context) {
     final SettingsController settingsController = Get.find<SettingsController>();
-    final Map<String, dynamic>? arguments = Get.arguments as Map<String, dynamic>?; 
-    final String category = arguments?['category'] ?? 'Unknown Category';
 
     return Obx(() {
       bool isDarkMode = settingsController.isDarkMode.value;
@@ -41,7 +37,7 @@ class Product2View extends GetView<Product2Controller> {
               color: isDarkMode ? Colors.white : Colors.black,
             ),
             onPressed: () {
-              Get.back();
+              Get.back(); // Kembali ke halaman sebelumnya
             },
           ),
           title: Row(
@@ -78,7 +74,7 @@ class Product2View extends GetView<Product2Controller> {
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
                 onPressed: () {
-                  // Implement your cart functionality here
+                  // Implement cart functionality here
                 },
               ),
             ],
@@ -92,7 +88,7 @@ class Product2View extends GetView<Product2Controller> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  category,
+                  'Product 2 Title', // Ganti dengan judul produk
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
@@ -100,7 +96,7 @@ class Product2View extends GetView<Product2Controller> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 17),
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -113,9 +109,108 @@ class Product2View extends GetView<Product2Controller> {
                 ),
                 itemCount: controller.productList.length,
                 itemBuilder: (context, index) {
-                  final product = controller.productList[index]; // Get Product directly
-                  final componentProduct = convertToComponentProduct(product); // Convert to ComponentProduct
-                  return buildProductCard(componentProduct, isDarkMode);
+                  final product = controller.productList[index];
+                  return Card(
+                    color: isDarkMode ? Colors.grey[850] : Colors.white,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 1,
+                                      blurRadius: 3,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: product.image.startsWith('http')
+                                      ? Image.network(
+                                          product.image,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        )
+                                      : (product.image.isNotEmpty
+                                          ? Image.file(
+                                              File(product.image),
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                            )
+                                          : Container(
+                                              color: Colors.grey[300],
+                                              child: const Icon(Icons.image, color: Colors.grey),
+                                            )),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.add, color: Colors.black),
+                                    onPressed: () {
+                                      Get.toNamed('/description', arguments: {
+                                        'title': product.title,
+                                        'image': product.image,
+                                        'price': product.price,
+                                        'description': product.description,
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product.title,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                'Rp ${product.price}',
+                                style: const TextStyle(color: Colors.brown, fontSize: 12),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                product.description.length > 30
+                                    ? '${product.description.substring(0, 30)}...'
+                                    : product.description,
+                                style: TextStyle(
+                                  color: isDarkMode ? Colors.white54 : Colors.black54,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ],
@@ -143,7 +238,7 @@ class Product2View extends GetView<Product2Controller> {
                 Get.offNamed('/riwayat');
                 break;
               case 3:
-                Get.offNamed('/penjualan');
+                // Get.offNamed('/penjualan'); // Uncomment when implementing
                 break;
               case 4:
                 Get.offNamed('/account');
@@ -153,114 +248,5 @@ class Product2View extends GetView<Product2Controller> {
         ),
       );
     });
-  }
-
-  // Conversion method
-  ComponentProduct convertToComponentProduct(Product product) {
-    return ComponentProduct(
-      title: product.title,
-      image: product.image,
-      description: product.description,
-      price: product.price.toDouble(), // Assuming price is an int in Product
-    );
-  }
-
-  Widget buildProductCard(ComponentProduct product, bool isDarkMode) {
-    return Card(
-      color: isDarkMode ? Colors.grey[850] : Colors.white,
-      elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: product.image.startsWith('/data/') // Check if the image is from a file path
-                        ? Image.file(
-                            File(product.image),
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          )
-                        : Image.asset(
-                            product.image, // For asset images
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      icon: const Icon(Icons.add, color: Colors.black),
-                      onPressed: () {
-                        Get.toNamed('/description', arguments: {
-                          'title': product.title,
-                          'image': product.image,
-                          'price': product.price,
-                          'description': product.description,
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  'Rp ${product.price}',
-                  style: const TextStyle(color: Colors.brown, fontSize: 12),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  product.description.length > 30
-                      ? '${product.description.substring(0, 30)}...'
-                      : product.description,
-                  style: TextStyle(
-                    color: isDarkMode ? Colors.white54 : Colors.black54,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

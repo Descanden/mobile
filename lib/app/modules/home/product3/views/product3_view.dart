@@ -135,12 +135,19 @@ class Product3View extends GetView<Product3Controller> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: Image.file(
-                                    File(product.image), // Menampilkan gambar dari path file
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                  ),
+                                  child: product.image.startsWith('http') // Check if the image is a URL
+                                      ? Image.network(
+                                          product.image, // For network images
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        )
+                                      : Image.file(
+                                          File(product.image), // Menampilkan gambar dari path file
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                        ),
                                 ),
                               ),
                               Positioned(

@@ -85,7 +85,6 @@ class ProductView extends GetView<ProductController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 17),
-              // Menambahkan judul "Bomber Jacket"
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
@@ -97,7 +96,7 @@ class ProductView extends GetView<ProductController> {
                   ),
                 ),
               ),
-              const SizedBox(height: 17), // Jarak antara judul dan grid
+              const SizedBox(height: 17),
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -137,17 +136,24 @@ class ProductView extends GetView<ProductController> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: product.image.isNotEmpty
-                                      ? Image.file(
-                                          File(product.image), // Gunakan File untuk gambar
+                                  child: product.image.startsWith('http') // Check if the image is a URL
+                                      ? Image.network(
+                                          product.image, // For network images
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: double.infinity,
                                         )
-                                      : Container(
-                                          color: Colors.grey[300], // Placeholder jika gambar tidak ada
-                                          child: const Icon(Icons.image, color: Colors.grey),
-                                        ),
+                                      : (product.image.isNotEmpty
+                                          ? Image.file(
+                                              File(product.image), // For local images
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                            )
+                                          : Container(
+                                              color: Colors.grey[300], // Placeholder if no image
+                                              child: const Icon(Icons.image, color: Colors.grey),
+                                            )),
                                 ),
                               ),
                               Positioned(
@@ -158,7 +164,7 @@ class ProductView extends GetView<ProductController> {
                                   child: IconButton(
                                     icon: const Icon(Icons.add, color: Colors.black),
                                     onPressed: () {
-                                      // Navigasi ke halaman detail produk
+                                      // Navigate to product details page
                                       Get.toNamed('/description', arguments: {
                                         'title': product.title,
                                         'image': product.image,
@@ -191,7 +197,7 @@ class ProductView extends GetView<ProductController> {
                                 style: const TextStyle(color: Colors.brown, fontSize: 12),
                               ),
                               const SizedBox(height: 5),
-                              // Tampilkan deskripsi singkat
+                              // Display short description
                               Text(
                                 product.description.length > 30
                                     ? '${product.description.substring(0, 30)}...'
@@ -234,7 +240,7 @@ class ProductView extends GetView<ProductController> {
                 Get.offNamed('/riwayat');
                 break;
               case 3:
-                // Get.offNamed('/penjualan');
+                // Get.offNamed('/penjualan'); // Uncomment when implementing
                 break;
               case 4:
                 Get.offNamed('/account');

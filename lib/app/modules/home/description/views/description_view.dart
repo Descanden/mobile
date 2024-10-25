@@ -10,12 +10,12 @@ class DescriptionView extends StatefulWidget {
 }
 
 class _DescriptionViewState extends State<DescriptionView> {
-  String selectedSize = 'S'; // Default size yang dipilih
-  int quantity = 1; // Jumlah default produk yang dipilih
+  String selectedSize = 'S'; // Default size selected
+  int quantity = 1; // Default quantity
 
   @override
   Widget build(BuildContext context) {
-    final productData = Get.arguments; // Mengambil semua argumen
+    final productData = Get.arguments; // Get all arguments
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -39,7 +39,7 @@ class _DescriptionViewState extends State<DescriptionView> {
               color: isDarkMode ? Colors.white : Colors.black,
             ),
             onPressed: () {
-              // Navigasi ke halaman keranjang
+              // Navigate to cart page
             },
           ),
         ],
@@ -51,12 +51,19 @@ class _DescriptionViewState extends State<DescriptionView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: productData['image'] != null && File(productData['image']).existsSync()
-                    ? Image.file(
-                        File(productData['image']),
-                        height: 300,
-                        fit: BoxFit.cover,
-                      )
+                child: productData['image'] != null && 
+                        (productData['image'].startsWith('http') || File(productData['image']).existsSync())
+                    ? (productData['image'].startsWith('http') 
+                        ? Image.network(
+                            productData['image'],
+                            height: 300,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(productData['image']),
+                            height: 300,
+                            fit: BoxFit.cover,
+                          ))
                     : Image.asset(
                         'assets/image_not_found.png',
                         height: 300,
@@ -80,7 +87,7 @@ class _DescriptionViewState extends State<DescriptionView> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        productData['title'] ?? 'Tidak ada nama produk',
+                        productData['title'] ?? 'No product name',
                         style: TextStyle(
                           fontSize: 16,
                           color: isDarkMode ? Colors.white : Colors.black,
@@ -103,7 +110,9 @@ class _DescriptionViewState extends State<DescriptionView> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Implement size chart functionality
+                    },
                     child: const Text(
                       'Size Chart',
                       style: TextStyle(color: Colors.grey),
@@ -140,14 +149,13 @@ class _DescriptionViewState extends State<DescriptionView> {
               ),
               const SizedBox(height: 8),
               Text(
-                productData['description'] ?? 'Deskripsi produk akan ditampilkan di sini...',
+                productData['description'] ?? 'Description will be displayed here...',
                 style: TextStyle(
                   fontSize: 14,
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),
               const SizedBox(height: 20),
-              // Bagian bawah dengan box untuk love, tanda tambah-kurang, dan add to cart
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
@@ -169,7 +177,7 @@ class _DescriptionViewState extends State<DescriptionView> {
                     IconButton(
                       icon: const Icon(Icons.favorite, color: Colors.red),
                       onPressed: () {
-                        // Tambah ke favorit
+                        // Add to favorites
                       },
                     ),
                     Container(
@@ -224,7 +232,7 @@ class _DescriptionViewState extends State<DescriptionView> {
                         } else {
                           Get.snackbar(
                             'Error',
-                            'Pilih ukuran terlebih dahulu!',
+                            'Please select a size first!',
                             backgroundColor: Colors.red,
                             colorText: Colors.white,
                           );

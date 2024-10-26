@@ -9,7 +9,7 @@ class UserPreferencesService {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString(_emailKey, email);
     } catch (e) {
-      print('Error saving email: $e'); // Log the error
+      print('Error saving email: $e');
     }
   }
 
@@ -19,7 +19,7 @@ class UserPreferencesService {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       return prefs.getString(_emailKey);
     } catch (e) {
-      print('Error getting email: $e'); // Log the error
+      print('Error getting email: $e');
       return null;
     }
   }
@@ -30,7 +30,7 @@ class UserPreferencesService {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove(_emailKey);
     } catch (e) {
-      print('Error removing email: $e'); // Log the error
+      print('Error removing email: $e');
     }
   }
 }

@@ -1,21 +1,22 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../../routes/app_pages.dart';
+import '../../login/controllers/login_controller.dart';
 
 class RegisterController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  var isPasswordVisible = false.obs;
 
-  // Method untuk registrasi
+  // Method for registration
   Future<void> register() async {
-    String username = usernameController.text.trim();
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    if (username.isEmpty || email.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       Get.snackbar(
         'Error',
         'All fields are required',
@@ -27,13 +28,13 @@ class RegisterController extends GetxController {
     }
 
     try {
-      // Membuat user dan langsung menggunakan userCredential
+      // Create user and obtain the userCredential
       await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Jika berhasil, tampilkan snackbar sukses
+      // Show success snackbar
       Get.snackbar(
         'Success',
         'Registration successful',
@@ -42,10 +43,11 @@ class RegisterController extends GetxController {
         colorText: Colors.white,
       );
 
-      // Optional: Tambahkan username ke profil pengguna atau database jika perlu
+      // Save email for login using the LoginController
+      Get.find<LoginController>().usernameController.text = email;
 
-      // Navigasi ke halaman utama setelah registrasi
-      Get.offNamed('/home'); // Ganti '/home' dengan rute yang sesuai
+      // Navigate back to the login page
+      Get.offNamed(Routes.LOGIN);
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -59,9 +61,12 @@ class RegisterController extends GetxController {
 
   @override
   void onClose() {
-    usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.onClose();
+  }
+
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
   }
 }

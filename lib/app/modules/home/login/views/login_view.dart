@@ -43,7 +43,7 @@ class LoginView extends StatelessWidget {
               controller: controller.usernameController,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.person, color: Colors.grey),
-                hintText: 'Username / Email',
+                hintText: 'Email',
                 contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -100,7 +100,20 @@ class LoginView extends StatelessWidget {
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () async {
+                await controller.forgotPassword(); // Call forgotPassword method
+              },
+              child: const Text(
+                'Forgot Password?',
+                style: TextStyle(
+                  color: Color(0xFF704F38), // Dark brown text
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             TextButton(
               onPressed: () {
                 Get.toNamed(Routes.REGISTER); // Navigate to Register Page

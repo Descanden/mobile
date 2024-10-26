@@ -119,14 +119,14 @@ class TambahPegawaiView extends GetView<TambahPegawaiController> {
                   )),
               const SizedBox(height: 20),
               // Tombol untuk menambahkan pegawai
-              Center( // Menambahkan Center untuk memposisikan tombol di tengah
+              Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.brown, // Mengubah latar belakang tombol
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Menambahkan padding
                   ),
                   onPressed: () {
-                    controller.addPegawai(pegawaiController);
+                    controller.addPegawai(); // Call without parameters
                   },
                   child: const Text(
                     'Tambah Pegawai',

@@ -11,6 +11,8 @@ class TambahPegawaiController extends GetxController {
   var selectedPegawaiRole = 'Admin'.obs; // Default role
   var selectedStatus = 'Active'.obs; // Default status
 
+  final PegawaiController pegawaiController = Get.find<PegawaiController>();
+
   @override
   void onClose() {
     usernameController.dispose();
@@ -20,7 +22,7 @@ class TambahPegawaiController extends GetxController {
     super.onClose();
   }
 
-  void addPegawai(PegawaiController pegawaiController) {
+  void addPegawai() {
     final String username = usernameController.text.trim();
     final String password = passwordController.text.trim();
     final String nama = namaController.text.trim();
@@ -28,30 +30,12 @@ class TambahPegawaiController extends GetxController {
     final String role = selectedPegawaiRole.value;
     final String status = selectedStatus.value;
 
-    if (username.isNotEmpty && password.isNotEmpty && nama.isNotEmpty && nomor.isNotEmpty) {
-      pegawaiController.addPegawai(username, password, nama, nomor, role, status);
-
-      // Clear inputs after adding
-      clearInputs();
-
-      Get.snackbar('Sukses', 'Pegawai berhasil ditambahkan',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white);
-    } else {
-      Get.snackbar('Error', 'Semua kolom harus diisi',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white);
+    if (username.isEmpty || password.isEmpty || nama.isEmpty || nomor.isEmpty) {
+      Get.snackbar('Error', 'Semua kolom harus diisi.', snackPosition: SnackPosition.BOTTOM);
+      return;
     }
-  }
 
-  void clearInputs() {
-    usernameController.clear();
-    passwordController.clear();
-    namaController.clear();
-    nomorController.clear();
-    selectedPegawaiRole.value = 'Admin'; // Reset to default
-    selectedStatus.value = 'Active'; // Reset to default
+    pegawaiController.addPegawai(username, password, nama, nomor, role, status);
+    Get.back(); // Kembali ke halaman sebelumnya setelah menambah pegawai
   }
 }

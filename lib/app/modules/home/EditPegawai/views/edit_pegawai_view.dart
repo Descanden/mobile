@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../pegawai/controllers/pegawai_controller.dart';
+import '../../pegawai/views/pegawai.dart';
 import '../controllers/edit_pegawai_controller.dart';
 
 class EditPegawaiView extends StatelessWidget {

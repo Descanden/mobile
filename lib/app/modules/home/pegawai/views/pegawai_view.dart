@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../controllers/pegawai_controller.dart';
+import 'pegawai_detail_view.dart'; // Import the detail view
 
 class PegawaiView extends GetView<PegawaiController> {
   const PegawaiView({super.key});
@@ -67,11 +68,17 @@ class PegawaiView extends GetView<PegawaiController> {
                 itemBuilder: (context, index) {
                   final pegawaiItem = pegawai[index];
                   return ListTile(
-                    title: Text(
-                      pegawaiItem.name,
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.brown[300] : Colors.black,
-                        fontWeight: FontWeight.bold,
+                    title: GestureDetector(
+                      onTap: () {
+                        // Navigate to PegawaiDetailView and pass the pegawaiItem
+                        Get.to(() => PegawaiDetailView(pegawai: pegawaiItem));
+                      },
+                      child: Text(
+                        pegawaiItem.name,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.brown[300] : Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     subtitle: Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../pegawai/controllers/pegawai_controller.dart';
+import '../../pegawai/views/pegawai.dart';
 
 class EditPegawaiController extends GetxController {
   var username = ''.obs;
@@ -23,7 +24,7 @@ class EditPegawaiController extends GetxController {
   }
 
   // Logika untuk mengupdate pegawai
-  void updatePegawai(Pegawai pegawai) {
+  Future<void> updatePegawai(Pegawai pegawai) async {
     // Flag untuk mendeteksi perubahan
     bool updated = false;
 
@@ -38,10 +39,12 @@ class EditPegawaiController extends GetxController {
     }
 
     // Memeriksa apakah ada perubahan
-    if (pegawai.username != username.value) {
-      pegawai.username = username.value;
+    String currentUsername = pegawai.username;
+
+    if (currentUsername != username.value) {
       updated = true;
     }
+
     if (pegawai.password != password.value) {
       pegawai.password = password.value;
       updated = true;
@@ -66,7 +69,7 @@ class EditPegawaiController extends GetxController {
     // Melakukan update jika ada perubahan
     if (updated) {
       // Panggil metode update dari PegawaiController
-      pegawaiController.updatePegawai(pegawai.username, pegawai.password, pegawai.name, pegawai.phone, pegawai.role, pegawai.status);
+      await pegawaiController.updatePegawai(currentUsername, username.value, password.value, pegawai.name, pegawai.phone, pegawai.role, pegawai.status);
       Get.snackbar(
         'Sukses',
         'Data pegawai berhasil diperbarui.',
@@ -86,8 +89,8 @@ class EditPegawaiController extends GetxController {
     Get.defaultDialog(
       title: 'Konfirmasi Hapus',
       middleText: 'Apakah Anda yakin ingin menghapus pegawai ini?',
-      onConfirm: () {
-        pegawaiController.deletePegawai(pegawai);
+      onConfirm: () async {
+        await pegawaiController.deletePegawai(pegawai);
         Get.back(); // Tutup dialog konfirmasi
       },
       onCancel: () {

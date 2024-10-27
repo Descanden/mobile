@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
+import '../../basket/controllers/basket_controller.dart';
 
 class DescriptionView extends StatefulWidget {
   const DescriptionView({super.key});
@@ -10,12 +11,13 @@ class DescriptionView extends StatefulWidget {
 }
 
 class _DescriptionViewState extends State<DescriptionView> {
-  String selectedSize = 'S'; // Default size selected
-  int quantity = 1; // Default quantity
+  final BasketController basketController = Get.find();
+  String selectedSize = 'S';
+  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
-    final productData = Get.arguments; // Get all arguments
+    final productData = Get.arguments;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -39,7 +41,7 @@ class _DescriptionViewState extends State<DescriptionView> {
               color: isDarkMode ? Colors.white : Colors.black,
             ),
             onPressed: () {
-              // Navigate to cart page
+              Get.toNamed('/basket');
             },
           ),
         ],
@@ -51,9 +53,9 @@ class _DescriptionViewState extends State<DescriptionView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: productData['image'] != null && 
+                child: productData['image'] != null &&
                         (productData['image'].startsWith('http') || File(productData['image']).existsSync())
-                    ? (productData['image'].startsWith('http') 
+                    ? (productData['image'].startsWith('http')
                         ? Image.network(
                             productData['image'],
                             height: 300,
@@ -224,11 +226,12 @@ class _DescriptionViewState extends State<DescriptionView> {
                       ),
                       onPressed: () {
                         if (selectedSize.isNotEmpty) {
-                          Get.toNamed('/cart', arguments: {
+                          basketController.addItem({
                             'product': productData,
                             'size': selectedSize,
                             'quantity': quantity,
                           });
+                          Get.toNamed('/basket');
                         } else {
                           Get.snackbar(
                             'Error',

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/home/basket/bindings/basket_binding.dart';
+import '../modules/home/basket/views/basket_view.dart';
 import '../modules/components/map/bindings/map_binding.dart';
 import '../modules/components/map/views/map_view.dart';
 import '../modules/home/AddItem/bindings/add_item_binding.dart';
@@ -190,6 +192,11 @@ class AppPages {
       name: _Paths.ITEM,
       page: () => const ItemView(),
       binding: ItemBinding(),
+    ),
+    GetPage(
+      name: _Paths.BASKET,
+      page: () => const BasketView(),
+      binding: BasketBinding(),
     ),
   ];
 }

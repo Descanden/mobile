@@ -4,10 +4,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'app/modules/components/user_preferences_servies.dart';
+import 'app/modules/home/basket/controllers/basket_controller.dart';
 import 'app/modules/home/item/controllers/item_controller.dart';
 import 'app/modules/home/product/controllers/product_controller.dart';
 import 'app/modules/home/product2/controllers/product2_controller.dart';
-import 'app/modules/home/product3/controllers/product3_controller.dart'; // Import Product3Controller
+import 'app/modules/home/product3/controllers/product3_controller.dart';
 import 'app/routes/app_pages.dart';
 import 'app/modules/home/settings/controllers/settings_controller.dart';
 
@@ -29,15 +30,12 @@ void main() async {
   final settingsController = Get.put(SettingsController());
   settingsController.isDarkMode.value = box.read('darkMode') ?? false;
 
-  // Initialize ItemController and ProductController
+  // Initialize other controllers
   Get.put(ItemController());
   Get.put(ProductController());
-
-  // Initialize Product2Controller
-  Get.put(Product2Controller()); 
-
-  // Initialize Product3Controller
+  Get.put(Product2Controller());
   Get.put(Product3Controller());
+  Get.put(BasketController()); // Initialize BasketController
 
   // Load user email from SharedPreferences
   final userPreferencesService = UserPreferencesService();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../controllers/pegawai_controller.dart';
-import 'pegawai_detail_view.dart'; // Import the detail view
+import 'pegawai_detail_view.dart';
 
 class PegawaiView extends GetView<PegawaiController> {
   const PegawaiView({super.key});

@@ -4,7 +4,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'app/modules/components/user_preferences_servies.dart';
+import 'app/modules/home/basket/bindings/basket_binding.dart';
 import 'app/modules/home/basket/controllers/basket_controller.dart';
+import 'app/modules/home/description/views/description_view.dart';
 import 'app/modules/home/item/controllers/item_controller.dart';
 import 'app/modules/home/product/controllers/product_controller.dart';
 import 'app/modules/home/product2/controllers/product2_controller.dart';
@@ -23,7 +25,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
-  Get.put(BasketController());
 
   // Inisialisasi handler untuk pesan background
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -50,6 +51,9 @@ void main() async {
 
   // Initialize Product3Controller
   Get.put(Product3Controller());
+
+  // Initialize BasketController
+  Get.put(BasketController());
 
   // Load user email from SharedPreferences
   final userPreferencesService = UserPreferencesService();
@@ -89,7 +93,15 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         title: "Your App Title",
         initialRoute: Routes.LOGIN, // Atur rute awal
-        getPages: AppPages.routes, // Rute aplikasi
+        getPages: [
+          ...AppPages.routes, // Rute aplikasi
+          GetPage(
+            name: '/description',
+            page: () => const DescriptionView(),
+            binding: BasketBinding(),
+          ),
+          // Add more routes if needed
+        ],
         debugShowCheckedModeBanner: false, // Hilangkan banner debug
         theme: Get.find<SettingsController>().isDarkMode.value
             ? ThemeData.dark() // Tema gelap

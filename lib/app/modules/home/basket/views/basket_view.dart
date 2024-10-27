@@ -9,6 +9,7 @@ class BasketView extends GetView<BasketController> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        await controller.showReminderNotification(); // Trigger the reminder notification
         return true; // Allow back navigation
       },
       child: Scaffold(
@@ -37,7 +38,7 @@ class BasketView extends GetView<BasketController> {
                           middleText: "Are you sure you want to remove this item?",
                           confirm: ElevatedButton(
                             onPressed: () {
-                              
+                              controller.removeItem(index);
                               Get.back();
                             },
                             child: const Text("Yes"),

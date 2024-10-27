@@ -11,7 +11,9 @@ class DescriptionView extends StatefulWidget {
 }
 
 class _DescriptionViewState extends State<DescriptionView> {
-  final BasketController basketController = Get.find();
+  // Ensure that the BasketController is registered before calling Get.find()
+  final BasketController basketController = Get.find(); // Make sure BasketController is registered
+
   String selectedSize = 'S';
   int quantity = 1;
 
@@ -179,7 +181,7 @@ class _DescriptionViewState extends State<DescriptionView> {
                     IconButton(
                       icon: const Icon(Icons.favorite, color: Colors.red),
                       onPressed: () {
-                        // Add to favorites
+                        // Add to favorites logic
                       },
                     ),
                     Container(

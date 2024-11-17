@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BasketController extends GetxController {
   final items = <Map<String, dynamic>>[].obs;
@@ -13,10 +14,14 @@ class BasketController extends GetxController {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+  // Firestore instance
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   void onInit() {
     super.onInit();
     _initializeNotifications();
+    fetchItemsFromFirestore(); // Fetch items from Firestore on init
   }
 
   Future<void> _initializeNotifications() async {
@@ -26,16 +31,21 @@ class BasketController extends GetxController {
     await _firebaseMessaging.requestPermission();
     print("Requested permission for Firebase Messaging.");
 
-    // Initialize local notifications for foreground
+    // Initialize local notifications
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initializationSettings = InitializationSettings(android: androidSettings);
 
-    // Initialize local notifications
     try {
-      await _localNotificationsPlugin.initialize(initializationSettings);
+      await _localNotificationsPlugin.initialize(initializationSettings,
+          onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        print("Notification tapped: ${response.payload}");
+        if (response.payload != null) {
+          // Example navigation based on payload
+          // Get.toNamed('/yourRouteName', arguments: response.payload);
+        }
+      });
       print("Local notifications initialized successfully.");
       
-      // Create the notification channel for Android 8.0 and above
       await _createNotificationChannel();
     } catch (e) {
       print("Error initializing local notifications: $e");
@@ -46,6 +56,22 @@ class BasketController extends GetxController {
       print("Received foreground message: ${message.notification?.title}");
       _showLocalNotification(message);
     });
+
+    // Handle background messages
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  Future<void> fetchItemsFromFirestore() async {
+    try {
+      // Fetch items from Firestore collection
+      QuerySnapshot querySnapshot = await _firestore.collection('items').get();
+      for (var doc in querySnapshot.docs) {
+        items.add(doc.data() as Map<String, dynamic>);
+      }
+      print("Items fetched from Firestore: ${items.length}");
+    } catch (e) {
+      print("Error fetching items from Firestore: $e");
+    }
   }
 
   Future<void> _createNotificationChannel() async {
@@ -57,7 +83,6 @@ class BasketController extends GetxController {
       playSound: true,
     );
 
-    // Create the channel (Ensure this is called on the main thread)
     final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
         _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
@@ -84,10 +109,16 @@ class BasketController extends GetxController {
         message.notification?.title,
         message.notification?.body,
         notificationDetails,
+        payload: message.data['payload'], // Pass additional data if needed
       );
     } catch (e) {
       print("Error showing local notification: $e");
     }
+  }
+
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    print("Handling a background message: ${message.messageId}");
+    // Perform actions when the app is in the background, e.g., showing a notification
   }
 
   Future<void> showReminderNotification() async {
@@ -187,6 +218,6 @@ class BasketController extends GetxController {
   }
 
   void checkout() {
-    // Handle checkout with selected items
+    // Handle checkout
   }
 }

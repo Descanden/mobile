@@ -7,20 +7,22 @@ import 'app/modules/components/user_preferences_servies.dart';
 import 'app/modules/home/basket/bindings/basket_binding.dart';
 import 'app/modules/home/basket/controllers/basket_controller.dart';
 import 'app/modules/home/description/views/description_view.dart';
+import 'app/modules/home/feed/controllers/feed_controller.dart';
+import 'app/modules/home/feed/views/feed_view.dart';
 import 'app/modules/home/item/controllers/item_controller.dart';
 import 'app/modules/home/product/controllers/product_controller.dart';
 import 'app/modules/home/product2/controllers/product2_controller.dart';
-import 'app/modules/home/product3/controllers/product3_controller.dart'; // Import Product3Controller
+import 'app/modules/home/product3/controllers/product3_controller.dart';
 import 'app/routes/app_pages.dart';
 import 'app/modules/home/settings/controllers/settings_controller.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 
 /// Handler untuk pesan di background
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Notifikasi untuk mengajak user checkout produk
   print("Pesan diterima saat aplikasi terminated: ${message.messageId}");
-  // Tambahkan logika notifikasi sesuai kebutuhan
 }
 
+/// Main function
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -42,44 +44,38 @@ void main() async {
   final settingsController = Get.put(SettingsController());
   settingsController.isDarkMode.value = box.read('darkMode') ?? false;
 
-  // Initialize ItemController and ProductController
+  // Initialize Controllers
   Get.put(ItemController());
   Get.put(ProductController());
-
-  // Initialize Product2Controller
   Get.put(Product2Controller());
-
-  // Initialize Product3Controller
   Get.put(Product3Controller());
-
-  // Initialize BasketController
   Get.put(BasketController());
+  Get.put(FeedController()); // Inisialisasi FeedController
 
   // Load user email from SharedPreferences
   final userPreferencesService = UserPreferencesService();
   String? savedEmail = await userPreferencesService.getEmail();
   if (savedEmail != null) {
-    // You can use the saved email as needed
     print('Loaded email: $savedEmail');
   }
 
   // Mendapatkan token perangkat untuk pertama kali
   FirebaseMessaging.instance.getToken().then((token) {
     print("Device Token: $token"); // Cetak token pertama kali
-    // Simpan token ke server atau database jika diperlukan
   });
 
   // Listener untuk pembaruan token
   FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
     print("Updated Device Token: $newToken");
-    // Simpan token baru ke server atau database jika diperlukan
   });
 
   // Listener untuk pesan yang diterima di foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print("Pesan diterima saat aplikasi berjalan: ${message.notification?.title}");
-    // Logika untuk menampilkan notifikasi atau mengambil tindakan lain
   });
+
+  // Initialize Firebase In-App Messaging
+  await FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
 
   runApp(const MyApp());
 }
@@ -92,20 +88,23 @@ class MyApp extends StatelessWidget {
     return Obx(() {
       return GetMaterialApp(
         title: "Your App Title",
-        initialRoute: Routes.LOGIN, // Atur rute awal
+        initialRoute: Routes.LOGIN,
         getPages: [
-          ...AppPages.routes, // Rute aplikasi
+          ...AppPages.routes,
           GetPage(
             name: '/description',
             page: () => const DescriptionView(),
             binding: BasketBinding(),
           ),
-          // Add more routes if needed
+          GetPage(
+            name: '/feed',
+            page: () => const FeedView(),
+          ),
         ],
-        debugShowCheckedModeBanner: false, // Hilangkan banner debug
+        debugShowCheckedModeBanner: false,
         theme: Get.find<SettingsController>().isDarkMode.value
-            ? ThemeData.dark() // Tema gelap
-            : ThemeData.light(), // Tema terang
+            ? ThemeData.dark()
+            : ThemeData.light(),
       );
     });
   }

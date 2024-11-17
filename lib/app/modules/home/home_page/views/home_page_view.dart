@@ -5,24 +5,23 @@ import '../../../components/map/views/map_view.dart';
 import '../../../components/webview_page.dart';
 import '../controllers/home_page_controller.dart';
 import '../../settings/controllers/settings_controller.dart';
-
+import '../../../../routes/app_pages.dart';
 
 class HomePageView extends GetView<HomePageController> {
   const HomePageView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final SettingsController settingsController =
-        Get.find<SettingsController>(); // Initialize SettingsController
+    final SettingsController settingsController = Get.find<SettingsController>();
 
     return Scaffold(
       backgroundColor: settingsController.isDarkMode.value
           ? const Color(0xFF121212)
-          : Colors.white, // Background color
+          : Colors.white,
       appBar: AppBar(
         backgroundColor: settingsController.isDarkMode.value
             ? Colors.black
-            : const Color(0xFFAC9365), // Change AppBar color
+            : const Color(0xFFAC9365),
         elevation: 0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,24 +31,57 @@ class HomePageView extends GetView<HomePageController> {
                 decoration: BoxDecoration(
                   color: settingsController.isDarkMode.value
                       ? const Color(0xFF2A2A2A)
-                      : Colors.white, // Change background color
+                      : Colors.white,
                   borderRadius: BorderRadius.circular(25),
                 ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search,
-                        color: settingsController.isDarkMode.value
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Obx(() => TextField(
+                        controller: controller.searchController,
+                        style: TextStyle(
+                          color: settingsController.isDarkMode.value
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search,
+                              color: settingsController.isDarkMode.value
+                                  ? Colors.white54
+                                  : Colors.black54),
+                          hintText: controller.isListening.value
+                              ? 'Mendengarkan...'
+                              : controller.recognizedText.value.isEmpty
+                              ? 'Cari produk'
+                              : controller.recognizedText.value,
+                          hintStyle: TextStyle(
+                              color: settingsController.isDarkMode.value
+                                  ? Colors.white54
+                                  : Colors.black54),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 20),
+                        ),
+                      )),
+                    ),
+                    Obx(() => IconButton(
+                      icon: Icon(
+                        controller.isListening.value ? Icons.mic : Icons.mic_none,
+                        color: controller.isListening.value
+                            ? Colors.red
+                            : (settingsController.isDarkMode.value
                             ? Colors.white54
-                            : Colors.black54), // Change icon color
-                    hintText: 'Cari produk',
-                    hintStyle: TextStyle(
-                        color: settingsController.isDarkMode.value
-                            ? Colors.white54
-                            : Colors.black54), // Change hint text color
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 20),
-                  ),
+                            : Colors.black54),
+                      ),
+                      onPressed: () {
+                        if (controller.isListening.value) {
+                          controller.stopListening();
+                        } else {
+                          controller.startListening();
+                        }
+                      },
+                    )),
+                  ],
                 ),
               ),
             ),
@@ -57,20 +89,18 @@ class HomePageView extends GetView<HomePageController> {
               icon: Icon(Icons.shopping_bag_outlined,
                   color: settingsController.isDarkMode.value
                       ? Colors.white
-                      : Colors.black), // Change shopping bag icon color
+                      : Colors.black),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: FaIcon(FontAwesomeIcons.instagram,
+                  color: settingsController.isDarkMode.value
+                      ? Colors.white
+                      : Colors.black),
               onPressed: () {
-                // Action for shopping bag icon
+                Get.to(() => WebViewPage());
               },
             ),
-            // Add Instagram icon button here
-            IconButton(
-  icon: FaIcon(FontAwesomeIcons.instagram,
-      color: settingsController.isDarkMode.value ? Colors.white : Colors.black),
-  onPressed: () {
-    Get.to(() => WebViewPage()); // Correctly navigate to WebViewPage
-  },
-),
-
           ],
         ),
       ),
@@ -78,28 +108,25 @@ class HomePageView extends GetView<HomePageController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Main Image (increased size and added padding)
             Padding(
               padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0, vertical: 10.0), // Added vertical padding
+                  horizontal: 16.0, vertical: 10.0),
               child: GestureDetector(
                 onTap: () {
-                  // Navigate to MapView page
-                  Get.to(() => MapView()); // Replace WebViewPage with MapView
+                  Get.to(() => MapView());
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: Image.asset(
-                    'lib/assets/Frame home.jpg', // Image path
-                    height: 330, // Increased height slightly for a larger image
+                    'lib/assets/Frame home.jpg',
+                    height: 330,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20), // Additional spacing
-            // Row of buttons
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -115,8 +142,6 @@ class HomePageView extends GetView<HomePageController> {
               ),
             ),
             const SizedBox(height: 20),
-            const SizedBox(width: 25),
-            // Icon Grid
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: GridView(
@@ -135,7 +160,7 @@ class HomePageView extends GetView<HomePageController> {
                       settingsController.isDarkMode.value),
                   _buildIconButton('Tambah Barang', Icons.add_circle,
                       '/item', settingsController.isDarkMode.value),
-                  _buildIconButton('Daftar Member', Icons.group, '/members',
+                  _buildIconButton('Feed', Icons.rss_feed, Routes.FEED,
                       settingsController.isDarkMode.value),
                   _buildIconButton('Input harga/promo', Icons.price_check,
                       '/promo', settingsController.isDarkMode.value),
@@ -147,10 +172,9 @@ class HomePageView extends GetView<HomePageController> {
           ],
         ),
       ),
-      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Fixed type for more than 3 items
-        currentIndex: 0, // Set to Home by default
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 0,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
@@ -163,19 +187,19 @@ class HomePageView extends GetView<HomePageController> {
         onTap: (index) {
           switch (index) {
             case 0:
-              Get.toNamed('/home-page'); // Navigate to Home
+              Get.toNamed(Routes.HOME_PAGE);
               break;
             case 1:
-              Get.toNamed('/category'); // Navigate to Kategori
+              Get.toNamed(Routes.CATEGORY);
               break;
             case 2:
-              Get.toNamed('/history'); // Navigate to Riwayat
+              Get.toNamed(Routes.HISTORY);
               break;
             case 3:
-              Get.toNamed('/penjualan'); // Navigate to Penjualan
+              Get.toNamed('/penjualan');
               break;
             case 4:
-              Get.toNamed('/account'); // Navigate to Account
+              Get.toNamed(Routes.ACCOUNT);
               break;
           }
         },
@@ -183,7 +207,6 @@ class HomePageView extends GetView<HomePageController> {
     );
   }
 
-  // Helper method for creating a category button
   Widget _buildCategoryButton(String text, String route, bool isDarkMode) {
     return Expanded(
       child: GestureDetector(
@@ -199,7 +222,7 @@ class HomePageView extends GetView<HomePageController> {
             child: Text(
               text,
               style: TextStyle(
-                  color: isDarkMode ? Colors.white : Colors.white), // Change text color
+                  color: isDarkMode ? Colors.white : Colors.white),
             ),
           ),
         ),
@@ -207,23 +230,22 @@ class HomePageView extends GetView<HomePageController> {
     );
   }
 
-  // Helper method for creating an icon button (slightly larger icons)
   Widget _buildIconButton(
       String label, IconData icon, String route, bool isDarkMode) {
     return GestureDetector(
-      onTap: () => Get.toNamed(route), // Navigate to specific route
+      onTap: () => Get.toNamed(route),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon,
               size: 50,
-              color: isDarkMode ? Colors.white : Colors.black), // Change icon color
+              color: isDarkMode ? Colors.white : Colors.black),
           const SizedBox(height: 5),
           Text(
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: isDarkMode ? Colors.white : Colors.black), // Change text color
+                color: isDarkMode ? Colors.white : Colors.black),
           ),
         ],
       ),

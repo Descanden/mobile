@@ -28,6 +28,7 @@ abstract class Routes {
   static const REGISTER = _Paths.REGISTER;
   static const ITEM = _Paths.ITEM;
   static const BASKET = _Paths.BASKET;
+  static const FEED = _Paths.FEED;
 }
 
 abstract class _Paths {
@@ -58,4 +59,5 @@ abstract class _Paths {
   static const REGISTER = '/register';
   static const ITEM = '/item';
   static const BASKET = '/basket';
+  static const FEED = '/feed';
 }

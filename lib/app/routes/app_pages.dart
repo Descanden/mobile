@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 
-import '../modules/home/basket/bindings/basket_binding.dart';
-import '../modules/home/basket/views/basket_view.dart';
 import '../modules/components/map/bindings/map_binding.dart';
 import '../modules/components/map/views/map_view.dart';
 import '../modules/home/AddItem/bindings/add_item_binding.dart';
@@ -24,10 +22,14 @@ import '../modules/home/TambahSupplier/bindings/tambah_supplier_binding.dart';
 import '../modules/home/TambahSupplier/views/tambah_supplier_view.dart';
 import '../modules/home/account/bindings/account_binding.dart';
 import '../modules/home/account/views/account_view.dart';
+import '../modules/home/basket/bindings/basket_binding.dart';
+import '../modules/home/basket/views/basket_view.dart';
 import '../modules/home/category/bindings/category_binding.dart';
 import '../modules/home/category/views/category_view.dart';
 import '../modules/home/description/bindings/description_binding.dart';
 import '../modules/home/description/views/description_view.dart';
+import '../modules/home/feed/bindings/feed_binding.dart';
+import '../modules/home/feed/views/feed_view.dart';
 import '../modules/home/home_page/bindings/home_page_binding.dart';
 import '../modules/home/home_page/views/home_page_view.dart';
 import '../modules/home/item/bindings/item_binding.dart';
@@ -197,6 +199,11 @@ class AppPages {
       name: _Paths.BASKET,
       page: () => const BasketView(),
       binding: BasketBinding(),
+    ),
+    GetPage(
+      name: _Paths.FEED,
+      page: () => const FeedView(),
+      binding: FeedBinding(),
     ),
   ];
 }

@@ -202,7 +202,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FEED,
-      page: () => const FeedView(),
+      page: () => FeedView(),
       binding: FeedBinding(),
     ),
   ];

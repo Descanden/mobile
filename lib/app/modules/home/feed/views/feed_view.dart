@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../settings/controllers/settings_controller.dart';
 import '../controllers/feed_controller.dart';
 import 'feed_detail_view.dart';
@@ -216,6 +217,9 @@ class FeedView extends StatelessWidget {
     final messageController = TextEditingController();
     String? selectedMediaType;
 
+    final speech = stt.SpeechToText();
+    bool isListening = false;
+
     showDialog(
       context: context,
       builder: (context) {
@@ -265,6 +269,19 @@ class FeedView extends StatelessWidget {
                     backgroundColor: Color(0xFFAC9365)),
                 child: const Text('Add', style: TextStyle(color: Colors.white)),
               ),
+              IconButton(
+                icon: Icon(Icons.mic,
+                    color: isListening ? Colors.red : Colors.grey),
+                onPressed: () async {
+                  if (isListening) {
+                    await speech.stop();
+                    isListening = false;
+                  } else {
+                    await _startListening(speech, messageController);
+                    isListening = true;
+                  }
+                },
+              ),
             ],
           ),
         );
@@ -272,21 +289,74 @@ class FeedView extends StatelessWidget {
     );
   }
 
-  Widget VideoWidget({required File videoFile}) {
-    final VideoPlayerController controller = VideoPlayerController.file(videoFile);
+  Future<void> _startListening(stt.SpeechToText speech,
+      TextEditingController messageController) async {
+    bool available = await speech.initialize(onStatus: (status) {
+      print('Speech status: $status');
+    }, onError: (error) {
+      print('Speech error: $error');
+    });
 
-    return FutureBuilder(
-      future: controller.initialize(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return AspectRatio(
-            aspectRatio: controller.value.aspectRatio,
-            child: VideoPlayer(controller),
-          );
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-    );
+    if (available) {
+      speech.listen(
+        onResult: (result) {
+          messageController.text = result.recognizedWords;
+        },
+      );
+    } else {
+      Get.snackbar(
+        'Error',
+        'Microphone access is required for speech-to-text functionality.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+}
+
+class VideoWidget extends StatelessWidget {
+  final File videoFile;
+  const VideoWidget({required this.videoFile});
+
+  @override
+  Widget build(BuildContext context) {
+    return VideoPlayerWidget(videoFile: videoFile);
+  }
+}
+
+class VideoPlayerWidget extends StatefulWidget {
+  final File videoFile;
+  const VideoPlayerWidget({required this.videoFile});
+
+  @override
+  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
+}
+
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.file(widget.videoFile)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _controller.value.isInitialized
+        ? AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          )
+        : const Center(child: CircularProgressIndicator());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
   }
 }

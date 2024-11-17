@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
           ),
           GetPage(
             name: '/feed',
-            page: () => const FeedView(),
+            page: () => FeedView(),
           ),
         ],
         debugShowCheckedModeBanner: false,

@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pemrograman_mobile/app/modules/home/settings/controllers/settings_controller.dart';
-import 'dart:io'; // Import untuk File
 import '../controllers/product3_controller.dart';
 
 class Product3View extends GetView<Product3Controller> {

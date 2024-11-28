@@ -2,11 +2,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart'; // Import Firebase Storage
-import 'dart:io'; // For file handling
-import '../../product/controllers/product_controller.dart' as HomeProduct; // Alias for home product controller
-import '../../product2/controllers/product2_controller.dart' as Product2; // Alias for product2 controller
-import '../../product3/controllers/product3_controller.dart' as Product3; // Alias for product3 controller
+import 'package:firebase_storage/firebase_storage.dart'; // Firebase Storage
+import 'dart:io'; // File handling
+import '../../product/controllers/product_controller.dart' as HomeProduct;
+import '../../product2/controllers/product2_controller.dart' as Product2;
+import '../../product3/controllers/product3_controller.dart' as Product3;
 
 class ItemController extends GetxController {
   var categories = <String>[].obs; // Observable list of categories
@@ -15,6 +15,8 @@ class ItemController extends GetxController {
   final priceController = TextEditingController(); // Controller for price
   final descriptionController = TextEditingController(); // Controller for description
   XFile? image; // For holding the selected image
+
+  var isLoading = false.obs; // Observable for loading state
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Firestore instance
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance; // Firebase Storage instance
@@ -30,7 +32,7 @@ class ItemController extends GetxController {
     categories.value = [
       'Product1',
       'Product2',
-      'Product3'
+      'Product3',
     ]; // Use proper capitalization for consistency
   }
 
@@ -76,9 +78,11 @@ class ItemController extends GetxController {
 
     String? imageUrl;
     if (image != null) {
+      isLoading.value = true; // Set loading state to true
       imageUrl = await uploadImageToFirebaseStorage(image!);
       if (imageUrl == null) {
         Get.snackbar("Error", "Failed to upload image");
+        isLoading.value = false; // Set loading state to false
         return;
       }
     } else {
@@ -92,66 +96,73 @@ class ItemController extends GetxController {
       description: descriptionController.text, // Use descriptionController text
     );
 
-    if (selectedCategory.value == 'Product1') {
-      final productController = Get.find<HomeProduct.ProductController>(); // Use the alias
-      var homeProduct = HomeProduct.Product(
-        image: imageUrl,
-        title: nameController.text,
-        price: int.tryParse(priceController.text) ?? 0,
-        description: descriptionController.text, // Use descriptionController text
-      );
-      productController.productList.add(homeProduct);
+    try {
+      if (selectedCategory.value == 'Product1') {
+        final productController = Get.find<HomeProduct.ProductController>();
+        var homeProduct = HomeProduct.Product(
+          image: imageUrl,
+          title: nameController.text,
+          price: int.tryParse(priceController.text) ?? 0,
+          description: descriptionController.text,
+        );
+        productController.productList.add(homeProduct);
 
-      await _firestore.collection('products1').add({
-        'image': imageUrl,
-        'title': homeProduct.title,
-        'price': homeProduct.price,
-        'description': homeProduct.description,
-      });
+        await _firestore.collection('products1').add({
+          'image': imageUrl,
+          'title': homeProduct.title,
+          'price': homeProduct.price,
+          'description': homeProduct.description,
+        });
 
-      Get.snackbar("Success", "Product added to Product1 successfully!");
-    } else if (selectedCategory.value == 'Product2') {
-      final product2Controller = Get.find<Product2.Product2Controller>(); // Use the alias
-      var newProduct2 = Product2.Product(
-        image: imageUrl,
-        title: nameController.text,
-        price: int.tryParse(priceController.text) ?? 0,
-        description: descriptionController.text, // Use descriptionController text
-      );
-      product2Controller.addProduct(newProduct2);
+        Get.snackbar("Success", "Product added to Product1 successfully!");
+      } else if (selectedCategory.value == 'Product2') {
+        final product2Controller = Get.find<Product2.Product2Controller>();
+        var newProduct2 = Product2.Product(
+          image: imageUrl,
+          title: nameController.text,
+          price: int.tryParse(priceController.text) ?? 0,
+          description: descriptionController.text,
+        );
+        product2Controller.addProduct(newProduct2);
 
-      await _firestore.collection('products2').add({
-        'image': newProduct2.image,
-        'title': newProduct2.title,
-        'price': newProduct2.price,
-        'description': newProduct2.description,
-      });
+        await _firestore.collection('products2').add({
+          'image': newProduct2.image,
+          'title': newProduct2.title,
+          'price': newProduct2.price,
+          'description': newProduct2.description,
+        });
 
-      Get.snackbar("Success", "Product added to Product2 successfully!");
-    } else if (selectedCategory.value == 'Product3') {
-      final product3Controller = Get.find<Product3.Product3Controller>(); // Use the alias
-      product3Controller.productList.add(newProduct);
+        Get.snackbar("Success", "Product added to Product2 successfully!");
+      } else if (selectedCategory.value == 'Product3') {
+        final product3Controller = Get.find<Product3.Product3Controller>();
+        product3Controller.productList.add(newProduct);
 
-      await _firestore.collection('products3').add({
-        'image': newProduct.image,
-        'title': newProduct.title,
-        'price': newProduct.price,
-        'description': newProduct.description,
-      });
+        await _firestore.collection('products3').add({
+          'image': newProduct.image,
+          'title': newProduct.title,
+          'price': newProduct.price,
+          'description': newProduct.description,
+        });
 
-      Get.snackbar("Success", "Product added to Product3 successfully!");
-    } else {
-      Get.snackbar("Error", "Invalid category selected");
-      return;
+        Get.snackbar("Success", "Product added to Product3 successfully!");
+      } else {
+        Get.snackbar("Error", "Invalid category selected");
+        isLoading.value = false;
+        return;
+      }
+    } catch (e) {
+      print("Error saving product: $e");
+      Get.snackbar("Error", "Failed to save product");
+    } finally {
+      isLoading.value = false; // Set loading state to false
     }
 
+    // Clear fields and reset state
     nameController.clear();
     priceController.clear();
-    descriptionController.clear(); // Clear the description field
-    image = null; // Clear the image
-    selectedCategory.value = ''; // Reset selected category
-    update(); // Update the UI
+    descriptionController.clear();
+    image = null;
+    selectedCategory.value = '';
+    update(); // Update UI
   }
-
-  void fetchProductsByCategory() {}
 }

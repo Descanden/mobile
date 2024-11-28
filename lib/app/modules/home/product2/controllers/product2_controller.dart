@@ -1,38 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import '../../product/controllers/product_controller.dart'; // Import the Product model from components
 
 class Product2Controller extends GetxController {
-  final productList = <Product>[].obs; // Observable list of Product for Product2
-  var isLoading = false.obs;
+  var productList = <Product>[].obs;
 
-  // Initial list of products
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
   void onInit() {
     super.onInit();
-    loadInitialProducts(); // Load initial products
+    fetchProducts(); // Fetch products when the controller is initialized
   }
 
-  void loadInitialProducts() {
-
+  // Fetch products from Firestore for Product2 category
+  void fetchProducts() async {
+    try {
+      var querySnapshot = await _firestore.collection('products2').get();
+      var products = querySnapshot.docs.map((doc) {
+        return Product(
+          image: doc['image'],
+          title: doc['title'],
+          price: doc['price'],
+          description: doc['description'],
+        );
+      }).toList();
+      productList.assignAll(products); // Update product list
+    } catch (e) {
+      print("Error fetching products: $e");
+    }
   }
 
-  // Method to add a new product to the productList
-  void addProduct(Product product) {
-    productList.add(product);
-    Get.snackbar("Success", "Product added to Product2 successfully!");
-  }
+  void addProduct(Product newProduct2) {}
 }
 
 class Product {
   final String image;
   final String title;
   final int price;
-  final String description; 
+  final String description;
 
-  Product({
-    required this.image,
-    required this.title,
-    required this.price,
-    required this.description,
-  });
+  Product({required this.image, required this.title, required this.price, required this.description});
 }

@@ -152,4 +152,6 @@ class ItemController extends GetxController {
     selectedCategory.value = ''; // Reset selected category
     update(); // Update the UI
   }
+
+  void fetchProductsByCategory() {}
 }

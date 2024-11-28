@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../controllers/settings_controller.dart';
 
 class SettingsView extends GetView<SettingsController> {
-  const SettingsView({super.key});
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +81,12 @@ class SettingsView extends GetView<SettingsController> {
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),
+              const SizedBox(height: 20),
+              // Tombol untuk memilih audio
+              ElevatedButton(
+                onPressed: _selectAudioFile,
+                child: const Text('Pilih Suara Proses'),
+              ),
             ],
           ),
         );
@@ -113,4 +123,28 @@ class SettingsView extends GetView<SettingsController> {
       ),
     );
   }
+
+  // Fungsi untuk memilih file audio
+  Future<void> _selectAudioFile() async {
+    // Memilih file audio dari perangkat
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.audio, // Pilih hanya file audio
+    );
+
+    if (result != null) {
+      String? filePath = result.files.single.path;
+
+      if (filePath != null) {
+        // Simpan path file audio untuk digunakan nanti
+        Get.find<SettingsController>().setAudioFilePath(filePath);
+        print('Audio file selected: $filePath');
+      }
+    } else {
+      print('No audio file selected');
+    }
+  }
+}
+
+extension on SettingsController {
+  void setAudioFilePath(String filePath) {}
 }

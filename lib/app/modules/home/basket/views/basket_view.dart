@@ -1,15 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:audioplayers/audioplayers.dart';
+import '../../settings/controllers/settings_controller.dart';
 import '../controllers/basket_controller.dart';
 
 class BasketView extends GetView<BasketController> {
-  const BasketView({super.key});
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  BasketView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await controller.showReminderNotification(); // Trigger the reminder notification
+        await controller
+            .showReminderNotification(); // Trigger the reminder notification
         return true; // Allow back navigation
       },
       child: Scaffold(
@@ -35,7 +42,8 @@ class BasketView extends GetView<BasketController> {
                       confirmDismiss: (direction) async {
                         return await Get.defaultDialog(
                           title: "Remove Item",
-                          middleText: "Are you sure you want to remove this item?",
+                          middleText:
+                              "Are you sure you want to remove this item?",
                           confirm: ElevatedButton(
                             onPressed: () {
                               controller.removeItem(index);
@@ -60,7 +68,8 @@ class BasketView extends GetView<BasketController> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: const Icon(Icons.delete, color: Colors.white)),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                         child: Card(
                           child: Padding(
                             padding: const EdgeInsets.all(10),
@@ -69,7 +78,10 @@ class BasketView extends GetView<BasketController> {
                               children: [
                                 Checkbox(
                                   value: item['selected'],
-                                  onChanged: (value) => controller.toggleItemSelection(index),
+                                  onChanged: (value) {
+                                    controller.toggleItemSelection(index);
+                                    controller.updateSelectedTotal();
+                                  },
                                 ),
                                 Image.network(
                                   item['product']['image'],
@@ -80,11 +92,13 @@ class BasketView extends GetView<BasketController> {
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         item['product']['title'],
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(height: 5),
                                       Text('Size Chart: ${item['size']}'),
@@ -94,24 +108,34 @@ class BasketView extends GetView<BasketController> {
                                           Text(
                                             'Rp ${item['product']['originalPrice']}',
                                             style: const TextStyle(
-                                              decoration: TextDecoration.lineThrough,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
                                               color: Colors.grey,
                                             ),
                                           ),
                                           const SizedBox(width: 5),
-                                          Text('Rp ${item['product']['price']}'),
+                                          Text(
+                                              'Rp ${item['product']['price']}'),
                                         ],
                                       ),
                                       Row(
                                         children: [
                                           IconButton(
                                             icon: const Icon(Icons.remove),
-                                            onPressed: () => controller.decreaseQuantity(index),
+                                            onPressed: () {
+                                              controller
+                                                  .decreaseQuantity(index);
+                                              controller.updateSelectedTotal();
+                                            },
                                           ),
                                           Text('${item['quantity']}'),
                                           IconButton(
                                             icon: const Icon(Icons.add),
-                                            onPressed: () => controller.increaseQuantity(index),
+                                            onPressed: () {
+                                              controller
+                                                  .increaseQuantity(index);
+                                              controller.updateSelectedTotal();
+                                            },
                                           ),
                                         ],
                                       ),
@@ -128,38 +152,14 @@ class BasketView extends GetView<BasketController> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: controller.allSelected.value,
-                          onChanged: (value) => controller.toggleSelectAll(),
-                        ),
-                        const Text('Semua'),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        const Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(
-                          controller.selectedTotal.value > 0 ? 'Rp ${controller.selectedTotal.value}' : '',
-                          style: TextStyle(color: controller.selectedTotal.value > 0 ? null : Colors.transparent),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10.0, vertical: 10.0),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: controller.selectedTotal.value > 0 ? controller.checkout : null,
+                    onPressed: controller.selectedTotal.value > 0
+                        ? _processOrder
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF704F38),
                       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -180,4 +180,49 @@ class BasketView extends GetView<BasketController> {
       ),
     );
   }
+
+  Future<void> _processOrder() async {
+    // Mengambil path audio dari SettingsController
+    String? audioPath = Get.find<SettingsController>().audioFilePath.value;
+
+    if (audioPath != null && audioPath.isNotEmpty) {
+      try {
+        // Pastikan path audio valid dan file dapat dibaca
+        final file = File(audioPath);
+        if (await file.exists()) {
+
+          await _audioPlayer.setReleaseMode(ReleaseMode.stop);
+
+          await _audioPlayer.play(DeviceFileSource(
+              audioPath)); // Gunakan DeviceFileSource untuk path lokal
+          print('Audio playing from: $audioPath');
+        } else {
+          print('Audio file does not exist at: $audioPath');
+          Get.snackbar(
+            "Error",
+            "Audio file not found. Please check the selected file.",
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        }
+      } catch (e) {
+        print('Error playing audio: $e');
+        Get.snackbar(
+          "Error",
+          "Failed to play audio: $e",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } else {
+      print('No audio file selected');
+      Get.snackbar(
+        "Error",
+        "No audio file selected in settings.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+}
+
+extension on BasketController {
+  void updateSelectedTotal() {}
 }

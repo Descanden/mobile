@@ -92,7 +92,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SETTINGS,
-      page: () => const SettingsView(),
+      page: () => SettingsView(),
       binding: SettingsBinding(),
     ),
     GetPage(
@@ -197,7 +197,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.BASKET,
-      page: () => const BasketView(),
+      page: () => BasketView(),
       binding: BasketBinding(),
     ),
     GetPage(

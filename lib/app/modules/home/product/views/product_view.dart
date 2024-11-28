@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/product_controller.dart';
 import '../../settings/controllers/settings_controller.dart';
-import 'dart:io'; // Import File untuk memproses gambar
+import 'dart:io';
 
 class ProductView extends GetView<ProductController> {
   const ProductView({super.key});
@@ -14,7 +14,7 @@ class ProductView extends GetView<ProductController> {
     return Obx(() {
       bool isDarkMode = settingsController.isDarkMode.value;
 
-      if (controller.productList.isEmpty) {
+      if (controller.isLoading.value) {
         return Scaffold(
           backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
           appBar: AppBar(
@@ -136,22 +136,22 @@ class ProductView extends GetView<ProductController> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(15),
-                                  child: product.image.startsWith('http') // Check if the image is a URL
+                                  child: product.image.startsWith('http')
                                       ? Image.network(
-                                          product.image, // For network images
+                                          product.image,
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: double.infinity,
                                         )
                                       : (product.image.isNotEmpty
                                           ? Image.file(
-                                              File(product.image), // For local images
+                                              File(product.image),
                                               fit: BoxFit.cover,
                                               width: double.infinity,
                                               height: double.infinity,
                                             )
                                           : Container(
-                                              color: Colors.grey[300], // Placeholder if no image
+                                              color: Colors.grey[300],
                                               child: const Icon(Icons.image, color: Colors.grey),
                                             )),
                                 ),
@@ -197,7 +197,6 @@ class ProductView extends GetView<ProductController> {
                                 style: const TextStyle(color: Colors.brown, fontSize: 12),
                               ),
                               const SizedBox(height: 5),
-                              // Display short description
                               Text(
                                 product.description.length > 30
                                     ? '${product.description.substring(0, 30)}...'
@@ -240,7 +239,7 @@ class ProductView extends GetView<ProductController> {
                 Get.offNamed('/riwayat');
                 break;
               case 3:
-                // Get.offNamed('/penjualan'); // Uncomment when implementing
+                // Get.offNamed('/penjualan');
                 break;
               case 4:
                 Get.offNamed('/account');

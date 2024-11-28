@@ -77,7 +77,7 @@ class ItemView extends GetView<ItemController> {
 
                 // Button untuk menambah produk
                 ElevatedButton(
-                  onPressed: controller.saveItem,
+                  onPressed: controller.saveItem, // Call the saveItem function from the controller
                   child: const Text('Tambah Barang'),
                 ),
               ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,135 +9,32 @@ class BasketController extends GetxController {
   final selectedTotal = 0.obs;
   final selectedCount = 0.obs;
 
-  // Initialize Firebase Messaging and Local Notifications
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  var selectedAddress = ''.obs;
+
+  var selectedName;
+
+  var isLoading;
+
+  var transactionNote; // To store selected address
 
   @override
   void onInit() {
     super.onInit();
     _initializeNotifications();
-    fetchItemsFromFirestore(); // Fetch items from Firestore on init
-  }
-
-  Future<void> _initializeNotifications() async {
-    print("Initializing notifications...");
-
-    // Request permissions for iOS
-    await _firebaseMessaging.requestPermission();
-    print("Requested permission for Firebase Messaging.");
-
-    // Initialize local notifications
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initializationSettings = InitializationSettings(android: androidSettings);
-
-    try {
-      await _localNotificationsPlugin.initialize(initializationSettings,
-          onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        print("Notification tapped: ${response.payload}");
-        if (response.payload != null) {
-          // Example navigation based on payload
-          // Get.toNamed('/yourRouteName', arguments: response.payload);
-        }
-      });
-      print("Local notifications initialized successfully.");
-      
-      await _createNotificationChannel();
-    } catch (e) {
-      print("Error initializing local notifications: $e");
-    }
-
-    // Handle foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Received foreground message: ${message.notification?.title}");
-      _showLocalNotification(message);
-    });
-
-    // Handle background messages
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    fetchItemsFromFirestore();
   }
 
   Future<void> fetchItemsFromFirestore() async {
     try {
-      // Fetch items from Firestore collection
       QuerySnapshot querySnapshot = await _firestore.collection('items').get();
       for (var doc in querySnapshot.docs) {
         items.add(doc.data() as Map<String, dynamic>);
       }
-      print("Items fetched from Firestore: ${items.length}");
     } catch (e) {
       print("Error fetching items from Firestore: $e");
-    }
-  }
-
-  Future<void> _createNotificationChannel() async {
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'your_channel_id', // Your channel ID
-      'your_channel_name', // Your channel name
-      description: 'Your channel description', // Your channel description
-      importance: Importance.high,
-      playSound: true,
-    );
-
-    final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-        _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-
-    if (androidPlugin != null) {
-      await androidPlugin.createNotificationChannel(channel);
-      print("Notification channel created successfully.");
-    } else {
-      print("Android plugin not found. Unable to create notification channel.");
-    }
-  }
-
-  Future<void> _showLocalNotification(RemoteMessage message) async {
-    const androidDetails = AndroidNotificationDetails(
-      'your_channel_id', // Use the same channel ID as above
-      'your_channel_name', // Use the same channel name as above
-      importance: Importance.high,
-      priority: Priority.high,
-    );
-    const notificationDetails = NotificationDetails(android: androidDetails);
-    
-    try {
-      await _localNotificationsPlugin.show(
-        message.notification?.hashCode ?? 0,
-        message.notification?.title,
-        message.notification?.body,
-        notificationDetails,
-        payload: message.data['payload'], // Pass additional data if needed
-      );
-    } catch (e) {
-      print("Error showing local notification: $e");
-    }
-  }
-
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print("Handling a background message: ${message.messageId}");
-    // Perform actions when the app is in the background, e.g., showing a notification
-  }
-
-  Future<void> showReminderNotification() async {
-    const androidDetails = AndroidNotificationDetails(
-      'reminder_channel_id',
-      'Reminder Notifications',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
-    const notificationDetails = NotificationDetails(android: androidDetails);
-    
-    try {
-      await _localNotificationsPlugin.show(
-        0,
-        'Jangan Lupa!',
-        'Jangan lupa melakukan pemesanan langsung.',
-        notificationDetails,
-      );
-    } catch (e) {
-      print("Error showing reminder notification: $e");
     }
   }
 
@@ -152,12 +48,12 @@ class BasketController extends GetxController {
     } else {
       items.add({...item, 'selected': false});
     }
-    calculateSelectedTotal();
+    updateSelectedTotal();
   }
 
   void increaseQuantity(int index) {
     items[index]['quantity']++;
-    calculateSelectedTotal();
+    updateSelectedTotal();
   }
 
   void decreaseQuantity(int index) {
@@ -179,18 +75,18 @@ class BasketController extends GetxController {
       );
     } else {
       items[index]['quantity']--;
-      calculateSelectedTotal();
+      updateSelectedTotal();
     }
   }
 
   void removeItem(int index) {
     items.removeAt(index);
-    calculateSelectedTotal();
+    updateSelectedTotal();
   }
 
   void toggleItemSelection(int index) {
     items[index]['selected'] = !items[index]['selected'];
-    calculateSelectedTotal();
+    updateSelectedTotal();
     allSelected.value = items.every((item) => item['selected']);
   }
 
@@ -200,10 +96,10 @@ class BasketController extends GetxController {
     for (var item in items) {
       item['selected'] = newValue;
     }
-    calculateSelectedTotal();
+    updateSelectedTotal();
   }
 
-  void calculateSelectedTotal() {
+  void updateSelectedTotal() {
     int total = 0;
     int count = 0;
     for (var item in items) {
@@ -217,7 +113,79 @@ class BasketController extends GetxController {
     selectedCount.value = count;
   }
 
-  void checkout() {
-    // Handle checkout
+  Future<void> showReminderNotification() async {
+    const androidDetails = AndroidNotificationDetails(
+      'reminder_channel_id',
+      'Reminder Notifications',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+    const notificationDetails = NotificationDetails(android: androidDetails);
+
+    try {
+      await _localNotificationsPlugin.show(
+        0,
+        'Jangan Lupa!',
+        'Jangan lupa melakukan pemesanan langsung.',
+        notificationDetails,
+      );
+    } catch (e) {
+      print("Error showing reminder notification: $e");
+    }
   }
+
+  void checkout() {
+    // Pastikan ada barang yang dipilih dan alamat sudah ada
+    if (selectedAddress.isEmpty) {
+      Get.snackbar('Alamat Belum Dilengkapi', 'Silakan pilih alamat pengiriman terlebih dahulu.');
+      return;
+    }
+
+    final selectedItems = items.where((item) => item['selected']).toList();
+    if (selectedItems.isEmpty) {
+      Get.snackbar('Tidak Ada Barang', 'Pilih barang terlebih dahulu sebelum checkout.');
+      return;
+    }
+
+    // Proses checkout, misalnya simpan data ke Firestore
+    _firestore.collection('orders').add({
+      'items': selectedItems,
+      'address': selectedAddress.value,
+      'total': selectedTotal.value,
+      'status': 'pending', // Status bisa ditentukan sesuai dengan alur
+      'createdAt': FieldValue.serverTimestamp(),
+    }).then((value) {
+      Get.snackbar('Sukses', 'Pesanan Anda berhasil diproses.');
+      items.clear(); // Bersihkan keranjang setelah checkout
+      selectedTotal.value = 0;
+      selectedCount.value = 0;
+      selectedAddress.value = ''; // Reset alamat
+    }).catchError((error) {
+      Get.snackbar('Gagal', 'Terjadi kesalahan saat memproses pesanan.');
+      print("Error adding order: $error");
+    });
+  }
+
+  void _initializeNotifications() {
+    const androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final initializationSettings = InitializationSettings(android: androidInitializationSettings);
+    _localNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  // Method to set or update the address
+  void setAddress(String newAddress) {
+    selectedAddress.value = newAddress;
+  }
+
+  void setName(result) {}
+
+  void setTransactionNote(String note) {}
+
+  void setNote(String text) {}
+}
+
+RxString userNote = ''.obs;
+
+void setNote(String note) {
+  userNote.value = note;
 }

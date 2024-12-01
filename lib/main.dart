@@ -27,7 +27,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
-
+  runApp(const MyApp());
+  
   // Inisialisasi handler untuk pesan background
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -50,7 +51,7 @@ void main() async {
   Get.put(Product2Controller());
   Get.put(Product3Controller());
   Get.put(BasketController());
-  Get.put(FeedController()); // Inisialisasi FeedController
+  Get.put(FeedController());
 
   // Load user email from SharedPreferences
   final userPreferencesService = UserPreferencesService();

@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:audioplayers/audioplayers.dart';
-import '../../settings/controllers/settings_controller.dart';
+import 'package:pemrograman_mobile/app/routes/app_pages.dart';
 import '../controllers/basket_controller.dart';
 
 class BasketView extends GetView<BasketController> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   BasketView({super.key});
 
@@ -15,8 +11,7 @@ class BasketView extends GetView<BasketController> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await controller
-            .showReminderNotification(); // Trigger the reminder notification
+        await controller.showReminderNotification(); // Trigger the reminder notification
         return true; // Allow back navigation
       },
       child: Scaffold(
@@ -80,7 +75,6 @@ class BasketView extends GetView<BasketController> {
                                   value: item['selected'],
                                   onChanged: (value) {
                                     controller.toggleItemSelection(index);
-                                    controller.updateSelectedTotal();
                                   },
                                 ),
                                 Image.network(
@@ -125,7 +119,6 @@ class BasketView extends GetView<BasketController> {
                                             onPressed: () {
                                               controller
                                                   .decreaseQuantity(index);
-                                              controller.updateSelectedTotal();
                                             },
                                           ),
                                           Text('${item['quantity']}'),
@@ -134,7 +127,6 @@ class BasketView extends GetView<BasketController> {
                                             onPressed: () {
                                               controller
                                                   .increaseQuantity(index);
-                                              controller.updateSelectedTotal();
                                             },
                                           ),
                                         ],
@@ -152,77 +144,24 @@ class BasketView extends GetView<BasketController> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0, vertical: 10.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: controller.selectedTotal.value > 0
-                        ? _processOrder
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF704F38),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Proses',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
+  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+  child: SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: controller.selectedCount.value > 0
+          ? () => Get.toNamed(Routes.CHECKOUT)
+          : null,
+      child: Text(
+        'Checkout (${controller.selectedCount.value} items)',
+      ),
+    ),
+  ),
+),
+
             ],
           );
         }),
       ),
     );
   }
-
-  Future<void> _processOrder() async {
-    // Mengambil path audio dari SettingsController
-    String? audioPath = Get.find<SettingsController>().audioFilePath.value;
-
-    if (audioPath != null && audioPath.isNotEmpty) {
-      try {
-        // Pastikan path audio valid dan file dapat dibaca
-        final file = File(audioPath);
-        if (await file.exists()) {
-
-          await _audioPlayer.setReleaseMode(ReleaseMode.stop);
-
-          await _audioPlayer.play(DeviceFileSource(
-              audioPath)); // Gunakan DeviceFileSource untuk path lokal
-          print('Audio playing from: $audioPath');
-        } else {
-          print('Audio file does not exist at: $audioPath');
-          Get.snackbar(
-            "Error",
-            "Audio file not found. Please check the selected file.",
-            snackPosition: SnackPosition.BOTTOM,
-          );
-        }
-      } catch (e) {
-        print('Error playing audio: $e');
-        Get.snackbar(
-          "Error",
-          "Failed to play audio: $e",
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
-    } else {
-      print('No audio file selected');
-      Get.snackbar(
-        "Error",
-        "No audio file selected in settings.",
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
-  }
-}
-
-extension on BasketController {
-  void updateSelectedTotal() {}
 }

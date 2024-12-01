@@ -29,6 +29,8 @@ abstract class Routes {
   static const ITEM = _Paths.ITEM;
   static const BASKET = _Paths.BASKET;
   static const FEED = _Paths.FEED;
+  static const CHECKOUT = _Paths.CHECKOUT;
+  static const GPS = _Paths.GPS;
 }
 
 abstract class _Paths {
@@ -60,4 +62,6 @@ abstract class _Paths {
   static const ITEM = '/item';
   static const BASKET = '/basket';
   static const FEED = '/feed';
+  static const CHECKOUT = '/checkout';
+  static const GPS = '/gps';
 }

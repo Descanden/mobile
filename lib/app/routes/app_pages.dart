@@ -26,10 +26,14 @@ import '../modules/home/basket/bindings/basket_binding.dart';
 import '../modules/home/basket/views/basket_view.dart';
 import '../modules/home/category/bindings/category_binding.dart';
 import '../modules/home/category/views/category_view.dart';
+import '../modules/home/checkout/bindings/checkout_binding.dart';
+import '../modules/home/checkout/views/checkout_view.dart';
 import '../modules/home/description/bindings/description_binding.dart';
 import '../modules/home/description/views/description_view.dart';
 import '../modules/home/feed/bindings/feed_binding.dart';
 import '../modules/home/feed/views/feed_view.dart';
+import '../modules/home/gps/bindings/gps_binding.dart';
+import '../modules/home/gps/views/gps_view.dart';
 import '../modules/home/home_page/bindings/home_page_binding.dart';
 import '../modules/home/home_page/views/home_page_view.dart';
 import '../modules/home/item/bindings/item_binding.dart';
@@ -204,6 +208,16 @@ class AppPages {
       name: _Paths.FEED,
       page: () => FeedView(),
       binding: FeedBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHECKOUT,
+      page: () => CheckoutView(),
+      binding: CheckoutBinding(),
+    ),
+    GetPage(
+      name: _Paths.GPS,
+      page: () => const GpsView(),
+      binding: GpsBinding(),
     ),
   ];
 }

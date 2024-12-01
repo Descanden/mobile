@@ -273,27 +273,25 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
               const SizedBox(height: 16),
               _buildInputField('Alamat Lengkap', _detailAddressController, 'Alamat lengkap tidak boleh kosong'),
               const SizedBox(height: 24),
-              ElevatedButton(
+ElevatedButton(
   onPressed: () {
     if (_formKey.currentState!.validate()) {
-      // Simpan data alamat
       _saveData();
-
-      // Tampilkan notifikasi berhasil disimpan
-      Get.snackbar(
-        'Sukses',
-        'Alamat berhasil disimpan',
-        snackPosition: SnackPosition.BOTTOM, // Menampilkan snackbar di bagian bawah
-        backgroundColor: Colors.green, // Warna latar belakang hijau untuk keberhasilan
-        colorText: Colors.white, // Warna teks putih
+      final snackBar = SnackBar(
+        content: const Text(
+          'Alamat berhasil disimpan',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.grey[300], 
+        behavior: SnackBarBehavior.floating,
       );
-
-      // Kembali ke halaman sebelumnya
-      Get.back(); // Mengembalikan ke halaman sebelumnya
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      // Get.back();
     }
   },
   child: const Text('Simpan Alamat'),
 ),
+
 
             ],
           ),

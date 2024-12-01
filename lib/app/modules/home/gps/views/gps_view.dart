@@ -120,46 +120,64 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
     }
   }
 
-  // Fungsi untuk mencari lokasi berdasarkan alamat
-  Future<void> _searchLocation() async {
-    try {
+Future<void> _searchLocation() async {
+  try {
+    // Mengecek apakah alamat sudah dimasukkan
+    if (_addressController.text.isNotEmpty) {
+      // Mencari lokasi berdasarkan alamat yang dimasukkan
       List<Location> locations = await locationFromAddress(_addressController.text);
-
       if (locations.isNotEmpty) {
         final location = locations.first;
 
+        // Menyimpan latitude dan longitude
         if (mounted) {
           setState(() {
             _latitude = location.latitude.toString();
             _longitude = location.longitude.toString();
             _locationMessage = "Lokasi ditemukan: ${_addressController.text}";
           });
+
+          // Melakukan reverse geocoding dengan koordinat yang ditemukan
+          List<Placemark> placemarks = await placemarkFromCoordinates(
+            location.latitude, location.longitude);
+
+          if (placemarks.isNotEmpty) {
+            Placemark placemark = placemarks.first;
+
+            // Menggabungkan alamat lengkap secara manual
+            String fullAddress = '';
+            if (placemark.street != null) fullAddress += placemark.street!;
+            if (placemark.subLocality != null) fullAddress += ', ${placemark.subLocality}';
+            if (placemark.locality != null) fullAddress += ', ${placemark.locality}';
+            if (placemark.administrativeArea != null) fullAddress += ', ${placemark.administrativeArea}';
+            if (placemark.postalCode != null) fullAddress += ' ${placemark.postalCode}';
+
+            // Menampilkan alamat lengkap pada controller
+            _detailAddressController.text = fullAddress;
+
+            // Menampilkan bagian alamat lainnya jika diperlukan
+            _labelController.text = placemark.subLocality ?? ''; // Kelurahan
+            _cityController.text = placemark.locality ?? ''; // Kota & Kecamatan
+          }
         }
-        // Simpan lokasi yang ditemukan
-        _saveLocationData();
       } else {
-        if (mounted) {
-          setState(() {
-            _locationMessage = "Alamat tidak ditemukan";
-          });
-        }
-      }
-    } catch (e) {
-      if (mounted) {
         setState(() {
-          _locationMessage = "Terjadi kesalahan: ${e.toString()}";
+          _locationMessage = "Alamat tidak ditemukan";
         });
       }
     }
+  } catch (e) {
+    setState(() {
+      _locationMessage = "Terjadi kesalahan: ${e.toString()}";
+    });
   }
+}
 
-  // Menyimpan data ke GetStorage
   void _saveLocationData() {
     box.write('latitude', _latitude);
     box.write('longitude', _longitude);
   }
 
-  // Membuka Google Maps berdasarkan koordinat
   Future<void> _openGoogleMaps() async {
     if (_latitude != null && _longitude != null) {
       final url = Uri.parse(
@@ -193,7 +211,7 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
             IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                Get.back(); // Kembali ke halaman sebelumnya menggunakan Get.back()
+                Get.back();
               },
             ),
             const SizedBox(width: 8),
@@ -267,7 +285,7 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
               const SizedBox(height: 16),
               _buildInputField('Nomor Hp', _phoneController, 'Nomor HP tidak boleh kosong'),
               const SizedBox(height: 16),
-              _buildInputField('Label Alamat', _labelController, 'Label alamat tidak boleh kosong'),
+              _buildInputField('Kelurahan', _labelController, 'Kelurahan tidak boleh kosong'),
               const SizedBox(height: 16),
               _buildInputField('Kota & Kecamatan', _cityController, 'Kota tidak boleh kosong'),
               const SizedBox(height: 16),
@@ -321,25 +339,27 @@ ElevatedButton(
   }
 
   // Fungsi untuk menyimpan data alamat yang dimasukkan
-  void _saveData() {
+void _saveData() {
   box.write('recipientName', _recipientNameController.text);
   box.write('phone', _phoneController.text);
-  box.write('label', _labelController.text);
+  box.write('label', _labelController.text);  // Menyimpan kelurahan dengan key 'label'
   box.write('city', _cityController.text);
   box.write('detailAddress', _detailAddressController.text);
 }
 
 
+
   // Memuat data yang disimpan sebelumnya
-  void _loadSavedData() {
-    _recipientNameController.text = box.read('recipientName') ?? '';
-    _phoneController.text = box.read('phone') ?? '';
-    _labelController.text = box.read('label') ?? '';
-    _cityController.text = box.read('city') ?? '';
-    _detailAddressController.text = box.read('detailAddress') ?? '';
-    _latitude = box.read('latitude');
-    _longitude = box.read('longitude');
-  }
+void _loadSavedData() {
+  _recipientNameController.text = box.read('recipientName') ?? '';
+  _phoneController.text = box.read('phone') ?? '';
+  _labelController.text = box.read('label') ?? ''; // Pastikan key yang digunakan 'label'
+  _cityController.text = box.read('city') ?? '';
+  _detailAddressController.text = box.read('detailAddress') ?? '';
+  _latitude = box.read('latitude');
+  _longitude = box.read('longitude');
+}
+
 
   @override
   void dispose() {

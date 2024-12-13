@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart'; // Import untuk geocoding
+import 'package:geocoding/geocoding.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../controllers/gps_controller.dart';
 
@@ -53,8 +53,8 @@ class SearchAddressPage extends StatefulWidget {
 }
 
 class _SearchAddressPageState extends State<SearchAddressPage> {
-  final box = GetStorage(); // Menginisialisasi GetStorage
-  final _formKey = GlobalKey<FormState>(); // Add a form key for validation
+  final box = GetStorage();
+  final _formKey = GlobalKey<FormState>(); 
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _recipientNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -69,13 +69,12 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
   @override
   void initState() {
     super.initState();
-    _loadSavedData(); // Memuat data yang disimpan ketika halaman dimuat
+    _loadSavedData(); 
     if (_latitude == null || _longitude == null) {
-      _getCurrentLocation(); // Hanya dapatkan lokasi saat ini jika data belum disimpan
+      _getCurrentLocation(); 
     }
   }
 
-  // Fungsi untuk mendapatkan lokasi saat ini
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -122,14 +121,11 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
 
 Future<void> _searchLocation() async {
   try {
-    // Mengecek apakah alamat sudah dimasukkan
     if (_addressController.text.isNotEmpty) {
-      // Mencari lokasi berdasarkan alamat yang dimasukkan
       List<Location> locations = await locationFromAddress(_addressController.text);
       if (locations.isNotEmpty) {
         final location = locations.first;
 
-        // Menyimpan latitude dan longitude
         if (mounted) {
           setState(() {
             _latitude = location.latitude.toString();
@@ -137,27 +133,22 @@ Future<void> _searchLocation() async {
             _locationMessage = "Lokasi ditemukan: ${_addressController.text}";
           });
 
-          // Melakukan reverse geocoding dengan koordinat yang ditemukan
           List<Placemark> placemarks = await placemarkFromCoordinates(
             location.latitude, location.longitude);
 
           if (placemarks.isNotEmpty) {
             Placemark placemark = placemarks.first;
 
-            // Menggabungkan alamat lengkap secara manual
             String fullAddress = '';
-            if (placemark.street != null) fullAddress += placemark.street!;
+            // if (placemark.street != null) fullAddress += placemark.street!;
             if (placemark.subLocality != null) fullAddress += ', ${placemark.subLocality}';
             if (placemark.locality != null) fullAddress += ', ${placemark.locality}';
             if (placemark.administrativeArea != null) fullAddress += ', ${placemark.administrativeArea}';
             if (placemark.postalCode != null) fullAddress += ' ${placemark.postalCode}';
 
-            // Menampilkan alamat lengkap pada controller
             _detailAddressController.text = fullAddress;
-
-            // Menampilkan bagian alamat lainnya jika diperlukan
-            _labelController.text = placemark.subLocality ?? ''; // Kelurahan
-            _cityController.text = placemark.locality ?? ''; // Kota & Kecamatan
+            _labelController.text = placemark.subLocality ?? '';
+            _cityController.text = placemark.locality ?? '';
           }
         }
       } else {
@@ -192,7 +183,6 @@ Future<void> _searchLocation() async {
     }
   }
 
-  // Meluncurkan URL di browser
   Future<void> _launchURL(Uri url) async {
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
@@ -231,7 +221,7 @@ Future<void> _searchLocation() async {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey, // Attach the form key here
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -246,7 +236,7 @@ Future<void> _searchLocation() async {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.white, // White background
+                  fillColor: Colors.white,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -257,7 +247,7 @@ Future<void> _searchLocation() async {
               ),
               const SizedBox(height: 16),
               ElevatedButton.icon(
-                onPressed: _searchLocation, // Panggil pencarian lokasi
+                onPressed: _searchLocation,
                 icon: const Icon(Icons.search),
                 label: const Text('Cari Lokasi'),
               ),
@@ -309,8 +299,6 @@ ElevatedButton(
   },
   child: const Text('Simpan Alamat'),
 ),
-
-
             ],
           ),
         ),
@@ -318,7 +306,6 @@ ElevatedButton(
     );
   }
 
-  // Fungsi untuk membangun input field yang digunakan berulang
   Widget _buildInputField(String label, TextEditingController controller, String errorMessage) {
     return TextFormField(
       controller: controller,
@@ -338,22 +325,20 @@ ElevatedButton(
     );
   }
 
-  // Fungsi untuk menyimpan data alamat yang dimasukkan
 void _saveData() {
   box.write('recipientName', _recipientNameController.text);
   box.write('phone', _phoneController.text);
-  box.write('label', _labelController.text);  // Menyimpan kelurahan dengan key 'label'
+  box.write('label', _labelController.text);
   box.write('city', _cityController.text);
   box.write('detailAddress', _detailAddressController.text);
 }
 
 
 
-  // Memuat data yang disimpan sebelumnya
 void _loadSavedData() {
   _recipientNameController.text = box.read('recipientName') ?? '';
   _phoneController.text = box.read('phone') ?? '';
-  _labelController.text = box.read('label') ?? ''; // Pastikan key yang digunakan 'label'
+  _labelController.text = box.read('label') ?? '';
   _cityController.text = box.read('city') ?? '';
   _detailAddressController.text = box.read('detailAddress') ?? '';
   _latitude = box.read('latitude');

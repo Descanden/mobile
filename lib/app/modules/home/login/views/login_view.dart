@@ -84,8 +84,13 @@ class LoginView extends StatelessWidget {
                 if (success) {
                   Get.offNamed(Routes.HOME_PAGE); // Navigate to home page
                 } else {
-                  Get.snackbar('Login Failed', 'Invalid credentials or network error',
-                      backgroundColor: Colors.red, colorText: Colors.white);
+                  Get.snackbar(
+                    'Invalid credentials or network error',
+                    'Please check your credentials or network connection.',
+                    backgroundColor: Colors.white,
+                    colorText: Color(0xFF704F38), // Coklat Tua
+                    snackPosition: SnackPosition.TOP, // Position snackbar di atas
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(

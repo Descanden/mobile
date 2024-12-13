@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../connection/connection_controller.dart';
 import '../controllers/product_controller.dart';
 import '../../settings/controllers/settings_controller.dart';
 import 'dart:io';
@@ -10,6 +11,7 @@ class ProductView extends GetView<ProductController> {
   @override
   Widget build(BuildContext context) {
     final SettingsController settingsController = Get.find<SettingsController>();
+    final ConnectionController connectionController = Get.find<ConnectionController>(); // Menambahkan controller koneksi
 
     return Obx(() {
       bool isDarkMode = settingsController.isDarkMode.value;
@@ -23,6 +25,18 @@ class ProductView extends GetView<ProductController> {
             title: const Text('Loading...'),
           ),
           body: const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      if (controller.productList.isEmpty && !controller.isLoading.value) {
+        return Scaffold(
+          backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
+          appBar: AppBar(
+            backgroundColor: isDarkMode ? Colors.black : const Color(0xFFAC9365),
+            elevation: 0,
+            title: const Text('No Products Available'),
+          ),
+          body: const Center(child: Text('No products found. Please try again later.')),
         );
       }
 
@@ -142,6 +156,21 @@ class ProductView extends GetView<ProductController> {
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: double.infinity,
+                                          loadingBuilder: (context, child, loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return const Center(child: CircularProgressIndicator());
+                                            }
+                                          },
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Center(
+                                              child: Icon(
+                                                Icons.error,
+                                                color: isDarkMode ? Colors.white : Colors.black,
+                                              ),
+                                            );
+                                          },
                                         )
                                       : (product.image.isNotEmpty
                                           ? Image.file(

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pemrograman_mobile/app/modules/home/settings/controllers/settings_controller.dart';
@@ -15,7 +14,7 @@ class Product3View extends GetView<Product3Controller> {
     return Obx(() {
       bool isDarkMode = settingsController.isDarkMode.value;
 
-      if (controller.productList.isEmpty) {
+      if (controller.isLoading.value) {
         return Scaffold(
           backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
           appBar: AppBar(
@@ -24,6 +23,41 @@ class Product3View extends GetView<Product3Controller> {
             title: const Text('Loading...'),
           ),
           body: const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      if (controller.hasError.value) {
+        return Scaffold(
+          backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
+          appBar: AppBar(
+            backgroundColor: isDarkMode ? Colors.black : const Color(0xFFAC9365),
+            elevation: 0,
+            title: const Text('Error'),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error, color: isDarkMode ? Colors.red : Colors.redAccent, size: 50),
+                const SizedBox(height: 20),
+                const Text(
+                  "No internet connection. Please check your connection.",
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    controller.fetchProducts(); // Retry fetching data
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDarkMode ? Colors.grey[700] : const Color(0xFFAC9365),
+                  ),
+                  child: const Text("Retry"),
+                ),
+              ],
+            ),
+          ),
         );
       }
 
@@ -38,7 +72,7 @@ class Product3View extends GetView<Product3Controller> {
               color: isDarkMode ? Colors.white : Colors.black,
             ),
             onPressed: () {
-              Get.back(); // Kembali ke halaman sebelumnya
+              Get.back(); // Go back to the previous page
             },
           ),
           title: Row(
@@ -56,7 +90,7 @@ class Product3View extends GetView<Product3Controller> {
                         Icons.search,
                         color: isDarkMode ? Colors.white54 : Colors.black54,
                       ),
-                      hintText: 'Cari produk',
+                      hintText: 'Search products',
                       hintStyle: TextStyle(
                         color: isDarkMode ? Colors.white54 : Colors.black54,
                       ),
@@ -142,9 +176,25 @@ class Product3View extends GetView<Product3Controller> {
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: double.infinity,
+                                          loadingBuilder: (context, child, loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return const Center(child: CircularProgressIndicator());
+                                            }
+                                          },
+                                          errorBuilder: (context, error, stackTrace) {
+                                            // Handle error gracefully
+                                            return Center(
+                                              child: Icon(
+                                                Icons.error,
+                                                color: isDarkMode ? Colors.white : Colors.black,
+                                              ),
+                                            );
+                                          },
                                         )
                                       : Image.file(
-                                          File(product.image), // Menampilkan gambar dari path file
+                                          File(product.image), // Display image from file path
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: double.infinity,
@@ -159,7 +209,7 @@ class Product3View extends GetView<Product3Controller> {
                                   child: IconButton(
                                     icon: const Icon(Icons.add, color: Colors.black),
                                     onPressed: () {
-                                      // Navigasi ke halaman detail produk
+                                      // Navigate to the product detail page
                                       Get.toNamed('/description', arguments: {
                                         'title': product.title,
                                         'image': product.image,
@@ -192,7 +242,7 @@ class Product3View extends GetView<Product3Controller> {
                                 style: const TextStyle(color: Colors.brown, fontSize: 12),
                               ),
                               const SizedBox(height: 5),
-                              // Tampilkan deskripsi singkat
+                              // Display a shortened description
                               Text(
                                 product.description.length > 30
                                     ? '${product.description.substring(0, 30)}...'
@@ -210,7 +260,7 @@ class Product3View extends GetView<Product3Controller> {
                   );
                 },
               ),
-            ],  
+            ],
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(

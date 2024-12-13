@@ -219,5 +219,10 @@ class AppPages {
       page: () => const GpsView(),
       binding: GpsBinding(),
     ),
+//     GetPage(
+//       name: '/NoConnectionView',
+//       page: () => const NoConnectionView(),
+// ),
+
   ];
 }

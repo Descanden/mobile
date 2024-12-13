@@ -77,6 +77,9 @@ dependencies:
   flutter_sound: ^9.1.0
   audioplayers: ^6.1.0
   flutter_tts: ^4.2.0
+  connectivity_plus: ^6.0.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   
 
   

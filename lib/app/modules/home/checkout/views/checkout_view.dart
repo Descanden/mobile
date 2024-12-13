@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart'; // Import GetStorage
+import 'package:get_storage/get_storage.dart';
 import 'package:pemrograman_mobile/app/modules/home/basket/controllers/basket_controller.dart';
 
 class CheckoutView extends StatelessWidget {
   final BasketController controller = Get.find();
-  final GetStorage box = GetStorage(); // Initialize GetStorage
+  final GetStorage box = GetStorage();
 
   CheckoutView({super.key});
 
@@ -26,7 +26,6 @@ class CheckoutView extends StatelessWidget {
         ),
       ),
       body: Obx(() {
-        // Filter barang yang dipilih
         final selectedItems =
             controller.items.where((item) => item['selected']).toList();
 
@@ -36,7 +35,6 @@ class CheckoutView extends StatelessWidget {
 
         return Column(
           children: [
-            // Alamat pengiriman
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
@@ -47,11 +45,10 @@ class CheckoutView extends StatelessWidget {
               child: GestureDetector(
                 onTap: () async {
                   final result =
-                      await Get.toNamed('/gps'); // Navigasi ke halaman GPS
+                      await Get.toNamed('/gps');
                   if (result != null) {
-                    // Handle the result if there is any data returned from the GPS page
-                    controller.setAddress(result['address']); // Update address if there's new data
-                    controller.setName(result['name']); // Update name if there's new data
+                    controller.setAddress(result['address']);
+                    controller.setName(result['name']);
                   }
                 },
                 child: Row(
@@ -141,7 +138,6 @@ class CheckoutView extends StatelessWidget {
                                     color: Colors.brown, fontSize: 12),
                               ),
                               const SizedBox(height: 5),
-                              // Menampilkan jumlah barang
                               Text(
                                 'Jumlah: ${item['quantity']}',
                                 style: const TextStyle(
@@ -159,7 +155,6 @@ class CheckoutView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            // Kasih catatan
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
@@ -181,13 +176,12 @@ class CheckoutView extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Tampilkan pop-up untuk mengisi catatan
                       showDialog(
                         context: context,
                         builder: (context) {
                           TextEditingController noteController =
                               TextEditingController(
-                                  text: box.read('orderNote') ?? ''); // Load the saved note
+                                  text: box.read('orderNote') ?? '');
                           return AlertDialog(
                             title: const Text('Tambah Catatan'),
                             content: TextField(
@@ -205,9 +199,8 @@ class CheckoutView extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // Simpan catatan ke GetStorage
                                   box.write('orderNote', noteController.text);
-                                  controller.setNote(noteController.text); // Update the controller
+                                  controller.setNote(noteController.text); 
                                   Navigator.pop(context);
                                   Get.snackbar(
                                       'Sukses', 'Catatan berhasil disimpan.');
@@ -226,7 +219,6 @@ class CheckoutView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            // Ringkasan transaksi
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
@@ -247,7 +239,6 @@ class CheckoutView extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  // Menampilkan nama produk dan jumlahnya
                   for (var item in selectedItems)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -273,7 +264,6 @@ class CheckoutView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            // Tombol checkout
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: SizedBox(

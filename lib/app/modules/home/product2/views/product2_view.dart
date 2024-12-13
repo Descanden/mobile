@@ -14,7 +14,8 @@ class Product2View extends GetView<Product2Controller> {
     return Obx(() {
       bool isDarkMode = settingsController.isDarkMode.value;
 
-      if (controller.productList.isEmpty) {
+      // Handle empty product list or loading state
+      if (controller.isLoading.value) {
         return Scaffold(
           backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
           appBar: AppBar(
@@ -23,6 +24,18 @@ class Product2View extends GetView<Product2Controller> {
             title: const Text('Loading...'),
           ),
           body: const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      if (controller.hasError.value) {
+        return Scaffold(
+          backgroundColor: isDarkMode ? const Color(0xFF121212) : Colors.white,
+          appBar: AppBar(
+            backgroundColor: isDarkMode ? Colors.black : const Color(0xFFAC9365),
+            elevation: 0,
+            title: const Text('Error'),
+          ),
+          body: const Center(child: Text('Failed to load products.')),
         );
       }
 
@@ -142,6 +155,21 @@ class Product2View extends GetView<Product2Controller> {
                                           fit: BoxFit.cover,
                                           width: double.infinity,
                                           height: double.infinity,
+                                          loadingBuilder: (context, child, loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return const Center(child: CircularProgressIndicator());
+                                            }
+                                          },
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Center(
+                                              child: Icon(
+                                                Icons.error,
+                                                color: isDarkMode ? Colors.white : Colors.black,
+                                              ),
+                                            );
+                                          },
                                         )
                                       : (product.image.isNotEmpty
                                           ? Image.file(
@@ -238,7 +266,6 @@ class Product2View extends GetView<Product2Controller> {
                 Get.offNamed('/riwayat');
                 break;
               case 3:
-                // Get.offNamed('/penjualan'); // Uncomment when implementing
                 break;
               case 4:
                 Get.offNamed('/account');

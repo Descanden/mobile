@@ -30,7 +30,8 @@ allprojects {
 
 android {
     namespace = "com.example.architexture_pattern" // Add the namespace here
-    compileSdk = flutter.compileSdkVersion
+    // compileSdk = flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

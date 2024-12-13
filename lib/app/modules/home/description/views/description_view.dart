@@ -11,9 +11,7 @@ class DescriptionView extends StatefulWidget {
 }
 
 class _DescriptionViewState extends State<DescriptionView> {
-  // Accessing BasketController after it's registered
-  late final BasketController basketController; // Declare the controller variable
-
+  late final BasketController basketController;
   String selectedSize = 'S';
   int quantity = 1;
 
@@ -68,6 +66,21 @@ class _DescriptionViewState extends State<DescriptionView> {
                             productData['image'],
                             height: 300,
                             fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              } else {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Center(
+                                child: Icon(
+                                  Icons.error,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                              );
+                            },
                           )
                         : Image.file(
                             File(productData['image']),

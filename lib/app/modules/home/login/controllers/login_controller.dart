@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pemrograman_mobile/app/routes/app_pages.dart';
+import 'package:connectivity_plus/connectivity_plus.dart'; // Tambahkan ini
+import '../../../../routes/app_pages.dart';
 import '../../../components/user_preferences_servies.dart';
 import '../../account/controllers/account_controller.dart';
 
@@ -14,84 +15,59 @@ class LoginController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final UserPreferencesService _userPreferencesService = UserPreferencesService();
 
-  var isPasswordVisible = false.obs; // Reactive variable for password visibility
+  var isPasswordVisible = false.obs;
+  var isLoading = false.obs; // Menambahkan variabel loading
 
-  // Register method
-  Future<bool> register() async {
-    String email = usernameController.text.trim();
-    String password = passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Username and Password cannot be empty',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return false;
-    }
-
-    try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      Get.snackbar(
-        'Success',
-        'Account created successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-
-      // Save email to SharedPreferences
-      await _userPreferencesService.saveEmail(email);
-
-      // Navigate back to the login page
-      Get.offNamed(Routes.LOGIN);
-      return true;
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return false;
-    }
+  // Cek koneksi internet
+  Future<bool> isConnectedToInternet() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
   }
 
-  // Login method
   Future<bool> login() async {
     String email = usernameController.text.trim();
     String password = passwordController.text.trim();
 
+    // Cek koneksi internet terlebih dahulu
+    bool isConnected = await isConnectedToInternet();
+    if (!isConnected) {
+      Get.snackbar(
+        'No Internet Connection',
+        'Please check your internet connection and try again.',
+        snackPosition: SnackPosition.TOP, // Show snackbar at the top
+        backgroundColor: Colors.white,
+        colorText: Color(0xFF704F38), // Coklat Tua
+      );
+      return false;
+    }
+
     if (email.isEmpty || password.isEmpty) {
       Get.snackbar(
         'Error',
         'Username and Password cannot be empty',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP, // Show snackbar at the top
+        backgroundColor: Colors.white,
+        colorText: Color(0xFF704F38), // Coklat Tua
       );
       return false;
     }
 
     try {
+      isLoading.value = true; // Set loading to true
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
-
       if (userCredential.user != null) {
         User? user = userCredential.user;
         print('User ID: ${user?.uid}');
-
+        
         // Save email to SharedPreferences
         await _userPreferencesService.saveEmail(email);
         
         Get.snackbar(
           'Success',
           'Logged in successfully',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP, // Show snackbar at the top
+          backgroundColor: Colors.white,
+          colorText: Color(0xFF704F38), // Coklat Tua
         );
 
         accountController.loadAccountData();
@@ -100,38 +76,53 @@ class LoginController extends GetxController {
       } else {
         Get.snackbar(
           'Error',
-          'Login failed, user credential is null',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          'Invalid credentials or network error',
+          snackPosition: SnackPosition.TOP, // Show snackbar at the top
+          backgroundColor: Colors.white,
+          colorText: Color(0xFF704F38), // Coklat Tua
         );
         return false;
       }
     } catch (e) {
       Get.snackbar(
         'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        'Invalid credentials or network error', // Pesan yang ditampilkan
+        snackPosition: SnackPosition.TOP, // Show snackbar at the top
+        backgroundColor: Colors.white,
+        colorText: Color(0xFF704F38), // Coklat Tua
       );
       return false;
+    } finally {
+      isLoading.value = false; // Set loading to false
     }
   }
 
   // Forgot Password method
-  Future<bool> forgotPassword() async {
+  Future<void> forgotPassword() async {
     String email = usernameController.text.trim();
+
+    // Cek koneksi internet
+    bool isConnected = await isConnectedToInternet();
+    if (!isConnected) {
+      Get.snackbar(
+        'No Internet Connection',
+        'Please check your internet connection and try again.',
+        snackPosition: SnackPosition.TOP, // Show snackbar at the top
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
     if (email.isEmpty) {
       Get.snackbar(
         'Error',
         'Email cannot be empty',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP, // Show snackbar at the top
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-      return false;
+      return;
     }
 
     try {
@@ -139,49 +130,19 @@ class LoginController extends GetxController {
       Get.snackbar(
         'Success',
         'Password reset email sent. Please check your inbox.',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP, // Show snackbar at the top
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-      return true;
     } catch (e) {
       Get.snackbar(
         'Error',
         e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP, // Show snackbar at the top
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-      return false;
     }
-  }
-
-  // Logout method
-  Future<void> logout() async {
-    await _auth.signOut();
-    await _userPreferencesService.removeEmail(); // Remove email from SharedPreferences
-    Get.snackbar(
-      'Success',
-      'Logged out successfully',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-    );
-    Get.offAllNamed(Routes.LOGIN);
-  }
-
-  // Load email during startup
-  Future<void> loadEmail() async {
-    String? email = await _userPreferencesService.getEmail();
-    if (email != null) {
-      usernameController.text = email; // Prefill the username/email field
-    }
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    // Don't load email initially, so it starts empty
   }
 
   // Method to toggle password visibility

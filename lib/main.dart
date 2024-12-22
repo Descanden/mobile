@@ -43,12 +43,12 @@ void main() async {
   final box = GetStorage();
   
   // Cek dan set nilai default jika belum ada
-  if (box.read('password') == null) {
-    box.write('password', 'sasha');
-  }
-  if (box.read('name') == null) {
-    box.write('name', 'Guest');
-  }
+  // if (box.read('password') == null) {
+  //   box.write('password', 'sasha');
+  // }
+  // if (box.read('name') == null) {
+  //   box.write('name', 'Guest');
+  // }
 
   // Inisialisasi SettingsController dan set nilai Dark Mode
   final settingsController = Get.put(SettingsController());

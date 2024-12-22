@@ -80,10 +80,30 @@ dependencies:
   connectivity_plus: ^6.0.3
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  
+  flutter_native_splash: ^2.4.3
+  flutter_launcher_icons: ^0.13.1
+  icons_launcher: ^3.0.0
 
+flutter_native_splash:
+  color: "#F2EBE0"
+  image: lib/app/modules/components/asset/storefront.png
+  android: true
+  ios: true
   
+# flutter_icons:
+#   android: true
+#   ios: true
+#   image_path: lib/app/modules/components/asset/Shopping-cart.png
+#   remove_alpha_ios: true
   
+icons_launcher:
+  color: "#F2EBE0"
+  image_path: lib/app/modules/components/asset/storefront.png
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
 
 dev_dependencies:
   flutter_test:

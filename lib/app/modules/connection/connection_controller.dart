@@ -34,8 +34,6 @@ class ConnectionController extends GetxController {
           Navigator.pop(Get.context!); // Menutup pop-up
         }
       }
-
-      // Tidak ada navigasi, tetap di halaman yang sama
       return;
     }
   }

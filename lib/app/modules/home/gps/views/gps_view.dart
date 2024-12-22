@@ -119,50 +119,49 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
     }
   }
 
-Future<void> _searchLocation() async {
-  try {
-    if (_addressController.text.isNotEmpty) {
-      List<Location> locations = await locationFromAddress(_addressController.text);
-      if (locations.isNotEmpty) {
-        final location = locations.first;
+  Future<void> _searchLocation() async {
+    try {
+      if (_addressController.text.isNotEmpty) {
+        List<Location> locations = await locationFromAddress(_addressController.text);
+        if (locations.isNotEmpty) {
+          final location = locations.first;
 
-        if (mounted) {
-          setState(() {
-            _latitude = location.latitude.toString();
-            _longitude = location.longitude.toString();
-            _locationMessage = "Lokasi ditemukan: ${_addressController.text}";
-          });
+          if (mounted) {
+            setState(() {
+              _latitude = location.latitude.toString();
+              _longitude = location.longitude.toString();
+              _locationMessage = "Lokasi ditemukan: ${_addressController.text}";
+            });
 
-          List<Placemark> placemarks = await placemarkFromCoordinates(
-            location.latitude, location.longitude);
+            List<Placemark> placemarks = await placemarkFromCoordinates(
+              location.latitude, location.longitude);
 
-          if (placemarks.isNotEmpty) {
-            Placemark placemark = placemarks.first;
+            if (placemarks.isNotEmpty) {
+              Placemark placemark = placemarks.first;
 
-            String fullAddress = '';
-            // if (placemark.street != null) fullAddress += placemark.street!;
-            if (placemark.subLocality != null) fullAddress += ', ${placemark.subLocality}';
-            if (placemark.locality != null) fullAddress += ', ${placemark.locality}';
-            if (placemark.administrativeArea != null) fullAddress += ', ${placemark.administrativeArea}';
-            if (placemark.postalCode != null) fullAddress += ' ${placemark.postalCode}';
+              String fullAddress = '';
+              if (placemark.subLocality != null) fullAddress += ', ${placemark.subLocality}';
+              if (placemark.locality != null) fullAddress += ', ${placemark.locality}';
+              if (placemark.administrativeArea != null) fullAddress += ', ${placemark.administrativeArea}';
+              if (placemark.postalCode != null) fullAddress += ' ${placemark.postalCode}';
 
-            _detailAddressController.text = fullAddress;
-            _labelController.text = placemark.subLocality ?? '';
-            _cityController.text = placemark.locality ?? '';
+              _detailAddressController.text = fullAddress;
+              _labelController.text = placemark.subLocality ?? '';
+              _cityController.text = placemark.locality ?? '';
+            }
           }
+        } else {
+          setState(() {
+            _locationMessage = "Alamat tidak ditemukan";
+          });
         }
-      } else {
-        setState(() {
-          _locationMessage = "Alamat tidak ditemukan";
-        });
       }
+    } catch (e) {
+      setState(() {
+        _locationMessage = "Terjadi kesalahan: ${e.toString()}";
+      });
     }
-  } catch (e) {
-    setState(() {
-      _locationMessage = "Terjadi kesalahan: ${e.toString()}";
-    });
   }
-}
 
   void _saveLocationData() {
     box.write('latitude', _latitude);
@@ -281,24 +280,23 @@ Future<void> _searchLocation() async {
               const SizedBox(height: 16),
               _buildInputField('Alamat Lengkap', _detailAddressController, 'Alamat lengkap tidak boleh kosong'),
               const SizedBox(height: 24),
-ElevatedButton(
-  onPressed: () {
-    if (_formKey.currentState!.validate()) {
-      _saveData();
-      final snackBar = SnackBar(
-        content: const Text(
-          'Alamat berhasil disimpan',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.grey[300], 
-        behavior: SnackBarBehavior.floating,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      // Get.back();
-    }
-  },
-  child: const Text('Simpan Alamat'),
-),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _saveData();
+                    final snackBar = SnackBar(
+                      content: const Text(
+                        'Alamat berhasil disimpan',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      backgroundColor: Colors.grey[300], 
+                      behavior: SnackBarBehavior.floating,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                child: const Text('Simpan Alamat'),
+              ),
             ],
           ),
         ),
@@ -325,26 +323,25 @@ ElevatedButton(
     );
   }
 
-void _saveData() {
-  box.write('recipientName', _recipientNameController.text);
-  box.write('phone', _phoneController.text);
-  box.write('label', _labelController.text);
-  box.write('city', _cityController.text);
-  box.write('detailAddress', _detailAddressController.text);
-}
+  void _saveData() {
+    box.write('recipientName', _recipientNameController.text);
+    box.write('phone', _phoneController.text);
+    box.write('label', _labelController.text);
+    box.write('city', _cityController.text);
+    box.write('detailAddress', _detailAddressController.text);
+    box.write('latitude', _latitude);
+    box.write('longitude', _longitude);
+  }
 
-
-
-void _loadSavedData() {
-  _recipientNameController.text = box.read('recipientName') ?? '';
-  _phoneController.text = box.read('phone') ?? '';
-  _labelController.text = box.read('label') ?? '';
-  _cityController.text = box.read('city') ?? '';
-  _detailAddressController.text = box.read('detailAddress') ?? '';
-  _latitude = box.read('latitude');
-  _longitude = box.read('longitude');
-}
-
+  void _loadSavedData() {
+    _recipientNameController.text = box.read('recipientName') ?? '';
+    _phoneController.text = box.read('phone') ?? '';
+    _labelController.text = box.read('label') ?? '';
+    _cityController.text = box.read('city') ?? '';
+    _detailAddressController.text = box.read('detailAddress') ?? '';
+    _latitude = box.read('latitude');
+    _longitude = box.read('longitude');
+  }
 
   @override
   void dispose() {

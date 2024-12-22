@@ -50,8 +50,10 @@ class HistoryView extends GetView<HistoryController> {
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   ),
-                  onPressed: () {},
-                  child: const Text('Rekap Bulanan', style: TextStyle(fontSize: 16, color: Colors.white)), // Teks putih
+                  onPressed: () {
+                    controller.filterMonthly();
+                  },
+                  child: const Text('Rekap Bulanan', style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -61,8 +63,10 @@ class HistoryView extends GetView<HistoryController> {
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   ),
-                  onPressed: () {},
-                  child: const Text('Rekap Harian', style: TextStyle(fontSize: 16, color: Colors.white)), // Teks putih
+                  onPressed: () {
+                    controller.filterDaily();
+                  },
+                  child: const Text('Rekap Harian', style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ],
             ),
@@ -94,15 +98,15 @@ class HistoryView extends GetView<HistoryController> {
                           history.name,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Colors.black, // Teks hitam agar terbaca di latar terang
+                            color: Colors.black,
                           ),
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Belanja: ${history.date}', style: const TextStyle(color: Colors.black)), // Teks hitam
+                            Text('Belanja: ${history.date}', style: const TextStyle(color: Colors.black)),
                             const SizedBox(height: 5),
-                            Text('Total Belanja: Rp ${history.total}', style: const TextStyle(color: Colors.black)), // Teks hitam
+                            Text('Total Belanja: Rp ${history.total}', style: const TextStyle(color: Colors.black)),
                           ],
                         ),
                         trailing: ElevatedButton(
@@ -112,10 +116,12 @@ class HistoryView extends GetView<HistoryController> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            // Tindakan untuk tombol status, misalnya lihat detail
+                          },
                           child: Text(
                             history.status,
-                            style: const TextStyle(color: Colors.white), // Teks putih pada tombol
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),

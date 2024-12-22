@@ -11,6 +11,13 @@ class CheckoutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Fetch saved address data from GetStorage
+    final String recipientName = box.read('recipientName') ?? '';
+    final String phone = box.read('phone') ?? '';
+    final String label = box.read('label') ?? '';
+    final String city = box.read('city') ?? '';
+    final String detailAddress = box.read('detailAddress') ?? '';
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -45,8 +52,9 @@ class CheckoutView extends StatelessWidget {
               child: GestureDetector(
                 onTap: () async {
                   final result =
-                      await Get.toNamed('/gps');
+                      await Get.toNamed('/gps'); // Navigate to GpsView
                   if (result != null) {
+                    // Use the result to update address and name
                     controller.setAddress(result['address']);
                     controller.setName(result['name']);
                   }
@@ -270,6 +278,18 @@ class CheckoutView extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    // Save checkout to history
+                    List<Map<String, dynamic>> history = List<Map<String, dynamic>>.from(box.read('checkoutHistory') ?? []);
+                    history.add({
+                      'address': '$recipientName, $phone, $label, $city, $detailAddress',
+                      'items': selectedItems,
+                      'total': controller.selectedTotal.value,
+                      'note': box.read('orderNote') ?? '',
+                      'date': DateTime.now().toString(),
+                    });
+                    box.write('checkoutHistory', history);
+
+                    // Proceed with checkout
                     controller.checkout();
                     Get.snackbar('Sukses', 'Pesanan Anda berhasil diproses.');
                   },
@@ -283,6 +303,25 @@ class CheckoutView extends StatelessWidget {
                   child: const Text('Checkout Sekarang',
                       style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
+              ),
+            ),
+            // History Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate to history view
+                  Get.toNamed('/history');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Lihat Riwayat Belanja',
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ),
           ],

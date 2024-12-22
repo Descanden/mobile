@@ -1,22 +1,76 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class HistoryController extends GetxController {
-  // Manage search query and list of history data
   var searchQuery = ''.obs;
-  var historyData = <HistoryItem>[
-    HistoryItem(name: 'Irvan s.', date: '2 Mei 2024', total: 64500, status: 'Status'),
-    HistoryItem(name: 'Rofiq', date: '2 Mei 2024', total: 640500, status: 'Cash'),
-    HistoryItem(name: 'Rekta', date: '2 Juli 2024', total: 4500, status: 'VA'),
-    HistoryItem(name: 'Rekta', date: '2 Juli 2024', total: 4500, status: 'Pending'),
-  ].obs;
+  var historyData = <HistoryItem>[].obs;
+  var filteredHistory = <HistoryItem>[].obs;
+
+  final GetStorage box = GetStorage();
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadHistoryData();
+  }
+
+  void loadHistoryData() {
+    // Load data from GetStorage and cast it correctly
+    var savedHistory = box.read('checkoutHistory') ?? [];
+    if (savedHistory is List) {
+      historyData.value = savedHistory.map((item) {
+        // Ensure that the item is a Map<String, dynamic>
+        if (item is Map<String, dynamic>) {
+          return HistoryItem(
+            name: item['name'] ?? 'Unknown', // Name can be the address or recipient name
+            date: item['date'] ?? 'Unknown',
+            total: item['total'] ?? 0,
+            status: item['status'] ?? 'Pending',
+          );
+        } else {
+          // If item is not a Map, return a default HistoryItem
+          return HistoryItem(
+            name: 'Unknown',
+            date: 'Unknown',
+            total: 0,
+            status: 'Pending',
+          );
+        }
+      }).toList();
+    }
+    filteredHistory.value = historyData;
+  }
 
   // Filter history based on search query
-  List<HistoryItem> get filteredHistory => historyData.where((item) {
-    return item.name.toLowerCase().contains(searchQuery.value.toLowerCase());
-  }).toList();
+  List<HistoryItem> get filteredSearchHistory {
+    return historyData.where((item) {
+      return item.name.toLowerCase().contains(searchQuery.value.toLowerCase());
+    }).toList();
+  }
 
   void updateSearch(String query) {
     searchQuery.value = query;
+    filteredHistory.value = filteredSearchHistory;
+  }
+
+  // Filter history for monthly view (e.g., May)
+  void filterMonthly() {
+    filteredHistory.value = historyData.where((item) {
+      final itemMonth = DateTime.parse('${item.date.split(' ')[1]} 1, 2024').month; // Convert date to DateTime and get the month
+      final currentMonth = DateTime.now().month; // Get current month
+      return itemMonth == currentMonth;
+    }).toList();
+  }
+
+  // Filter history for daily view (e.g., today)
+  void filterDaily() {
+    filteredHistory.value = historyData.where((item) {
+      final itemDate = DateTime.parse('${item.date.split(' ')[1]} ${item.date.split(' ')[0]}, 2024');
+      final currentDate = DateTime.now();
+      return itemDate.year == currentDate.year &&
+          itemDate.month == currentDate.month &&
+          itemDate.day == currentDate.day;
+    }).toList();
   }
 }
 

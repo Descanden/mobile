@@ -7,6 +7,9 @@ class HistoryView extends GetView<HistoryController> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure that the history is loaded when the view is built
+    controller.loadHistory();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFAD8966), // Warna coklat sesuai referensi
@@ -39,38 +42,38 @@ class HistoryView extends GetView<HistoryController> {
             const SizedBox(height: 15),
 
             // Tombol Rekap Bulanan dan Harian
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFAD8966), // Warna coklat
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  ),
-                  onPressed: () {
-                    controller.filterMonthly();
-                  },
-                  child: const Text('Rekap Bulanan', style: TextStyle(fontSize: 16, color: Colors.white)),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFAD8966), // Warna coklat
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  ),
-                  onPressed: () {
-                    controller.filterDaily();
-                  },
-                  child: const Text('Rekap Harian', style: TextStyle(fontSize: 16, color: Colors.white)),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     // ElevatedButton(
+            //     //   style: ElevatedButton.styleFrom(
+            //     //     backgroundColor: const Color(0xFFAD8966), // Warna coklat
+            //     //     shape: RoundedRectangleBorder(
+            //     //       borderRadius: BorderRadius.circular(20),
+            //     //     ),
+            //     //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            //     //   ),
+            //     //   onPressed: () {
+            //     //     controller.filterMonthly();
+            //     //   },
+            //       child: const Text('Rekap Bulanan', style: TextStyle(fontSize: 16, color: Colors.white)),
+            //     ),
+            //     ElevatedButton(
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: const Color(0xFFAD8966), // Warna coklat
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(20),
+            //         ),
+            //         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            //       ),
+            //       onPressed: () {
+            //         controller.filterDaily();
+            //       },
+            //       child: const Text('Rekap Harian', style: TextStyle(fontSize: 16, color: Colors.white)),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 20),
 
             // List Riwayat
             Expanded(
@@ -107,6 +110,10 @@ class HistoryView extends GetView<HistoryController> {
                             Text('Belanja: ${history.date}', style: const TextStyle(color: Colors.black)),
                             const SizedBox(height: 5),
                             Text('Total Belanja: Rp ${history.total}', style: const TextStyle(color: Colors.black)),
+                            const SizedBox(height: 5),
+                            Text('Alamat: ${history.address}', style: const TextStyle(color: Colors.grey)),
+                            const SizedBox(height: 5),
+                            Text('Catatan: ${history.note}', style: const TextStyle(color: Colors.grey)),
                           ],
                         ),
                         trailing: ElevatedButton(
@@ -117,7 +124,8 @@ class HistoryView extends GetView<HistoryController> {
                             ),
                           ),
                           onPressed: () {
-                            // Tindakan untuk tombol status, misalnya lihat detail
+                            // Show a dialog to view details and delete the item
+                            _showDetailDialog(context, history);
                           },
                           child: Text(
                             history.status,
@@ -163,6 +171,45 @@ class HistoryView extends GetView<HistoryController> {
           }
         },
       ),
+    );
+  }
+
+  void _showDetailDialog(BuildContext context, HistoryItem history) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Detail Riwayat: ${history.name}'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('Belanja: ${history.date}'),
+                Text('Total Belanja: Rp ${history.total}'),
+                Text('Alamat: ${history.address}'),
+                Text('Catatan: ${history.note}'),
+                Text('Status: ${history.status}'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Hapus'),
+              onPressed: () {
+                // Delete the history entry
+                controller.deleteHistoryEntry(history);
+                Get.back(); // Close the dialog
+                Get.snackbar('Riwayat Dihapus', 'Riwayat berhasil dihapus');
+              },
+            ),
+            TextButton(
+              child: const Text('Tutup'),
+              onPressed: () {
+                Get.back(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

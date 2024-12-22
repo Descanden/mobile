@@ -200,7 +200,15 @@ class _SearchAddressPageState extends State<SearchAddressPage> {
             IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                Get.back();
+                Get.back(result: {
+                  'recipientName': _recipientNameController.text,
+                  'phone': _phoneController.text,
+                  'label': _labelController.text,
+                  'city': _cityController.text,
+                  'detailAddress': _detailAddressController.text,
+                  'latitude': _latitude,
+                  'longitude': _longitude,
+                });
               },
             ),
             const SizedBox(width: 8),

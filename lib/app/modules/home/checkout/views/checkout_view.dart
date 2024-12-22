@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pemrograman_mobile/app/modules/home/basket/controllers/basket_controller.dart';
+import '../../History/controllers/history_controller.dart';  // Import HistoryController
 
 class CheckoutView extends StatelessWidget {
   final BasketController controller = Get.find();
   final GetStorage box = GetStorage();
+  
+  // Inisialisasi HistoryController
+  final HistoryController historyController = Get.put(HistoryController());  // Inisialisasi dengan Get.put()
 
   CheckoutView({super.key});
 
@@ -17,7 +21,7 @@ class CheckoutView extends StatelessWidget {
     final String label = box.read('label') ?? '';
     final String city = box.read('city') ?? '';
     final String detailAddress = box.read('detailAddress') ?? '';
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -55,8 +59,8 @@ class CheckoutView extends StatelessWidget {
                       await Get.toNamed('/gps'); // Navigate to GpsView
                   if (result != null) {
                     // Use the result to update address and name
-                    controller.setAddress(result['address']);
-                    controller.setName(result['name']);
+                    controller.setAddress(result['address'] ?? '');  // Fallback to empty string if null
+                    controller.setName(result['name'] ?? '');  // Fallback to empty string if null
                   }
                 },
                 child: Row(
@@ -272,58 +276,49 @@ class CheckoutView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Save checkout to history
-                    List<Map<String, dynamic>> history = List<Map<String, dynamic>>.from(box.read('checkoutHistory') ?? []);
-                    history.add({
-                      'address': '$recipientName, $phone, $label, $city, $detailAddress',
-                      'items': selectedItems,
-                      'total': controller.selectedTotal.value,
-                      'note': box.read('orderNote') ?? '',
-                      'date': DateTime.now().toString(),
-                    });
-                    box.write('checkoutHistory', history);
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+  child: SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: () {
+        // Save checkout to history
+        List<Map<String, dynamic>> history = List<Map<String, dynamic>>.from(box.read('checkoutHistory') ?? []);
+        history.add({
+          'address': '$recipientName, $phone, $label, $city, $detailAddress',
+          'items': selectedItems,
+          'total': controller.selectedTotal.value,
+          'note': box.read('orderNote') ?? '',
+          'date': DateTime.now().toString(),
+        });
+        box.write('checkoutHistory', history);
 
-                    // Proceed with checkout
-                    controller.checkout();
-                    Get.snackbar('Sukses', 'Pesanan Anda berhasil diproses.');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.brown,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text('Checkout Sekarang',
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
-                ),
-              ),
-            ),
-            // History Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Navigate to history view
-                  Get.toNamed('/history');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Lihat Riwayat Belanja',
-                    style: TextStyle(fontSize: 16, color: Colors.white)),
-              ),
-            ),
+        // Inform HistoryController to update
+        historyController.loadHistory();  // Call the method to refresh history
+
+        // Proceed with checkout
+        controller.checkout();
+
+        // Navigate to the History page
+        Get.toNamed('/history');
+        
+        // Show success message
+        Get.snackbar('Sukses', 'Pesanan Anda berhasil diproses.');
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.brown,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      child: const Text('Checkout Sekarang',
+          style: TextStyle(fontSize: 16, color: Colors.white)),
+    ),
+  ),
+),
+
+
           ],
         );
       }),

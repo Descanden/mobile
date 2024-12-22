@@ -162,10 +162,10 @@ class HomePageView extends GetView<HomePageController> {
                       '/item', settingsController.isDarkMode.value),
                   _buildIconButton('Feed', Icons.rss_feed, Routes.FEED,
                       settingsController.isDarkMode.value),
-                  _buildIconButton('Input harga/promo', Icons.price_check,
-                      '/promo', settingsController.isDarkMode.value),
-                  _buildIconButton('Jurnal', Icons.book, '/journal',
+                  _buildIconButton('History', Icons.book, '/history',
                       settingsController.isDarkMode.value),
+                  _buildIconButton('Geopify', Icons.public, '/map',
+                      settingsController.isDarkMode.value), // New Button
                 ],
               ),
             ),

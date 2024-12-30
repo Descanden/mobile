@@ -29,7 +29,7 @@ class ItemView extends GetView<ItemController> {
                     );
                   }).toList(),
                   onChanged: (value) {
-                    controller.selectedCategory.value = value ?? ''; // Store selected category
+                    controller.selectedCategory.value = value ?? '';
                   },
                 ),
                 const SizedBox(height: 16),

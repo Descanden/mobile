@@ -17,7 +17,7 @@ class AddItemView extends GetView<AddItemController> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Get.back(); // Navigate back to the previous page
+            Get.back();
           },
         ),
       ),

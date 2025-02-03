@@ -4,7 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
-import 'package:hive_flutter/hive_flutter.dart';  // Import Hive
+import 'package:hive_flutter/hive_flutter.dart';
 import 'app/modules/components/user_preferences_servies.dart';
 import 'app/modules/home/basket/bindings/basket_binding.dart';
 import 'app/modules/home/basket/controllers/basket_controller.dart';
